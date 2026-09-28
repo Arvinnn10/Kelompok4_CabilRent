@@ -1,275 +1,269 @@
+
+/* 1. Reset Dasar untuk Semua Elemen */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
+/* 2. Styling Body / Halaman Utama */
 body {
+    background-color: #FEF7EC; /* Warna krem hangat sesuai Figma */
     min-height: 100vh;
-    background-color: #f8fafc;
-    color: #1e293b;
-}
-
-/* Container Utama Pembagi 2 Sisi */
-.container {
-    display: flex;
-    min-height: 100vh;
-    width: 100%;
-}
-
-/* Sisi Kiri: Foto / Ilustrasi */
-.sisi-kiri {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-    padding: 2.5rem;
+}
+
+/* 3. Container Pembagi Sisi Kiri & Sisi Kanan */
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    background-color: #FEF7EC;
+}
+
+/* 4. Sisi Kiri (Gambar Ilustrasi) */
+.sisi-kiri {
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .sisi-kiri img {
-    max-width: 85%;
-    max-height: 80vh;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.08));
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
-/* Sisi Kanan: Kartu Form Login */
+/* 5. Sisi Kanan (Tempat Form Login) */
 .sisi-kanan {
     flex: 1;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2.5rem;
-    background-color: #ffffff;
+    padding: 30px;
 }
 
+/* 6. Kartu Putih Form Login */
 .card-login {
+    background-color: #FFFFFF;
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
+    border-radius: 20px;
+    padding: 44px 38px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
-/* Judul dan Subjudul */
+/* 7. Judul dan Subjudul */
 .judul {
-    font-size: 2rem;
+    font-size: 26px;
     font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.025em;
+    color: #1F1F1F;
+    text-align: center;
+    margin-bottom: 6px;
 }
 
 .subjudul {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin-bottom: 2rem;
+    font-size: 13px;
+    font-weight: 400;
+    color: #707070;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-/* Form Group */
+/* 8. Input Form (Nama & Password) */
 .form-group {
-    margin-bottom: 1.25rem;
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 18px;
 }
 
 .form-group label {
-    font-size: 0.875rem;
+    display: block;
+    font-size: 12.5px;
     font-weight: 500;
-    color: #334155;
-    margin-bottom: 0.5rem;
+    color: #222222;
+    margin-bottom: 7px;
 }
 
-.form-group input[type="text"] {
+.form-group input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e1;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #E6E6E6;
     border-radius: 8px;
-    font-size: 0.95rem;
-    color: #0f172a;
-    background-color: #ffffff;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 13px;
+    color: #222222;
     outline: none;
+    transition: border-color 0.2s;
 }
 
-.form-group input[type="text"]:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+.form-group input::placeholder {
+    color: #AFAFAF;
 }
 
-/* Password Input & Eye Button */
+.form-group input:focus {
+    border-color: #67483B; /* Warna cokelat saat input aktif */
+}
+
+/* 9. Wrapper Password & Tombol Mata */
 .password-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    width: 100%;
 }
 
 .password-wrapper input {
-    width: 100%;
-    padding: 0.75rem 2.75rem 0.75rem 1rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #0f172a;
-    background-color: #ffffff;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-}
-
-.password-wrapper input:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    padding-right: 42px;
 }
 
 .btn-mata {
     position: absolute;
-    right: 0.75rem;
+    right: 12px;
     background: none;
     border: none;
     cursor: pointer;
-    color: #64748b;
+    color: #8E8E8E;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem;
-    transition: color 0.2s;
 }
 
 .btn-mata:hover {
-    color: #0f172a;
+    color: #333333;
 }
 
-/* Baris Opsi (Ingat Saya & Lupa Sandi) */
+/* 10. Baris Pilihan: Ingat Saya & Lupa Password */
 .baris-opsi {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.875rem;
-    margin-bottom: 1.5rem;
+    margin-top: 10px;
+    margin-bottom: 22px;
+    font-size: 12px;
 }
 
 .ingat-saya {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #475569;
+    gap: 7px;
+    color: #555555;
     cursor: pointer;
-    user-select: none;
 }
 
-.ingat-saya input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: #0f172a;
+.ingat-saya input {
     cursor: pointer;
+    accent-color: #67483B;
 }
 
 .lupa-password {
-    color: #3b82f6;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.lupa-password:hover {
+    color: #888888;
     text-decoration: underline;
 }
 
-/* Tombol Masuk */
+.lupa-password:hover {
+    color: #67483B;
+}
+
+/* 11. Tombol Masuk ke Akun */
 .btn-masuk {
     width: 100%;
-    padding: 0.8rem;
-    background-color: #0f172a;
-    color: #ffffff;
+    height: 46px;
+    background-color: #67483B; /* Cokelat mocha sesuai Figma */
+    color: #FFFFFF;
     border: none;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: background-color 0.2s;
 }
 
 .btn-masuk:hover {
-    background-color: #1e293b;
+    background-color: #553B30;
 }
 
-.btn-masuk:active {
-    transform: scale(0.99);
-}
-
-/* Garis Pembatas 'atau' */
+/* 12. Garis Pembatas 'atau' */
 .garis-pembatas {
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 1.5rem 0;
-    color: #94a3b8;
-    font-size: 0.85rem;
+    margin: 20px 0;
+    color: #A0A0A0;
+    font-size: 12px;
 }
 
 .garis-pembatas::before,
 .garis-pembatas::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #ECECEC;
 }
 
 .garis-pembatas span {
-    padding: 0 0.75rem;
+    padding: 0 12px;
 }
 
-/* Tombol Google */
+/* 13. Tombol Login dengan Google */
 .btn-google {
     width: 100%;
-    padding: 0.75rem;
-    background-color: #ffffff;
-    border: 1px solid #cbd5e1;
+    height: 46px;
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #334155;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 8px;
     cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2D2D2D;
+    transition: background-color 0.2s;
 }
 
 .btn-google:hover {
-    background-color: #f8fafc;
-    border-color: #94a3b8;
+    background-color: #FBFBFB;
 }
 
-/* Footer Daftar Akun */
+/* 14. Footer Link Daftar */
 .footer-daftar {
     text-align: center;
-    font-size: 0.875rem;
-    color: #64748b;
-    margin-top: 1.5rem;
+    margin-top: 24px;
+    font-size: 12.5px;
+    color: #333333;
 }
 
 .footer-daftar a {
-    color: #3b82f6;
+    color: #222222;
     font-weight: 600;
-    text-decoration: none;
+    text-decoration: underline;
+    margin-left: 2px;
 }
 
 .footer-daftar a:hover {
-    text-decoration: underline;
+    color: #67483B;
 }
 
-/* Responsif Mobile */
-@media (max-width: 868px) {
+/* 15. Responsif untuk Tampilan HP / Layar Kecil */
+@media (max-width: 860px) {
     .container {
         flex-direction: column;
     }
 
     .sisi-kiri {
-        display: none;
+        height: 260px;
+        flex: none;
     }
 
     .sisi-kanan {
-        padding: 2rem 1.5rem;
-        min-height: 100vh;
+        height: auto;
+        padding: 30px 20px 50px 20px;
+    }
+
+    .card-login {
+        padding: 32px 24px;
     }
 }
