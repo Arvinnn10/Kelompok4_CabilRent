@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('produk_id')->constrained('products')->cascadeOnDelete();
             $table->integer('jumlah');
             $table->date('tanggal_acara');
-            $table->timestamp('created_at')->nullable();
+            $table->timestamps();
         });
     }
 

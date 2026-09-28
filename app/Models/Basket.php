@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Basket extends Model
 {
-    public $timestamps = false; // hanya ada created_at, tidak ada updated_at
-
     protected $fillable = [
         'user_id',
         'produk_id',
