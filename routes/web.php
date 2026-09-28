@@ -15,11 +15,6 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-Route::post('/login', function (\Illuminate\Http\Request $request) {
-    // Validasi & alur login sementara
-    return redirect('/');
-});
-
 
 // Produk
 Route::get('/produk', function () {
