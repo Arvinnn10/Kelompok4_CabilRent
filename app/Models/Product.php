@@ -34,3 +34,4 @@ class Product extends Model
         return $this->hasMany(Order::class, 'produk_id');
     }
 }
+okhat
