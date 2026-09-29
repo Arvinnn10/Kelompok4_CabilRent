@@ -65,7 +65,7 @@
                     </div>
 
                     <!-- Tombol Masuk ke Akun -->
-                    <button type="submit" class="btn-masuk">Masuk ke Akun</button>
+                    <button type="submit" class="btn-masuk">Masuk</button>
 
                     <!-- Garis Pembatas 'atau' -->
                     <div class="garis-pembatas">
