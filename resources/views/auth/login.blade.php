@@ -16,7 +16,7 @@
 <body class="login-body">
 
   <div class="login-container">
-    <!-- Banner ilustrasi di sebelah kiri Ganti gambar banner di bawah ini: Ganti path gambar di atribut src -->
+    <!-- Banner sebelah kiri  -->
     <div class="login-banner">
       <img src="{{ asset('images/login-banner.png') }}" alt="cabil.rent Illustration" class="login-banner-img">
       
@@ -35,14 +35,13 @@
           <p class="login-desc">Masuk dengan Email dan Password</p>
         </div>
 
-        <form action="{{ url('/dashboard') }}" method="POST" class="login-form">
-          @csrf
-
+        <!-- Form login  -->
+        <form action="{{ url('/dashboard') }}" method="GET" class="login-form">
           <!-- Kolom input nama -->
           <div class="form-group">
             <label for="name" class="form-label">Nama</label>
             <div class="input-wrapper">
-              <input type="text" id="name" name="name" class="form-input" placeholder="Masukkan Nama" value="{{ old('name') }}" required autofocus>
+              <input type="text" id="name" name="name" class="form-input" placeholder="Masukkan Nama" value="{{ old('name') }}">
             </div>
           </div>
 
@@ -50,7 +49,7 @@
           <div class="form-group">
             <label for="password" class="form-label">Password</label>
             <div class="input-wrapper">
-              <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password" required>
+              <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password">
               <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Lihat Password">
                 <!-- Ikon mata -->
                 <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
