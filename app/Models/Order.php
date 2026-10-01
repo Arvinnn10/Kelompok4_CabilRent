@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use AppendIterator;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -32,5 +33,4 @@ class Order extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'produk_id');
-    }
-}
+
