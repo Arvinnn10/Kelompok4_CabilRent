@@ -68,11 +68,11 @@
 
       <!-- Profil admin di bagian bawah sidebar -->
       <div class="sidebar-footer">
-        <a href="{{ url('/login') }}" class="user-profile" title="Klik untuk Logout / Ganti Akun">
-          <div class="user-avatar">I</div>
+        <a href="{{ route('logout') }}" class="user-profile" title="Klik untuk Logout">
+          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin'), 0, 1)) }}</div>
           <div class="user-info">
-            <span class="user-name">{{ Auth::user()->name ?? 'Ihsan' }}</span>
-            <span class="user-role">{{ Auth::user()->role ?? 'Pemilik' }}</span>
+            <span class="user-name">{{ Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin') }}</span>
+            <span class="user-role">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</span>
           </div>
         </a>
       </div>

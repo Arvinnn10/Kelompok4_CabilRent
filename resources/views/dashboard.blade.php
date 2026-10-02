@@ -69,11 +69,11 @@
 
       <!-- Profil admin di bagian bawah sidebar -->
       <div class="sidebar-footer">
-        <a href="{{ url('/login') }}" class="user-profile" title="Klik untuk Logout / Ganti Akun">
-          <div class="user-avatar">I</div>
+        <a href="{{ route('logout') }}" class="user-profile" title="Klik untuk Logout">
+          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin'), 0, 1)) }}</div>
           <div class="user-info">
-            <span class="user-name">{{ Auth::user()->name ?? 'Ihsan' }}</span>
-            <span class="user-role">{{ Auth::user()->role ?? 'Pemilik' }}</span>
+            <span class="user-name">{{ Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin') }}</span>
+            <span class="user-role">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</span>
           </div>
         </a>
       </div>
@@ -118,30 +118,30 @@
         <!-- Ringkasan sewa berjalan -->
         <div class="stat-card">
           <span class="stat-label">Sewa Berjalan</span>
-          <div class="stat-value">{{ $sewaBerjalan ?? '45 Gaun' }}</div>
-          <div class="stat-subtext">&nbsp;</div>
+          <div class="stat-value">{{ $sewaBerjalan ?? 0 }}</div>
+          <div class="stat-subtext">Pesanan sedang disewa</div>
         </div>
 
         <!-- Ringkasan pesanan aktif -->
         <div class="stat-card">
           <span class="stat-label">Pesanan Aktif</span>
-          <div class="stat-value">{{ $pesananAktif ?? '42' }}</div>
+          <div class="stat-value">{{ $pesananAktif ?? 0 }}</div>
           <div class="stat-subtext">
-            <span class="stat-trend">&#9650; 8 pesanan baru</span>
+            <span class="stat-trend">&#9650; Menunggu & Dikonfirmasi</span>
           </div>
         </div>
 
         <!-- Ringkasan total produk -->
         <div class="stat-card">
           <span class="stat-label">Total Produk</span>
-          <div class="stat-value">{{ $totalProduk ?? '143' }}</div>
-          <div class="stat-subtext">100 tersedia dari 3 kategori</div>
+          <div class="stat-value">{{ $totalProduk ?? 0 }}</div>
+          <div class="stat-subtext">{{ $produkTersedia ?? 0 }} tersedia dari {{ $totalKategori ?? 0 }} kategori</div>
         </div>
 
         <!-- Ringkasan keterlambatan pengembalian -->
         <div class="stat-card stat-alert">
           <span class="stat-label">Terlambat Kembali</span>
-          <div class="stat-value">{{ $terlambatKembali ?? '5' }}</div>
+          <div class="stat-value">{{ $terlambatKembali ?? 0 }}</div>
           <div class="stat-subtext">Ada tindakan</div>
         </div>
       </div>
@@ -202,49 +202,22 @@
           </div>
 
           <div class="progress-list">
-            <!-- Kategori paket kebaya -->
+            @forelse($kategoriList as $kat)
             <div class="progress-item">
               <div class="progress-item-header">
-                <span class="progress-item-title">Paket Kebaya</span>
-                <span class="progress-item-count">78 produk</span>
+                <span class="progress-item-title">{{ $kat->nama_kategori }}</span>
+                <span class="progress-item-count">{{ $kat->products_count }} produk</span>
               </div>
               <div class="progress-track">
-                <div class="progress-fill fill-dark" style="width: 85%;"></div>
+                @php
+                  $percent = ($totalProduk > 0) ? min(100, round(($kat->products_count / $totalProduk) * 100)) : 0;
+                @endphp
+                <div class="progress-fill fill-dark" style="width: {{ $percent }}%;"></div>
               </div>
             </div>
-
-            <!-- Kategori heels -->
-            <div class="progress-item">
-              <div class="progress-item-header">
-                <span class="progress-item-title">Heels</span>
-                <span class="progress-item-count">62 produk</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill fill-brown" style="width: 70%;"></div>
-              </div>
-            </div>
-
-            <!-- Kategori kemben -->
-            <div class="progress-item">
-              <div class="progress-item-header">
-                <span class="progress-item-title">Kemben</span>
-                <span class="progress-item-count">44 produk</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill fill-pink" style="width: 50%;"></div>
-              </div>
-            </div>
-
-            <!-- Kategori baju adat -->
-            <div class="progress-item">
-              <div class="progress-item-header">
-                <span class="progress-item-title">Adat</span>
-                <span class="progress-item-count">26 produk</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill fill-terracotta" style="width: 30%;"></div>
-              </div>
-            </div>
+            @empty
+            <p style="padding: 10px; color: #888; font-size: 13px;">Belum ada kategori.</p>
+            @endforelse
           </div>
         </div>
       </div>

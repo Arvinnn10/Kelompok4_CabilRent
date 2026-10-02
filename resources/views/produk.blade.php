@@ -68,11 +68,11 @@
 
       <!-- Profil admin di bagian bawah sidebar -->
       <div class="sidebar-footer">
-        <a href="{{ url('/login') }}" class="user-profile" title="Klik untuk Logout / Ganti Akun">
-          <div class="user-avatar">I</div>
+        <a href="{{ route('logout') }}" class="user-profile" title="Klik untuk Logout">
+          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin'), 0, 1)) }}</div>
           <div class="user-info">
-            <span class="user-name">{{ Auth::user()->name ?? 'Ihsan' }}</span>
-            <span class="user-role">{{ Auth::user()->role ?? 'Pemilik' }}</span>
+            <span class="user-name">{{ Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin') }}</span>
+            <span class="user-role">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</span>
           </div>
         </a>
       </div>
@@ -88,7 +88,7 @@
           </svg>
           <div>
             <h1 class="header-title">Produk</h1>
-            <p class="header-desc">200 kebaya - 89 tersedia</p>
+            <p class="header-desc">{{ $totalProduk }} produk - {{ $tersediaCount }} tersedia</p>
           </div>
         </div>
 
@@ -101,122 +101,43 @@
 
       <!-- Kolom cari dan tombol filter kategori -->
       <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
-        <div class="search-bar">
+        <form action="{{ route('produk.index') }}" method="GET" class="search-bar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" class="search-input" placeholder="Cari nama kebaya" style="width: 280px;">
-        </div>
+          <input type="text" name="search" class="search-input" placeholder="Cari nama kebaya" style="width: 280px;" value="{{ request('search') }}">
+        </form>
 
         <div class="filter-tabs">
-          <button class="filter-tab active">Semua</button>
-          <button class="filter-tab">Akad</button>
-          <button class="filter-tab">Wisuda</button>
-          <button class="filter-tab">Pesta</button>
-          <button class="filter-tab">Adat</button>
+          <a href="{{ route('produk.index') }}" class="filter-tab {{ !request('kategori') ? 'active' : '' }}">Semua</a>
+          @foreach($categories as $cat)
+          <a href="{{ route('produk.index', ['kategori' => $cat->id]) }}" class="filter-tab {{ request('kategori') == $cat->id ? 'active' : '' }}">{{ $cat->nama_kategori }}</a>
+          @endforeach
         </div>
       </div>
 
       <!-- Daftar kartu produk kebaya dan sepatu -->
       <div class="product-grid">
-        <!-- Produk brokat maroon -->
+        @forelse($products as $produk)
         <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-brokat-maroon.png') }}" alt="Brokat Maroon" class="product-img">
+            <img src="{{ asset('images/' . $produk->foto_produk) }}" alt="{{ $produk->nama_produk }}" class="product-img">
           </div>
-          <h4 class="product-title">Brokat Maroon</h4>
-          <p class="product-category-size">Akad · S M L XL</p>
+          <h4 class="product-title">{{ $produk->nama_produk }}</h4>
+          <p class="product-category-size">{{ $produk->category->nama_kategori ?? '-' }}</p>
           <div class="product-footer">
-            <div class="product-price">Rp 250.000<span>/hari</span></div>
-            <span class="badge badge-available">Tersedia</span>
+            <div class="product-price">Rp {{ number_format($produk->harga_sewa, 0, ',', '.') }}<span>/hari</span></div>
+            @if($produk->status_produk == 'tersedia')
+              <span class="badge badge-available">Tersedia</span>
+            @else
+              <span class="badge badge-waiting">Disewa</span>
+            @endif
           </div>
         </div>
-
-        <!-- Produk tulle sage green -->
-        <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="product-img-container">
-            <img src="{{ asset('images/produk-tulle-sage.png') }}" alt="Tulle Sage Green" class="product-img">
-          </div>
-          <h4 class="product-title">Tulle Sage Green</h4>
-          <p class="product-category-size">Wisuda · S M L</p>
-          <div class="product-footer">
-            <div class="product-price">Rp 200.000<span>/hari</span></div>
-            <span class="badge badge-available">Tersedia</span>
-          </div>
-        </div>
-
-        <!-- Produk encim gold klasik -->
-        <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="product-img-container">
-            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik" class="product-img">
-          </div>
-          <h4 class="product-title">Encim Gold Klasik</h4>
-          <p class="product-category-size">Adat · M L XL</p>
-          <div class="product-footer">
-            <div class="product-price">Rp 280.000<span>/hari</span></div>
-            <span class="badge badge-waiting">Disewa</span>
-          </div>
-        </div>
-
-        <!-- Produk modern navy lace -->
-        <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="product-img-container">
-            <img src="{{ asset('images/produk-modern-navy.png') }}" alt="Modern Navy Lace" class="product-img">
-          </div>
-          <h4 class="product-title">Modern Navy Lace</h4>
-          <p class="product-category-size">Pesta · S M L</p>
-          <div class="product-footer">
-            <div class="product-price">Rp 240.000<span>/hari</span></div>
-            <span class="badge badge-available">Tersedia</span>
-          </div>
-        </div>
-
-        <!-- Produk putih gading renda -->
-        <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="product-img-container">
-            <img src="{{ asset('images/produk-putih-gading.png') }}" alt="Putih Gading Renda" class="product-img">
-          </div>
-          <h4 class="product-title">Putih Gading Renda</h4>
-          <p class="product-category-size">Akad · S M L</p>
-          <div class="product-footer">
-            <div class="product-price">Rp 260.000<span>/hari</span></div>
-            <span class="badge badge-waiting">Disewa</span>
-          </div>
-        </div>
-
-        <!-- Produk rose dusty satin -->
-        <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="product-img-container">
-            <img src="{{ asset('images/produk-rose-dusty.png') }}" alt="Rose Dusty Satin" class="product-img">
-          </div>
-          <h4 class="product-title">Rose Dusty Satin</h4>
-          <p class="product-category-size">Pesta · S M L XL</p>
-          <div class="product-footer">
-            <div class="product-price">Rp 230.000<span>/hari</span></div>
-            <span class="badge badge-available">Tersedia</span>
-          </div>
-        </div>
-
-        <!-- Produk encim gold klasik -->
-        <div class="product-card">
-          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="product-img-container">
-            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik" class="product-img">
-          </div>
-          <h4 class="product-title">Encim Gold Klasik</h4>
-          <p class="product-category-size">Adat · M L XL</p>
-          <div class="product-footer">
-            <div class="product-price">Rp 280.000<span>/hari</span></div>
-            <span class="badge badge-waiting">Disewa</span>
-          </div>
-        </div>
+        @empty
+        <p style="padding: 20px; color: #888;">Belum ada produk yang ditambahkan.</p>
+        @endforelse
       </div>
     </main>
   </div>
