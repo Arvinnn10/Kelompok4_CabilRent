@@ -112,7 +112,7 @@ Route::get('/dashboard', function () {
     $terlambatKembali = 0;
 
     $kategoriList = Category::withCount('products')->get();
-    $pesananTerbaru = Order::with(['product', 'user'])->latest()->take(5)->get();
+    $pesananTerbaru = Order::with(['basket', 'product', 'user'])->latest()->take(5)->get();
 
     return view('dashboard', compact(
         'sewaBerjalan',
@@ -179,7 +179,7 @@ Route::get('/produk', function (Request $request) {
 // ==================== PESANAN ====================
 
 Route::get('/pesanan', function (Request $request) {
-    $query = Order::with(['product', 'user']);
+    $query = Order::with(['basket', 'product', 'user']);
 
     if ($request->filled('status') && $request->status !== 'Semua') {
         $query->where('status_pesan', $request->status);

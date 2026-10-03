@@ -29,4 +29,15 @@ class Basket extends Model
     {
         return $this->belongsTo(Product::class, 'produk_id');
     }
+
+    // Relasi: keranjang memiliki pesanan
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'basket_id');
+    }
+
+    public function order()
+    {
+        return $this->hasOne(Order::class, 'basket_id');
+    }
 }

@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('produk_id')->constrained('products')->cascadeOnDelete();
+            $table->foreignId('basket_id')->constrained('baskets')->cascadeOnDelete();
             $table->string('no_whatsapp', 20);
             $table->string('instagram', 50)->nullable();
             $table->string('domisili', 100);
