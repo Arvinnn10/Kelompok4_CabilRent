@@ -33,7 +33,7 @@
       <!-- Teks pembuka di atas gambar banner -->
       <div class="login-banner-overlay">
         <h1 class="banner-title">Join Us !</h1>
-        <p class="banner-subtitle">Daftarkan akun admin Anda sekarang</p>
+        <p class="banner-subtitle">Daftarkan akun Anda sekarang</p>
       </div>
     </div>
 
