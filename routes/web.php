@@ -92,113 +92,117 @@ Route::post('/register', function (Request $request) {
     return redirect('/login')->with('success', 'Pendaftaran berhasil! Silakan login.');
 })->name('register.post');
 
-// Logout
-Route::match(['get', 'post'], '/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect('/login');
-})->name('logout');
+// ==================== ROUTES YANG MEMERLUKAN LOGIN (AUTH) ====================
+Route::middleware(['auth'])->group(function () {
+
+    // Logout
+    Route::match(['get', 'post'], '/logout', function (Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    })->name('logout');
 
 
-// ==================== DASHBOARD ====================
+    // ==================== DASHBOARD ====================
 
-Route::get('/dashboard', function () {
-    $sewaBerjalan = Order::where('status_pesan', 'dikonfirmasi')->count();
-    $pesananAktif = Order::whereIn('status_pesan', ['pending', 'dikonfirmasi'])->count();
-    $totalProduk = Product::count();
-    $produkTersedia = Product::where('status_produk', 'tersedia')->count();
-    $totalKategori = Category::count();
-    $terlambatKembali = 0;
+    Route::get('/dashboard', function () {
+        $sewaBerjalan = Order::where('status_pesan', 'dikonfirmasi')->count();
+        $pesananAktif = Order::whereIn('status_pesan', ['pending', 'dikonfirmasi'])->count();
+        $totalProduk = Product::count();
+        $produkTersedia = Product::where('status_produk', 'tersedia')->count();
+        $totalKategori = Category::count();
+        $terlambatKembali = 0;
 
-    $kategoriList = Category::withCount('products')->get();
-    $pesananTerbaru = Order::with(['basket', 'product', 'user'])->latest()->take(5)->get();
+        $kategoriList = Category::withCount('products')->get();
+        $pesananTerbaru = Order::with(['basket', 'product', 'user'])->latest()->take(5)->get();
 
-    return view('dashboard', compact(
-        'sewaBerjalan',
-        'pesananAktif',
-        'totalProduk',
-        'produkTersedia',
-        'totalKategori',
-        'terlambatKembali',
-        'kategoriList',
-        'pesananTerbaru'
-    ));
-})->name('dashboard');
-
-
-// ==================== KATEGORI ====================
-
-Route::get('/kategori', function () {
-    $categories = Category::withCount('products')->get();
-    return view('kategori', compact('categories'));
-})->name('kategori.index');
-
-Route::post('/kategori', function (Request $request) {
-    $request->validate([
-        'nama_kategori' => 'required|max:50',
-    ]);
-
-    Category::create([
-        'nama_kategori' => $request->nama_kategori,
-    ]);
-
-    return back()->with('success', 'Kategori berhasil ditambahkan!');
-})->name('kategori.store');
-
-Route::delete('/kategori/{id}', function ($id) {
-    $category = Category::findOrFail($id);
-    $category->delete();
-
-    return back()->with('success', 'Kategori berhasil dihapus!');
-})->name('kategori.destroy');
+        return view('dashboard', compact(
+            'sewaBerjalan',
+            'pesananAktif',
+            'totalProduk',
+            'produkTersedia',
+            'totalKategori',
+            'terlambatKembali',
+            'kategoriList',
+            'pesananTerbaru'
+        ));
+    })->name('dashboard');
 
 
-// ==================== PRODUK ====================
+    // ==================== KATEGORI ====================
 
-Route::get('/produk', function (Request $request) {
-    $query = Product::with('category');
+    Route::get('/kategori', function () {
+        $categories = Category::withCount('products')->get();
+        return view('kategori', compact('categories'));
+    })->name('kategori.index');
 
-    if ($request->filled('search')) {
-        $query->where('nama_produk', 'like', '%' . $request->search . '%');
-    }
+    Route::post('/kategori', function (Request $request) {
+        $request->validate([
+            'nama_kategori' => 'required|max:50',
+        ]);
 
-    if ($request->filled('kategori')) {
-        $query->where('kategori_id', $request->kategori);
-    }
+        Category::create([
+            'nama_kategori' => $request->nama_kategori,
+        ]);
 
-    $products = $query->latest()->get();
-    $categories = Category::all();
-    $totalProduk = Product::count();
-    $tersediaCount = Product::where('status_produk', 'tersedia')->count();
+        return back()->with('success', 'Kategori berhasil ditambahkan!');
+    })->name('kategori.store');
 
-    return view('produk', compact('products', 'categories', 'totalProduk', 'tersediaCount'));
-})->name('produk.index');
+    Route::delete('/kategori/{id}', function ($id) {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return back()->with('success', 'Kategori berhasil dihapus!');
+    })->name('kategori.destroy');
 
 
-// ==================== PESANAN ====================
+    // ==================== PRODUK ====================
 
-Route::get('/pesanan', function (Request $request) {
-    $query = Order::with(['basket', 'product', 'user']);
+    Route::get('/produk', function (Request $request) {
+        $query = Product::with('category');
 
-    if ($request->filled('status') && $request->status !== 'Semua') {
-        $query->where('status_pesan', $request->status);
-    }
+        if ($request->filled('search')) {
+            $query->where('nama_produk', 'like', '%' . $request->search . '%');
+        }
 
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('id', 'like', "%{$search}%")
-              ->orWhere('no_whatsapp', 'like', "%{$search}%")
-              ->orWhere('domisili', 'like', "%{$search}%")
-              ->orWhereHas('user', function ($userQuery) use ($search) {
-                  $userQuery->where('nama_lengkap', 'like', "%{$search}%");
-              });
-        });
-    }
+        if ($request->filled('kategori')) {
+            $query->where('kategori_id', $request->kategori);
+        }
 
-    $orders = $query->latest()->paginate(10)->withQueryString();
-    $totalOrders = Order::count();
+        $products = $query->latest()->get();
+        $categories = Category::all();
+        $totalProduk = Product::count();
+        $tersediaCount = Product::where('status_produk', 'tersedia')->count();
 
-    return view('pesanan', compact('orders', 'totalOrders'));
-})->name('pesanan.index');
+        return view('produk', compact('products', 'categories', 'totalProduk', 'tersediaCount'));
+    })->name('produk.index');
+
+
+    // ==================== PESANAN ====================
+
+    Route::get('/pesanan', function (Request $request) {
+        $query = Order::with(['basket', 'product', 'user']);
+
+        if ($request->filled('status') && $request->status !== 'Semua') {
+            $query->where('status_pesan', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                  ->orWhere('no_whatsapp', 'like', "%{$search}%")
+                  ->orWhere('domisili', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('nama_lengkap', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $orders = $query->latest()->paginate(10)->withQueryString();
+        $totalOrders = Order::count();
+
+        return view('pesanan', compact('orders', 'totalOrders'));
+    })->name('pesanan.index');
+});
