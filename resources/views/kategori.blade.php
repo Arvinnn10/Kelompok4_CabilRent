@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kategori - cabil.rent Admin Panel</title>
+  <title>Kategori - Cabil.Rent</title>
   
   <!-- CSS Khusus Halaman Kategori  -->
   <link rel="stylesheet" href="{{ asset('css/kategori.css') }}">

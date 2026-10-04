@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Akun - cabil.rent Admin Panel</title>
+  <title>Register - Cabil.Rent</title>
   
   <!-- Style khusus halaman login/register -->
   <link rel="stylesheet" href="{{ asset('css/login.css') }}">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pesanan - cabil.rent Admin Panel</title>
+  <title>Pesanan - Cabil.Rent</title>
   
   <!-- CSS Khusus Halaman Pesanan  -->
   <link rel="stylesheet" href="{{ asset('css/pesanan.css') }}">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - cabil.rent Admin Panel</title>
+  <title>Dashboard - Cabil.Rent</title>
   
   <!-- CSS Khusus Halaman Dashboard (Vanilla CSS) -->
   <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
