@@ -16,7 +16,7 @@ class EnsureAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (! $request->user() || ! $request->user()->isAdmin()) {
-            abort(403, 'Akses ditolak. Halaman ini hanya dapat diakses oleh Administrator.');
+            return redirect('/')->with('error', 'Akses ditolak. Halaman tersebut hanya dapat diakses oleh Administrator.');
         }
 
         return $next($request);

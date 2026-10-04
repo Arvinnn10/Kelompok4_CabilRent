@@ -9,9 +9,13 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
 
-// Halaman utama diarahkan ke login
+// Halaman utama (Home / Dashboard Customer)
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('home');
+})->name('home');
+
+Route::get('/home', function () {
+    return redirect()->route('home');
 });
 
 // ==================== AUTH (LOGIN, REGISTER, LOGOUT) ====================
@@ -19,7 +23,7 @@ Route::get('/', function () {
 // Halaman Login
 Route::get('/login', function () {
     if (Auth::check()) {
-        return redirect('/dashboard');
+        return Auth::user()->isAdmin() ? redirect('/dashboard') : redirect('/');
     }
     return view('auth.login');
 })->name('login');
@@ -41,15 +45,14 @@ Route::post('/login', function (Request $request) {
 
     // Cek password hash
     if ($user && Hash::check($request->password, $user->password)) {
-        if (! $user->isAdmin()) {
-            return back()->withErrors([
-                'login' => 'Akun Anda terdaftar sebagai customer dan tidak memiliki akses ke Admin Panel.',
-            ])->withInput();
-        }
-
         Auth::login($user);
         $request->session()->regenerate();
-        return redirect('/dashboard');
+
+        if ($user->isAdmin()) {
+            return redirect()->intended('/dashboard');
+        }
+
+        return redirect()->intended('/');
     }
 
     return back()->withErrors([
@@ -60,7 +63,7 @@ Route::post('/login', function (Request $request) {
 // Halaman Register
 Route::get('/register', function () {
     if (Auth::check()) {
-        return redirect('/dashboard');
+        return Auth::user()->isAdmin() ? redirect('/dashboard') : redirect('/');
     }
     return view('auth.register');
 })->name('register');

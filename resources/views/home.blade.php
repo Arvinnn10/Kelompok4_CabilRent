@@ -8,21 +8,32 @@
 </head>
 <body>
 
+  @if (session('error'))
+    <div style="background-color: #ffebee; color: #c62828; padding: 12px 24px; text-align: center; font-size: 14px; border-bottom: 1px solid #ffcdd2;">
+      {{ session('error') }}
+    </div>
+  @endif
+  @if (session('success'))
+    <div style="background-color: #e8f5e9; color: #2e7d32; padding: 12px 24px; text-align: center; font-size: 14px; border-bottom: 1px solid #c8e6c9;">
+      {{ session('success') }}
+    </div>
+  @endif
+
   <!-- Navigasi atas -->
   <header class="navbar">
     <div class="container nav-container">
       <!-- Logo cabil.rent -->
-      <a href="#" class="nav-brand">
+      <a href="{{ url('/') }}" class="nav-brand">
         <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
         <span>CABIL.RENT</span>
       </a>
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="#" class="nav-link active">Home</a></li>
-        <li><a href="#" class="nav-link">Collection</a></li>
-        <li><a href="#" class="nav-link">About</a></li>
-        <li><a href="#" class="nav-link">Contact</a></li>
+        <li><a href="{{ url('/') }}" class="nav-link active">Home</a></li>
+        <li><a href="#collection" class="nav-link">Collection</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
 
       <!-- Bagian search dan tombol kanan -->
@@ -46,7 +57,7 @@
           </svg>
         </a>
 
-        <a href="#" class="nav-icon-btn" title="Akun Saya">
+        <a href="{{ Auth::check() ? route('logout') : route('login') }}" class="nav-icon-btn" title="{{ Auth::check() ? 'Keluar / Logout (' . (Auth::user()->nama_lengkap ?? Auth::user()->username) . ')' : 'Masuk / Login' }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="9"/>
             <circle cx="12" cy="10" r="3"/>
@@ -66,8 +77,8 @@
           Temukan kebaya impianmu untuk acara spesial. Pilihan kebaya cantik dengan desain elegan yang siap membuatmu tampil percaya diri.
         </p>
         <div class="hero-buttons">
-          <a href="#" class="btn-primary">MULAI SEWA</a>
-          <a href="#" class="btn-secondary">MULAI SEWA</a>
+          <a href="#populer" class="btn-primary">MULAI SEWA</a>
+          <a href="#collection" class="btn-secondary">MULAI SEWA</a>
         </div>
       </div>
 
@@ -79,11 +90,11 @@
   </section>
 
   <!-- Bagian koleksi -->
-  <section class="collection-section">
+  <section class="collection-section" id="collection">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Collection</h2>
-        <a href="#" class="section-link">
+        <a href="#populer" class="section-link">
           Lihat semua &rarr;
         </a>
       </div>
@@ -100,7 +111,7 @@
 
         <!-- Heels -->
         <div class="collection-card">
-          <img src="{{ asset('images/kategori-heels1.png') }}" alt="Heels">
+          <img src="{{ asset('images/kategori-heels.png') }}" alt="Heels">
           <div class="card-badge">
             <span class="badge-title">Heels</span>
             <span class="badge-count">62 produk &rarr;</span>
@@ -120,7 +131,7 @@
   </section>
 
   <!-- Galeri momen -->
-  <section class="galeri-section">
+  <section class="galeri-section" id="about">
     <div class="container">
       <div class="galeri-header">
         <div class="galeri-title-group">
@@ -159,63 +170,63 @@
   </section>
 
   <!-- Produk populer -->
-  <section class="populer-section">
+  <section class="populer-section" id="populer">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Koleksi Populer</h2>
-        <a href="#" class="section-link">Lihat semua &rarr;</a>
+        <a href="#collection" class="section-link">Lihat semua &rarr;</a>
       </div>
 
       <div class="populer-grid">
         <!-- Produk 1 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/sepatu1.png') }}" alt="Brokat Maroon">
+            <img src="{{ asset('images/produk-brokat-maroon.png') }}" alt="Brokat Maroon">
           </div>
           <h3 class="product-title">Brokat Maroon</h3>
           <p class="product-tag">Akad &bull; S M L XL</p>
           <div class="product-footer">
             <span class="product-price">Rp 250.000</span>
-            <a href="#" class="btn-sewa">Sewa</a>
+            <a href="#populer" class="btn-sewa">Sewa</a>
           </div>
         </div>
 
         <!-- Produk 2 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/sepatu2.png') }}" alt="Tulle Sage Green">
+            <img src="{{ asset('images/produk-tulle-sage.png') }}" alt="Tulle Sage Green">
           </div>
           <h3 class="product-title">Tulle Sage Green</h3>
           <p class="product-tag">Wisuda &bull; S M L</p>
           <div class="product-footer">
             <span class="product-price">Rp 200.000</span>
-            <a href="#" class="btn-sewa">Sewa</a>
+            <a href="#populer" class="btn-sewa">Sewa</a>
           </div>
         </div>
 
         <!-- Produk 3 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/bajuhitam.png') }}" alt="Encim Gold Klasik">
+            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik">
           </div>
           <h3 class="product-title">Encim Gold Klasik</h3>
           <p class="product-tag">Adat &bull; M L XL</p>
           <div class="product-footer">
             <span class="product-price">Rp 230.000</span>
-            <a href="#" class="btn-sewa">Sewa</a>
+            <a href="#populer" class="btn-sewa">Sewa</a>
           </div>
         </div>
 
         <!-- Produk 4 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/bajuputih.png') }}" alt="Modern Navy Lace">
+            <img src="{{ asset('images/produk-modern-navy.png') }}" alt="Modern Navy Lace">
           </div>
           <h3 class="product-title">Modern Navy Lace</h3>
           <p class="product-tag">Pesta &bull; S M L</p>
           <div class="product-footer">
             <span class="product-price">Rp 240.000</span>
-            <a href="#" class="btn-sewa">Sewa</a>
+            <a href="#populer" class="btn-sewa">Sewa</a>
           </div>
         </div>
       </div>
@@ -223,7 +234,7 @@
   </section>
 
   <!-- Bagian footer -->
-  <footer class="footer-section">
+  <footer class="footer-section" id="contact">
     <div class="container">
       <div class="footer-top">
         <!-- Profil brand -->
