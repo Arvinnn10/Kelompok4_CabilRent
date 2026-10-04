@@ -22,8 +22,10 @@ Route::get('/home', function () {
 
 // Halaman Login
 Route::get('/login', function () {
-    if (Auth::check()) {
-        return Auth::user()->isAdmin() ? redirect('/dashboard') : redirect('/');
+    /** @var \App\Models\User|null $user */
+    $user = Auth::user();
+    if ($user) {
+        return $user->isAdmin() ? redirect('/dashboard') : redirect('/');
     }
     return view('auth.login');
 })->name('login');
@@ -62,8 +64,10 @@ Route::post('/login', function (Request $request) {
 
 // Halaman Register
 Route::get('/register', function () {
-    if (Auth::check()) {
-        return Auth::user()->isAdmin() ? redirect('/dashboard') : redirect('/');
+    /** @var \App\Models\User|null $user */
+    $user = Auth::user();
+    if ($user) {
+        return $user->isAdmin() ? redirect('/dashboard') : redirect('/');
     }
     return view('auth.register');
 })->name('register');
