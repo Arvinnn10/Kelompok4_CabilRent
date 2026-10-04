@@ -49,10 +49,10 @@ Route::post('/login', function (Request $request) {
         $request->session()->regenerate();
 
         if ($user->isAdmin()) {
-            return redirect()->intended('/dashboard');
+            return redirect('/dashboard');
         }
 
-        return redirect()->intended('/');
+        return redirect('/');
     }
 
     return back()->withErrors([

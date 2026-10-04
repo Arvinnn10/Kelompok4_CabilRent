@@ -8,16 +8,6 @@
 </head>
 <body>
 
-  @if (session('error'))
-    <div style="background-color: #ffebee; color: #c62828; padding: 12px 24px; text-align: center; font-size: 14px; border-bottom: 1px solid #ffcdd2;">
-      {{ session('error') }}
-    </div>
-  @endif
-  @if (session('success'))
-    <div style="background-color: #e8f5e9; color: #2e7d32; padding: 12px 24px; text-align: center; font-size: 14px; border-bottom: 1px solid #c8e6c9;">
-      {{ session('success') }}
-    </div>
-  @endif
 
   <!-- Navigasi atas -->
   <header class="navbar">
