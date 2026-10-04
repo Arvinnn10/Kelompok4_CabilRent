@@ -88,7 +88,7 @@
           </svg>
           <div>
             <h1 class="header-title">Produk</h1>
-            <p class="header-desc">{{ $totalProduk }} produk - {{ $tersediaCount }} tersedia</p>
+            <p class="header-desc">200 kebaya - 89 tersedia</p>
           </div>
         </div>
 
@@ -101,49 +101,108 @@
 
       <!-- Kolom cari dan tombol filter kategori -->
       <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
-        <form action="{{ route('produk.index') }}" method="GET" class="search-bar">
+        <div class="search-bar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" name="search" class="search-input" placeholder="Cari nama kebaya" style="width: 280px;" value="{{ request('search') }}">
-        </form>
+          <input type="text" class="search-input" placeholder="Cari nama kebaya" style="width: 280px;">
+        </div>
 
         <div class="filter-tabs">
-          <a href="{{ route('produk.index') }}" class="filter-tab {{ !request('kategori') ? 'active' : '' }}">Semua</a>
-          @foreach($categories as $cat)
-          <a href="{{ route('produk.index', ['kategori' => $cat->id]) }}" class="filter-tab {{ request('kategori') == $cat->id ? 'active' : '' }}">{{ $cat->nama_kategori }}</a>
-          @endforeach
+          <button class="filter-tab active">Semua</button>
+          <button class="filter-tab">Akad</button>
+          <button class="filter-tab">Wisuda</button>
+          <button class="filter-tab">Pesta</button>
+          <button class="filter-tab">Adat</button>
         </div>
       </div>
 
       <!-- Daftar kartu produk kebaya dan sepatu -->
       <div class="product-grid">
-        @forelse($products as $produk)
+        <!-- Produk brokat maroon -->
         <div class="product-card">
+          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            @php
-              $img = $produk->foto_produk;
-              $imgUrl = (str_starts_with($img, 'assets/') || str_starts_with($img, 'images/')) 
-                ? asset($img) 
-                : asset('images/' . $img);
-            @endphp
-            <img src="{{ $imgUrl }}" alt="{{ $produk->nama_produk }}" class="product-img">
+            <img src="{{ asset('images/produk-brokat-maroon.png') }}" alt="Brokat Maroon" class="product-img">
           </div>
-          <h4 class="product-title">{{ $produk->nama_produk }}</h4>
-          <p class="product-category-size">{{ $produk->category->nama_kategori ?? '-' }}</p>
+          <h4 class="product-title">Brokat Maroon</h4>
+          <p class="product-category-size">Akad · S M L XL</p>
           <div class="product-footer">
-            <div class="product-price">Rp {{ number_format($produk->harga_sewa, 0, ',', '.') }}<span>/hari</span></div>
-            @if($produk->status_produk == 'tersedia')
-              <span class="badge badge-available">Tersedia</span>
-            @else
-              <span class="badge badge-waiting">Disewa</span>
-            @endif
+            <div class="product-price">Rp 250.000<span>/hari</span></div>
+            <span class="badge badge-available">Tersedia</span>
           </div>
         </div>
-        @empty
-        <p style="padding: 20px; color: #888;">Belum ada produk yang ditambahkan.</p>
-        @endforelse
+
+        <!-- Produk tulle sage green -->
+        <div class="product-card">
+          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
+          <div class="product-img-container">
+            <img src="{{ asset('images/produk-tulle-sage.png') }}" alt="Tulle Sage Green" class="product-img">
+          </div>
+          <h4 class="product-title">Tulle Sage Green</h4>
+          <p class="product-category-size">Wisuda · S M L</p>
+          <div class="product-footer">
+            <div class="product-price">Rp 200.000<span>/hari</span></div>
+            <span class="badge badge-available">Tersedia</span>
+          </div>
+        </div>
+
+        <!-- Produk encim gold klasik -->
+        <div class="product-card">
+          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
+          <div class="product-img-container">
+            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik" class="product-img">
+          </div>
+          <h4 class="product-title">Encim Gold Klasik</h4>
+          <p class="product-category-size">Adat · M L XL</p>
+          <div class="product-footer">
+            <div class="product-price">Rp 280.000<span>/hari</span></div>
+            <span class="badge badge-waiting">Disewa</span>
+          </div>
+        </div>
+
+        <!-- Produk modern navy lace -->
+        <div class="product-card">
+          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
+          <div class="product-img-container">
+            <img src="{{ asset('images/produk-modern-navy.png') }}" alt="Modern Navy Lace" class="product-img">
+          </div>
+          <h4 class="product-title">Modern Navy Lace</h4>
+          <p class="product-category-size">Pesta · S M L</p>
+          <div class="product-footer">
+            <div class="product-price">Rp 240.000<span>/hari</span></div>
+            <span class="badge badge-available">Tersedia</span>
+          </div>
+        </div>
+
+        <!-- Produk putih gading renda -->
+        <div class="product-card">
+          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
+          <div class="product-img-container">
+            <img src="{{ asset('images/produk-putih-gading.png') }}" alt="Putih Gading Renda" class="product-img">
+          </div>
+          <h4 class="product-title">Putih Gading Renda</h4>
+          <p class="product-category-size">Akad · S M L</p>
+          <div class="product-footer">
+            <div class="product-price">Rp 260.000<span>/hari</span></div>
+            <span class="badge badge-waiting">Disewa</span>
+          </div>
+        </div>
+
+        <!-- Produk rose dusty satin -->
+        <div class="product-card">
+          <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
+          <div class="product-img-container">
+            <img src="{{ asset('images/produk-rose-dusty.png') }}" alt="Rose Dusty Satin" class="product-img">
+          </div>
+          <h4 class="product-title">Rose Dusty Satin</h4>
+          <p class="product-category-size">Pesta · S M L XL</p>
+          <div class="product-footer">
+            <div class="product-price">Rp 230.000<span>/hari</span></div>
+            <span class="badge badge-available">Tersedia</span>
+          </div>
+        </div>
       </div>
     </main>
   </div>

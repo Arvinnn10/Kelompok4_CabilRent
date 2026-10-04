@@ -171,23 +171,8 @@ Route::middleware(['auth'])->group(function () {
 
         // ==================== PRODUK ====================
 
-        Route::get('/produk', function (Request $request) {
-            $query = Product::with('category');
-
-            if ($request->filled('search')) {
-                $query->where('nama_produk', 'like', '%' . $request->search . '%');
-            }
-
-            if ($request->filled('kategori')) {
-                $query->where('kategori_id', $request->kategori);
-            }
-
-            $products = $query->latest()->get();
-            $categories = Category::all();
-            $totalProduk = Product::count();
-            $tersediaCount = Product::where('status_produk', 'tersedia')->count();
-
-            return view('produk', compact('products', 'categories', 'totalProduk', 'tersediaCount'));
+        Route::get('/produk', function () {
+            return view('produk');
         })->name('produk.index');
 
 
