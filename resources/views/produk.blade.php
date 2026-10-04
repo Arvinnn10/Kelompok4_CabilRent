@@ -122,7 +122,13 @@
         @forelse($products as $produk)
         <div class="product-card">
           <div class="product-img-container">
-            <img src="{{ asset('images/' . $produk->foto_produk) }}" alt="{{ $produk->nama_produk }}" class="product-img">
+            @php
+              $img = $produk->foto_produk;
+              $imgUrl = (str_starts_with($img, 'assets/') || str_starts_with($img, 'images/')) 
+                ? asset($img) 
+                : asset('images/' . $img);
+            @endphp
+            <img src="{{ $imgUrl }}" alt="{{ $produk->nama_produk }}" class="product-img">
           </div>
           <h4 class="product-title">{{ $produk->nama_produk }}</h4>
           <p class="product-category-size">{{ $produk->category->nama_kategori ?? '-' }}</p>
