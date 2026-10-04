@@ -348,14 +348,14 @@ img {
   font-family: 'Playfair Display', serif;
   font-size: 30px;
   font-weight: 700;
-  color: #ffffff;
+  color: #000000;
   text-shadow: 0 1px 2px rgba(91, 55, 36, 0.2);
   margin-bottom: 4px;
 }
 
 .galeri-title-group p {
   font-size: 12px;
-  color: #ebdcd0;
+  color: #000000;
 }
 
 .galeri-link {
