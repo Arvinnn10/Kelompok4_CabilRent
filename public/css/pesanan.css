@@ -1,0 +1,410 @@
+/* Font Google */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #f6efe4;
+  color: #271a13;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Pembungkus halaman dan sidebar */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar navigasi sebelah kiri */
+.sidebar {
+  width: 200px;
+  min-width: 200px;
+  background-color: #623e2b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 18px 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-header {
+  margin-bottom: 30px;
+  padding-left: 6px;
+}
+
+.sidebar-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  display: block;
+}
+
+.sidebar-subtitle {
+  font-size: 11px;
+  color: #d5c3ba;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d5c3ba;
+}
+
+.nav-item:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-item.active {
+  background-color: #ffffff;
+  color: #623e2b;
+}
+
+.nav-item svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+/* Profil pemilik di bagian bawah sidebar */
+.sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 15px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px;
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #eedfd3;
+  color: #623e2b;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.user-role {
+  font-size: 11px;
+  color: #d5c3ba;
+}
+
+/* Konten utama */
+.main-wrapper {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* Header atas */
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.header-title-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  width: 24px;
+  height: 24px;
+  color: #271a13;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #271a13;
+}
+
+.header-desc {
+  font-size: 12px;
+  color: #8e8077;
+  margin-top: 2px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Kolom pencarian */
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar svg {
+  position: absolute;
+  left: 14px;
+  width: 15px;
+  height: 15px;
+  color: #8e8077;
+}
+
+.search-input {
+  background-color: #ffffff;
+  border: 1px solid #e0d5c7;
+  border-radius: 20px;
+  padding: 8px 16px 8px 38px;
+  font-size: 13px;
+  color: #271a13;
+  width: 260px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #623e2b;
+}
+
+/* Tombol utama cokelat */
+.btn-primary {
+  background-color: #623e2b;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #4e3020;
+}
+
+/* Baris filter pesanan */
+.pesanan-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  background-color: #ffffff;
+  border: 1px solid #dfd5c7;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #271a13;
+  cursor: pointer;
+}
+
+.filter-tab:hover {
+  background-color: #f7f1e8;
+}
+
+.filter-tab.active {
+  background-color: #623e2b;
+  color: #ffffff;
+  border-color: #623e2b;
+}
+
+/* Tabel pesanan */
+.table-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  padding: 22px 25px;
+  border: 1px solid #ebdcd0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.custom-table thead tr {
+  background-color: #d0e6fd;
+}
+
+.custom-table th {
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #271a13;
+}
+
+.custom-table th:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.custom-table th:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.custom-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #f2eae0;
+  vertical-align: middle;
+}
+
+.custom-table tr:last-child td {
+  border-bottom: none;
+}
+
+.font-bold {
+  font-weight: 700;
+  color: #271a13;
+}
+
+.action-link {
+  font-weight: 700;
+  color: #623e2b;
+}
+
+/* Status badge pesanan */
+.badge-outline {
+  display: inline-block;
+  background-color: #ffffff;
+  border: 1px solid #715140;
+  color: #715140;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Navigasi nomor halaman */
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #8e8077;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: 1px solid #e2d7c9;
+  font-size: 12px;
+  font-weight: 600;
+  color: #271a13;
+  cursor: pointer;
+}
+
+.page-btn.active {
+  background-color: #cfba9b;
+  border-color: #cfba9b;
+  color: #38281d;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .pesanan-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .app-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 15px;
+  }
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

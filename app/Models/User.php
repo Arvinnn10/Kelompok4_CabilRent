@@ -37,10 +37,17 @@ class User extends Authenticatable
         return $this->hasMany(Basket::class, 'user_id');
     }
 
-    // Relasi: satu user punya banyak pesanan
+    // Relasi: satu user punya banyak pesanan (melalui keranjang/basket)
     public function orders()
     {
-        return $this->hasMany(Order::class, 'user_id');
+        return $this->hasManyThrough(
+            Order::class,
+            Basket::class,
+            'user_id',
+            'basket_id',
+            'id',
+            'id'
+        );
     }
 
     // Helper: cek apakah user adalah admin

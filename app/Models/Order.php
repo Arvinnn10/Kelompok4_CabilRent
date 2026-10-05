@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'user_id',
-        'produk_id',
+        'basket_id',
         'no_whatsapp',
         'instagram',
         'domisili',
@@ -22,15 +21,35 @@ class Order extends Model
         'total_harga' => 'integer',
     ];
 
-    // Relasi: pesanan milik satu user
-    public function user()
+    // Relasi: pesanan milik satu keranjang (basket)
+    public function basket()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Basket::class, 'basket_id');
     }
 
-    // Relasi: pesanan berisi satu produk
+    // Relasi: user dari pesanan melalui basket
+    public function user()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            Basket::class,
+            'id',
+            'id',
+            'basket_id',
+            'user_id'
+        );
+    }
+
+    // Relasi: produk dari pesanan melalui basket
     public function product()
     {
-        return $this->belongsTo(Product::class, 'produk_id');
+        return $this->hasOneThrough(
+            Product::class,
+            Basket::class,
+            'id',
+            'id',
+            'basket_id',
+            'produk_id'
+        );
     }
 }

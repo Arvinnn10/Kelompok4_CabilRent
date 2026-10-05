@@ -28,10 +28,17 @@ class Product extends Model
         return $this->hasMany(Basket::class, 'produk_id');
     }
 
-    // Relasi: produk ada di banyak pesanan
+    // Relasi: produk ada di banyak pesanan (melalui keranjang/basket)
     public function orders()
     {
-        return $this->hasMany(Order::class, 'produk_id');
+        return $this->hasManyThrough(
+            Order::class,
+            Basket::class,
+            'produk_id',
+            'basket_id',
+            'id',
+            'id'
+        );
     }
 }
 
