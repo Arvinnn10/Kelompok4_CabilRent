@@ -213,22 +213,6 @@
                   <a href="#" class="action-danger">Hapus</a>
                 </td>
               </tr>
-              <tr>
-                <td class="font-bold">Adat</td>
-                <td>Kebaya encim, kutubaru, dan daerah</td>
-                <td>26</td>
-                <td>
-                  <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                  </label>
-                  <span style="font-size: 12px; margin-left: 8px; color: var(--text-muted);">Nonaktif</span>
-                </td>
-                <td>
-                  <a href="#" class="action-link">Edit</a>
-                  <a href="#" class="action-danger">Hapus</a>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>

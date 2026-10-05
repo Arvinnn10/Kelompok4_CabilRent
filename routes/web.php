@@ -127,10 +127,10 @@ Route::middleware(['auth'])->group(function () {
             $pesananAktif = Order::whereIn('status_pesan', ['pending', 'dikonfirmasi'])->count();
             $totalProduk = Product::count();
             $produkTersedia = Product::where('status_produk', 'tersedia')->count();
-            $totalKategori = Category::count();
+            $totalKategori = Category::where('nama_kategori', '!=', 'Adat')->count();
             $terlambatKembali = 0;
 
-            $kategoriList = Category::withCount('products')->get();
+            $kategoriList = Category::where('nama_kategori', '!=', 'Adat')->withCount('products')->get();
             $pesananTerbaru = Order::with(['basket', 'product', 'user'])->latest()->take(5)->get();
 
             return view('dashboard', compact(

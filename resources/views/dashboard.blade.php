@@ -203,6 +203,9 @@
 
           <div class="progress-list">
             @forelse($kategoriList as $kat)
+            @if(strtolower($kat->nama_kategori) == 'adat')
+              @continue
+            @endif
             <div class="progress-item">
               <div class="progress-item-header">
                 <span class="progress-item-title">{{ $kat->nama_kategori }}</span>
