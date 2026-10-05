@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $catKebaya = Category::firstOrCreate(['nama_kategori' => 'Paket Kebaya']);
         $catHeels  = Category::firstOrCreate(['nama_kategori' => 'Heels']);
         $catKemben = Category::firstOrCreate(['nama_kategori' => 'Kemben']);
+        $catAdat   = Category::firstOrCreate(['nama_kategori' => 'Adat']);
 
         // 3. Seed Products
         $productsData = [
@@ -92,7 +93,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'nama_produk'   => 'Kebaya Encim Gold Klasik',
-                'kategori_id'   => $catKebaya->id,
+                'kategori_id'   => $catAdat->id,
                 'desk_produk'   => 'Kebaya encim tradisional warna keemasan dengan motif bordir halus khas nusantara.',
                 'harga_sewa'    => 290000,
                 'foto_produk'   => 'produk-encim-gold.png',
