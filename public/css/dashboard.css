@@ -261,7 +261,7 @@ img {
 
 .stat-card.stat-alert {
   background-color: #D8C3A5;
-  border-color: #bddbfe;
+  /* border-color: #bddbfe; */
 }
 
 .stat-label {
