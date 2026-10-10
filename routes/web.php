@@ -15,14 +15,13 @@ Route::get('/home', function () {
     return redirect()->route('home');
 });
 
-// ==================== ROUTES YANG MEMERLUKAN LOGIN (AUTH) ====================
+// ROUTES YANG MEMERLUKAN LOGIN (AUTH)
 Route::middleware(['auth'])->group(function () {
 
-
-    // ==================== ROUTES KHUSUS ADMIN ====================
+    // ROUTES KHUSUS ADMIN
     Route::middleware(['admin'])->group(function () {
 
-        // ==================== DASHBOARD ====================
+        // DASHBOARD
 
         Route::get('/dashboard', function () {
             $sewaBerjalan = Order::where('status_pesan', 'dikonfirmasi')->count();
@@ -48,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
         })->name('dashboard');
 
 
-        // ==================== KATEGORI ====================
+        // KATEGORI
 
         Route::get('/kategori', function () {
             $categories = Category::withCount('products')->get();
@@ -75,14 +74,14 @@ Route::middleware(['auth'])->group(function () {
         })->name('kategori.destroy');
 
 
-        // ==================== PRODUK ====================
+        // PRODUK
 
         Route::get('/produk', function () {
             return view('produk');
         })->name('produk.index');
 
 
-        // ==================== PESANAN ====================
+        // PESANAN
 
         Route::get('/pesanan', function (Request $request) {
             $query = Order::with(['basket', 'product', 'user']);
@@ -95,11 +94,11 @@ Route::middleware(['auth'])->group(function () {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('id', 'like', "%{$search}%")
-                      ->orWhere('no_whatsapp', 'like', "%{$search}%")
-                      ->orWhere('domisili', 'like', "%{$search}%")
-                      ->orWhereHas('user', function ($userQuery) use ($search) {
-                          $userQuery->where('nama_lengkap', 'like', "%{$search}%");
-                      });
+                        ->orWhere('no_whatsapp', 'like', "%{$search}%")
+                        ->orWhere('domisili', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('nama_lengkap', 'like', "%{$search}%");
+                        });
                 });
             }
 
