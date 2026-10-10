@@ -142,7 +142,7 @@
         <div class="stat-card stat-alert">
           <span class="stat-label">Terlambat Kembali</span>
           <div class="stat-value">{{ $terlambatKembali ?? 0 }}</div>
-          <div class="stat-subtext">Ada tindakan</div>
+          <div class="stat-subtext">Penyewaan aktif</div>
         </div>
       </div>
 
