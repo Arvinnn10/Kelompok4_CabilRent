@@ -20,9 +20,10 @@
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
-          <span class="sidebar-brand">cabil.rent</span>
-          <span class="sidebar-subtitle">Admin Panel</span>
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo">
+          <span class="sidebar-brand">CABIL.RENT</span>
         </div>
+
 
         <nav class="sidebar-nav">
           <!-- Menu dashboard -->

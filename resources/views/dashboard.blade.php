@@ -20,8 +20,8 @@
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
-          <span class="sidebar-brand">cabil.rent</span>
-          <span class="sidebar-subtitle">Admin Panel</span>
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo">
+          <span class="sidebar-brand">CABIL.RENT</span>
         </div>
 
         <!-- Menu navigasi sidebar -->
@@ -108,7 +108,7 @@
 
           <!-- Tombol tambah sewa baru -->
           <button class="btn-primary">
-            <span>+</span> Sewa baru
+            <span>+</span> Catat Sewa 
           </button>
         </div>
       </div>
