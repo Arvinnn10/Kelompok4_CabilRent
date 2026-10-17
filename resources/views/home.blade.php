@@ -68,7 +68,7 @@
         </p>
         <div class="hero-buttons">
           <a href="#populer" class="btn-primary">MULAI SEWA</a>
-          <a href="#collection" class="btn-secondary">MULAI SEWA</a>
+          <a href="#collection" class="btn-secondary">WHATSAPP</a>
         </div>
       </div>
 
@@ -224,12 +224,15 @@
   </section>
 
   <!-- Bagian footer -->
-  <footer class="footer-section" id="contact">
+    <footer class="footer-section">
     <div class="container">
       <div class="footer-top">
-        <!-- Profil brand -->
+        <!-- Profil brand dengan Logo -->
         <div class="footer-brand">
-          <h3>Kebaya Anggun</h3>
+          <div class="footer-logo-box">
+            <img src="images/logo.png" alt="cabil.rent logo" class="brand-logo-img">
+            <span class="footer-brand-title">CABIL.RENT</span>
+          </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <a href="#" class="social-circle" title="Instagram">IG</a>
@@ -245,8 +248,7 @@
             <li><a href="#">Home</a></li>
             <li><a href="#">Collection</a></li>
             <li><a href="#">About</a></li>
-            <li><a href="#">Cara Menyewa</a></li>
-            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact</a></li>
           </ul>
         </div>
 
@@ -264,9 +266,9 @@
         <div class="footer-col">
           <h4>KONTAK</h4>
           <ul class="contact-list">
-            <li>Jl. Cantik No. 12</li>
+            <li>Jl. Banjarmasin No. 12</li>
             <li>Buka setiap hari, 09.00&ndash;18.00</li>
-            <li>WhatsApp: 0812-0000-0000</li>
+            <li>WhatsApp 0812-0000-0000</li>
             <li>halo@cabil.rent.id</li>
           </ul>
         </div>
@@ -274,7 +276,7 @@
 
       <!-- Copyright dan legalitas -->
       <div class="footer-bottom">
-        <p>&copy; 2026 Kebaya Anggun. Semua hak dilindungi.</p>
+        <p>&copy; 2026 cabil.rent , Semua hak dilindungi.</p>
         <div class="footer-legal">
           <a href="#">Syarat &amp; Ketentuan</a>
           <a href="#">Kebijakan Privasi</a>
