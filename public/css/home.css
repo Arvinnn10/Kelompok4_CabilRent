@@ -43,12 +43,12 @@ img {
 
 /* Header navigasi atas */
 .navbar {
-  background-color: #F6EFE4;
+  background-color: #D8C3A5;
   padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid #D8C3A5;
+  /* border-bottom: 1px solid #D8C3A5; */
 }
 
 .nav-container {
@@ -493,7 +493,7 @@ img {
 
 /* Bagian footer */
 .footer-section {
-  background-color: #f6efe4;
+  background-color: #F6EFE4;;
   padding: 50px 0 25px;
   color: #271a13;
 }
@@ -529,7 +529,7 @@ img {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid #271a13;
+  /* border: 1px solid #271a13; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -588,6 +588,19 @@ img {
   font-weight: 700;
   letter-spacing: 0.5px;
   color: #271a13;
+}
+
+.social-circle svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.social-circle img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
 }
 
 /* Garis dan copyright bawah */

@@ -126,7 +126,7 @@
       <div class="galeri-header">
         <div class="galeri-title-group">
           <h2>Galeri Momen</h2>
-          <p>Pelanggan kami di hari-hari spesialnya</p>
+          <!-- <p>Pelanggan kami di hari-hari spesialnya</p> -->
         </div>
         <a href="#" class="galeri-link">Lihat lebih banyak &rarr;</a>
       </div>
@@ -235,9 +235,15 @@
           </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
-            <a href="#" class="social-circle" title="Instagram">IG</a>
-            <a href="#" class="social-circle" title="WhatsApp">WA</a>
-            <a href="#" class="social-circle" title="TikTok">TT</a>
+            <a href="#" class="social-circle" title="Instagram">
+            <img src="images/instagram.png" alt="Instagram">
+            </a>
+            <a href="#" class="social-circle" title="WhatsApp">
+           <img src="images/wa.png" alt="WhatsApp">
+            </a>
+            <a href="#" class="social-circle" title="TikTok">
+           <img src="images/tiktok.png" alt="TikTok">
+            </a>
           </div>
         </div>
 
