@@ -356,13 +356,13 @@ img {
 }
 
 .badge-available {
-  background-color: #cfba9b;
-  color: #4a3427;
+  background-color: #D8C3A5;
+  color: #3D2010;
 }
 
 .badge-waiting {
-  background-color: #d0e6fd;
-  color: #1a4f8b;
+  background-color: #ebdcd0;
+  color: #623e2b;
 }
 
 @media (max-width: 1024px) {

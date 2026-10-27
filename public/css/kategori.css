@@ -303,8 +303,8 @@ img {
 }
 
 .btn-tan {
-  background-color: #cfba9b;
-  color: #4a3427;
+  background-color: #D8C3A5;
+  color: #3D2010;
   border: none;
   border-radius: 20px;
   padding: 8px 14px;
@@ -315,12 +315,12 @@ img {
 }
 
 .btn-tan:hover {
-  background-color: #c2ad8e;
+  background-color: #c8b394;
 }
 
 .btn-soft-blue {
-  background-color: #d0e6fd;
-  color: #1d4ed8;
+  background-color: #623e2b;
+  color: #ffffff;
   border: none;
   border-radius: 20px;
   padding: 8px 14px;
@@ -331,7 +331,7 @@ img {
 }
 
 .btn-soft-blue:hover {
-  background-color: #bddbfe;
+  background-color: #4e3020;
 }
 
 /* Tabel daftar kategori */
@@ -366,7 +366,7 @@ img {
 }
 
 .custom-table thead tr {
-  background-color: #d0e6fd;
+  background-color: #D8C3A5;
 }
 
 .custom-table th {

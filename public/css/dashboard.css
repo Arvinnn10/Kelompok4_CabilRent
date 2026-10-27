@@ -375,7 +375,7 @@ img {
 
 .chart-bar {
   width: 40px;
-  background-color: #d0e6fd;
+  background-color: #D8C3A5;
   border-radius: 6px 6px 0 0;
 }
 
@@ -466,7 +466,7 @@ img {
 }
 
 .custom-table thead tr {
-  background-color: #d0e6fd;
+  background-color: #D8C3A5;
 }
 
 .custom-table th {
@@ -516,8 +516,8 @@ img {
 }
 
 .badge-waiting {
-  background-color: #d0e6fd;
-  color: #1a4f8b;
+  background-color: #D8C3A5;
+  color: #3D2010;
 }
 
 .badge-rented {
