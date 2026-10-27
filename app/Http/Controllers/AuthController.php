@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -120,5 +123,82 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    /**
+     * Mengarahkan pengguna ke Google OAuth dialog.
+     */
+    public function redirectToGoogle()
+    {
+        if (empty(config('services.google.client_id')) || empty(config('services.google.client_secret'))) {
+            return redirect()->route('login')->withErrors([
+                'login' => 'Google Login belum dikonfigurasi. Harap isi GOOGLE_CLIENT_ID dan GOOGLE_CLIENT_SECRET di file .env',
+            ]);
+        }
+
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Menangani callback autentikasi dari Google.
+     */
+    public function handleGoogleCallback(Request $request)
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (Exception $e) {
+            return redirect()->route('login')->withErrors([
+                'login' => 'Gagal masuk dengan Google: ' . $e->getMessage(),
+            ]);
+        }
+
+        // Cari user berdasarkan google_id terlebih dahulu
+        $user = User::where('google_id', $googleUser->getId())->first();
+
+        if (!$user) {
+            // Jika belum ada dengan google_id, cari berdasarkan email
+            $user = User::where('email', $googleUser->getEmail())->first();
+
+            if ($user) {
+                // Sambungkan akun yang sudah ada dengan Google ID
+                $user->update([
+                    'google_id' => $googleUser->getId(),
+                    'avatar'    => $user->avatar ?: $googleUser->getAvatar(),
+                ]);
+            } else {
+                // Buat user baru jika belum terdaftar sama sekali
+                $baseUsername = Str::slug(explode('@', $googleUser->getEmail())[0], '_');
+                if (empty($baseUsername)) {
+                    $baseUsername = 'user';
+                }
+
+                // Pastikan username unik
+                $username = $baseUsername;
+                $counter = 1;
+                while (User::where('username', $username)->exists()) {
+                    $username = $baseUsername . '_' . $counter;
+                    $counter++;
+                }
+
+                $user = User::create([
+                    'google_id'    => $googleUser->getId(),
+                    'nama_lengkap' => $googleUser->getName() ?? $googleUser->getNickname() ?? $username,
+                    'username'     => $username,
+                    'email'        => $googleUser->getEmail(),
+                    'avatar'       => $googleUser->getAvatar(),
+                    'password'     => Hash::make(Str::random(24)),
+                    'role'         => 'customers',
+                ]);
+            }
+        }
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        if ($user->isAdmin()) {
+            return redirect()->intended('/dashboard');
+        }
+
+        return redirect()->intended('/');
     }
 }
