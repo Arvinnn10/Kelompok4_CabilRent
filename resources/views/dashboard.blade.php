@@ -64,6 +64,16 @@
             </svg>
             <span>Pesanan</span>
           </a>
+
+          <!-- Menu keranjang -->
+          <a href="{{ url('/keranjang') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span>Keranjang</span>
+          </a>
         </nav>
       </div>
 
@@ -242,38 +252,78 @@
               </tr>
             </thead>
             <tbody>
+              @forelse ($pesananTerbaru as $order)
+                <tr>
+                  <td>#{{ $order->id }}</td>
+                  <td>{{ $order->user->nama_lengkap ?? ($order->user->username ?? ($order->basket->user->nama_lengkap ?? 'Pelanggan')) }}</td>
+                  <td>{{ $order->product->nama_produk ?? ($order->desk_pemesanan ?? '-') }}</td>
+                  <td>{{ $order->basket && $order->basket->tanggal_acara ? \Carbon\Carbon::parse($order->basket->tanggal_acara)->format('d M Y') : $order->created_at->format('d M Y') }}</td>
+                  <td class="font-bold">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
+                  <td>
+                    <span class="badge {{ $order->status_pesan === 'dikonfirmasi' ? 'badge-paid' : 'badge-waiting' }}">
+                      {{ ucfirst($order->status_pesan) }}
+                    </span>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 25px 20px; color: #8e8077;">
+                    Belum ada pesanan terbaru.
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bagian tabel keranjang terbaru -->
+      <div class="table-card" style="margin-top: 22px;">
+        <div class="card-panel-header">
+          <h3 class="card-panel-title">Keranjang Terbaru</h3>
+          <a href="{{ url('/keranjang') }}" class="link-action">Lihat semua</a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
               <tr>
-                <td>123</td>
-                <td>Hailey Bieber</td>
-                <td>Brokat Maroon (M)</td>
-                <td>12–14 Okt</td>
-                <td class="font-bold">Rp 750.000</td>
-                <td><span class="badge badge-paid">Dibayar</span></td>
+                <th>ID</th>
+                <th>Pelanggan</th>
+                <th>Produk</th>
+                <th>Jumlah</th>
+                <th>Tanggal Acara</th>
+                <th>Total</th>
+                <th>Status</th>
               </tr>
-              <tr>
-                <td>321</td>
-                <td>Billie Eilis</td>
-                <td>Tulle Sage Green (S)</td>
-                <td>10–11 Okt</td>
-                <td class="font-bold">Rp 400.000</td>
-                <td><span class="badge badge-waiting">Menunggu</span></td>
-              </tr>
-              <tr>
-                <td>54325</td>
-                <td>Ayu Ting-Ting</td>
-                <td>Encim Gold Klasik (L)</td>
-                <td>08–09 Okt</td>
-                <td class="font-bold">Rp 560.000</td>
-                <td><span class="badge badge-rented">Disewa</span></td>
-              </tr>
-              <tr>
-                <td>999</td>
-                <td>Maya Sari</td>
-                <td>Modern Navy Lace (M)</td>
-                <td>05–06 Okt</td>
-                <td class="font-bold">Rp 480.000</td>
-                <td><span class="badge badge-late">Terlambat</span></td>
-              </tr>
+            </thead>
+            <tbody>
+              @forelse ($keranjangTerbaru as $basket)
+                <tr>
+                  <td>#{{ $basket->id }}</td>
+                  <td>
+                    <div class="font-bold">{{ $basket->user->nama_lengkap ?? ($basket->user->username ?? 'Pelanggan #' . $basket->user_id) }}</div>
+                    <span style="font-size: 11px; color: #8e8077;">{{ $basket->user->no_telp ?? '-' }}</span>
+                  </td>
+                  <td>{{ $basket->product->nama_produk ?? 'Produk #' . $basket->produk_id }}</td>
+                  <td>{{ $basket->jumlah }} item</td>
+                  <td>{{ $basket->tanggal_acara ? \Carbon\Carbon::parse($basket->tanggal_acara)->format('d M Y') : '-' }}</td>
+                  <td class="font-bold">Rp {{ number_format(($basket->product->harga_sewa ?? 0) * $basket->jumlah, 0, ',', '.') }}</td>
+                  <td>
+                    @if ($basket->order)
+                      <span class="badge badge-paid">{{ ucfirst($basket->order->status_pesan) }}</span>
+                    @else
+                      <span class="badge badge-waiting">Di Keranjang</span>
+                    @endif
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="7" style="text-align: center; padding: 25px 20px; color: #8e8077;">
+                    Belum ada data keranjang.
+                  </td>
+                </tr>
+              @endforelse
             </tbody>
           </table>
         </div>

@@ -64,6 +64,16 @@
             </svg>
             <span>Pesanan</span>
           </a>
+
+          <!-- Menu keranjang -->
+          <a href="{{ url('/keranjang') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span>Keranjang</span>
+          </a>
         </nav>
       </div>
 
@@ -139,89 +149,36 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>123</td>
-                <td>Siti Rahmawati</td>
-                <td>Brokat Maroon (M)</td>
-                <td>0821-0222</td>
-                <td class="font-bold">Banjarbaru</td>
-                <td class="font-bold">Rp 750.000</td>
-                <td><span class="badge badge-outline">Tertunda</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
-              <tr>
-                <td>123</td>
-                <td>Dewi Lestari</td>
-                <td>Tulle Sage Green (S)</td>
-                <td>0821-3030</td>
-                <td class="font-bold">Martapura</td>
-                <td class="font-bold">Rp 400.000</td>
-                <td><span class="badge badge-outline">Selesai</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
-              <tr>
-                <td>123</td>
-                <td>Ayu Puspita</td>
-                <td>Encim Gold Klasik (L)</td>
-                <td>0821-3434</td>
-                <td class="font-bold">Martapura</td>
-                <td class="font-bold">Rp 560.000</td>
-                <td><span class="badge badge-outline">Dikonfirmasi</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
-              <tr>
-                <td>123</td>
-                <td>Maya Sari</td>
-                <td>Modern Navy Lace (M)</td>
-                <td>0821-6767</td>
-                <td class="font-bold">Banjarmasin</td>
-                <td class="font-bold">Rp 480.000</td>
-                <td><span class="badge badge-outline">Dikonfirmasi</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
-              <tr>
-                <td>123</td>
-                <td>Nadia Putri</td>
-                <td>Putih Gading Renda (S)</td>
-                <td>0821-5656</td>
-                <td class="font-bold">Landasan Ulin</td>
-                <td class="font-bold">Rp 520.000</td>
-                <td><span class="badge badge-outline">Dibatalkan</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
-              <tr>
-                <td>123</td>
-                <td>Rina Kusuma</td>
-                <td>Rose Dusty Satin (M)</td>
-                <td>0821-2121</td>
-                <td class="font-bold">Banjarmasin</td>
-                <td class="font-bold">Rp 230.000</td>
-                <td><span class="badge badge-outline">Tertunda</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
-              <tr>
-                <td>123</td>
-                <td>Fitri Handayani</td>
-                <td>Kutubaru Batik Sogan (L)</td>
-                <td>0821-3546</td>
-                <td class="font-bold">Banjarbaru</td>
-                <td class="font-bold">Rp 440.000</td>
-                <td><span class="badge badge-outline">Selesai</span></td>
-                <td><a href="#" class="action-link">Detail &#9656;</a></td>
-              </tr>
+              @forelse ($orders as $order)
+                <tr>
+                  <td>#{{ $order->id }}</td>
+                  <td>{{ $order->user->nama_lengkap ?? ($order->user->username ?? ($order->basket->user->nama_lengkap ?? 'Pelanggan #' . $order->id)) }}</td>
+                  <td>{{ $order->product->nama_produk ?? ($order->desk_pemesanan ?? '-') }}</td>
+                  <td>{{ $order->no_whatsapp ?? '-' }}</td>
+                  <td class="font-bold">{{ $order->domisili ?? '-' }}</td>
+                  <td class="font-bold">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
+                  <td><span class="badge badge-outline">{{ ucfirst($order->status_pesan) }}</span></td>
+                  <td><a href="#" class="action-link">Detail &#9656;</a></td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="8" style="text-align: center; padding: 30px; color: #8e8077;">
+                    Belum ada data pesanan di database.
+                  </td>
+                </tr>
+              @endforelse
             </tbody>
           </table>
         </div>
 
-        <!-- Navigasi halaman tabel pesanan -->
-        <div class="pagination-wrapper">
-          <span>Menampilkan 1–7 dari 42 pesanan</span>
-          <div class="pagination-controls">
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">Next</button>
+        @if(method_exists($orders, 'links') && $orders->hasPages())
+          <div class="pagination-wrapper">
+            <span>Menampilkan {{ $orders->firstItem() ?? 0 }}–{{ $orders->lastItem() ?? 0 }} dari {{ $orders->total() }} pesanan</span>
+            <div>
+              {{ $orders->links() }}
+            </div>
           </div>
-        </div>
+        @endif
       </div>
     </main>
   </div>

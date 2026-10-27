@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Basket;
 
 // Halaman utama (Home / Dashboard Customer)
 Route::get('/', function () {
@@ -32,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
             $terlambatKembali = 0;
 
             $kategoriList = Category::withCount('products')->get();
-            $pesananTerbaru = Order::with(['basket', 'product', 'user'])->latest()->take(5)->get();
+            $pesananTerbaru = Order::with(['basket.user', 'product', 'user'])->latest()->take(5)->get();
+            $keranjangTerbaru = Basket::with(['product', 'user', 'order'])->latest()->take(5)->get();
 
             return view('dashboard', compact(
                 'sewaBerjalan',
@@ -42,7 +45,8 @@ Route::middleware(['auth'])->group(function () {
                 'totalKategori',
                 'terlambatKembali',
                 'kategoriList',
-                'pesananTerbaru'
+                'pesananTerbaru',
+                'keranjangTerbaru'
             ));
         })->name('dashboard');
 
@@ -107,6 +111,48 @@ Route::middleware(['auth'])->group(function () {
 
             return view('pesanan', compact('orders', 'totalOrders'));
         })->name('pesanan.index');
+
+
+        // KERANJANG
+
+        Route::get('/keranjang', function (Request $request) {
+            $user = Auth::user();
+            $query = Basket::with(['product.category', 'user', 'order']);
+
+            if (!$user->isAdmin()) {
+                $query->where('user_id', $user->id);
+            }
+
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('id', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($u) use ($search) {
+                            $u->where('nama_lengkap', 'like', "%{$search}%")
+                              ->orWhere('username', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('product', function ($p) use ($search) {
+                            $p->where('nama_produk', 'like', "%{$search}%");
+                        });
+                });
+            }
+
+            $baskets = $query->latest()->paginate(10)->withQueryString();
+            $totalBaskets = $user->isAdmin() ? Basket::count() : Basket::where('user_id', $user->id)->count();
+
+            return view('keranjang', compact('baskets', 'totalBaskets'));
+        })->name('keranjang.index');
+
+        Route::delete('/keranjang/{id}', function ($id) {
+            $user = Auth::user();
+            $basket = Basket::findOrFail($id);
+            if (!$user->isAdmin() && $basket->user_id !== $user->id) {
+                abort(403, 'Tidak diizinkan.');
+            }
+            $basket->delete();
+
+            return back()->with('success', 'Item keranjang berhasil dihapus!');
+        })->name('keranjang.destroy');
     });
 });
 
