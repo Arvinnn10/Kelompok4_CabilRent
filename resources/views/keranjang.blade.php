@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Keranjang - Cabil.Rent</title>
   
-  <!-- CSS Khusus Halaman Keranjang -->
   <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
-  
-  <!-- Font Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +13,6 @@
 <body>
 
   <div class="app-container">
-    <!-- Sidebar navigasi -->
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
@@ -25,8 +21,7 @@
         </div>
 
         <nav class="sidebar-nav">
-          <!-- Menu dashboard -->
-          <a href="{{ url('/dashboard') }}" class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
+          <a href="{{ url('/dashboard') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
               <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
@@ -36,8 +31,7 @@
             <span>Dashboard</span>
           </a>
 
-          <!-- Menu kategori -->
-          <a href="{{ url('/kategori') }}" class="nav-item {{ request()->is('kategori*') ? 'active' : '' }}">
+          <a href="{{ url('/kategori') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -47,16 +41,14 @@
             <span>Kategori</span>
           </a>
 
-          <!-- Menu produk -->
-          <a href="{{ url('/produk') }}" class="nav-item {{ request()->is('produk*') ? 'active' : '' }}">
+          <a href="{{ url('/produk') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
             </svg>
             <span>Produk</span>
           </a>
 
-          <!-- Menu pesanan -->
-          <a href="{{ url('/pesanan') }}" class="nav-item {{ request()->is('pesanan*') ? 'active' : '' }}">
+          <a href="{{ url('/pesanan') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="5" width="20" height="14" rx="2"></rect>
               <line x1="2" y1="10" x2="22" y2="10"></line>
@@ -64,8 +56,7 @@
             <span>Pesanan</span>
           </a>
 
-          <!-- Menu keranjang -->
-          <a href="{{ url('/keranjang') }}" class="nav-item {{ request()->is('keranjang*') ? 'active' : '' }}">
+          <a href="{{ url('/keranjang') }}" class="nav-item active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
@@ -76,21 +67,18 @@
         </nav>
       </div>
 
-      <!-- Profil admin di bagian bawah sidebar -->
       <div class="sidebar-footer">
         <a href="{{ route('logout') }}" class="user-profile" title="Klik untuk Logout">
-          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin'), 0, 1)) }}</div>
+          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->username ?? 'Admin', 0, 1)) }}</div>
           <div class="user-info">
-            <span class="user-name">{{ Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin') }}</span>
+            <span class="user-name">{{ Auth::user()->nama_lengkap ?? Auth::user()->username ?? 'Admin' }}</span>
             <span class="user-role">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</span>
           </div>
         </a>
       </div>
     </aside>
 
-    <!-- Konten utama keranjang -->
     <main class="main-wrapper">
-      <!-- Bagian atas judul halaman -->
       <div class="top-header">
         <div class="header-title-box">
           <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -111,14 +99,12 @@
         </div>
       </div>
 
-      <!-- Notifikasi jika berhasil menghapus / aksi -->
       @if (session('success'))
         <div style="background-color: #e8f5e9; color: #2e7d32; padding: 12px 18px; border-radius: 12px; font-size: 13px; margin-bottom: 20px; border: 1px solid #c8e6c9;">
           {{ session('success') }}
         </div>
       @endif
 
-      <!-- Filter dan pencarian -->
       <div class="pesanan-filter-bar">
         <form method="GET" action="{{ url('/keranjang') }}" class="search-bar" style="width: 100%; max-width: 380px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -129,7 +115,6 @@
         </form>
       </div>
 
-      <!-- Tabel data keranjang -->
       <div class="table-card">
         <div class="table-responsive">
           <table class="custom-table">
@@ -151,8 +136,8 @@
                 <tr>
                   <td>#{{ $basket->id }}</td>
                   <td>
-                    <div class="font-bold">{{ $basket->user->nama_lengkap ?? ($basket->user->username ?? 'Pelanggan #' . $basket->user_id) }}</div>
-                    <span style="font-size: 11px; color: #8e8077;">{{ $basket->user->no_telp ?? ($basket->user->email ?? '-') }}</span>
+                    <div class="font-bold">{{ $basket->user->nama_lengkap ?? $basket->user->username ?? 'Pelanggan #' . $basket->user_id }}</div>
+                    <span style="font-size: 11px; color: #8e8077;">{{ $basket->user->no_telp ?? $basket->user->email ?? '-' }}</span>
                   </td>
                   <td>
                     <div class="product-cell">
@@ -197,7 +182,7 @@
               @empty
                 <tr>
                   <td colspan="9" style="text-align: center; padding: 35px 20px; color: #8e8077;">
-                    Belum ada data keranjang yang tersimpan di database.
+                    Belum ada data keranjang.
                   </td>
                 </tr>
               @endforelse

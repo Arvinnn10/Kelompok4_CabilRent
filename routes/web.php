@@ -116,12 +116,7 @@ Route::middleware(['auth'])->group(function () {
         // KERANJANG
 
         Route::get('/keranjang', function (Request $request) {
-            $user = Auth::user();
             $query = Basket::with(['product.category', 'user', 'order']);
-
-            if (!$user->isAdmin()) {
-                $query->where('user_id', $user->id);
-            }
 
             if ($request->filled('search')) {
                 $search = $request->search;
@@ -138,17 +133,13 @@ Route::middleware(['auth'])->group(function () {
             }
 
             $baskets = $query->latest()->paginate(10)->withQueryString();
-            $totalBaskets = $user->isAdmin() ? Basket::count() : Basket::where('user_id', $user->id)->count();
+            $totalBaskets = Basket::count();
 
             return view('keranjang', compact('baskets', 'totalBaskets'));
         })->name('keranjang.index');
 
         Route::delete('/keranjang/{id}', function ($id) {
-            $user = Auth::user();
             $basket = Basket::findOrFail($id);
-            if (!$user->isAdmin() && $basket->user_id !== $user->id) {
-                abort(403, 'Tidak diizinkan.');
-            }
             $basket->delete();
 
             return back()->with('success', 'Item keranjang berhasil dihapus!');

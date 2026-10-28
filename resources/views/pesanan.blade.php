@@ -152,8 +152,8 @@
               @forelse ($orders as $order)
                 <tr>
                   <td>#{{ $order->id }}</td>
-                  <td>{{ $order->user->nama_lengkap ?? ($order->user->username ?? ($order->basket->user->nama_lengkap ?? 'Pelanggan #' . $order->id)) }}</td>
-                  <td>{{ $order->product->nama_produk ?? ($order->desk_pemesanan ?? '-') }}</td>
+                  <td>{{ $order->user->nama_lengkap ?? $order->user->username ?? 'Pelanggan' }}</td>
+                  <td>{{ $order->product->nama_produk ?? $order->desk_pemesanan ?? '-' }}</td>
                   <td>{{ $order->no_whatsapp ?? '-' }}</td>
                   <td class="font-bold">{{ $order->domisili ?? '-' }}</td>
                   <td class="font-bold">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>

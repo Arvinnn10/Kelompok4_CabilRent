@@ -255,8 +255,8 @@
               @forelse ($pesananTerbaru as $order)
                 <tr>
                   <td>#{{ $order->id }}</td>
-                  <td>{{ $order->user->nama_lengkap ?? ($order->user->username ?? ($order->basket->user->nama_lengkap ?? 'Pelanggan')) }}</td>
-                  <td>{{ $order->product->nama_produk ?? ($order->desk_pemesanan ?? '-') }}</td>
+                  <td>{{ $order->user->nama_lengkap ?? $order->user->username ?? 'Pelanggan' }}</td>
+                  <td>{{ $order->product->nama_produk ?? $order->desk_pemesanan ?? '-' }}</td>
                   <td>{{ $order->basket && $order->basket->tanggal_acara ? \Carbon\Carbon::parse($order->basket->tanggal_acara)->format('d M Y') : $order->created_at->format('d M Y') }}</td>
                   <td class="font-bold">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
                   <td>
@@ -302,10 +302,10 @@
                 <tr>
                   <td>#{{ $basket->id }}</td>
                   <td>
-                    <div class="font-bold">{{ $basket->user->nama_lengkap ?? ($basket->user->username ?? 'Pelanggan #' . $basket->user_id) }}</div>
+                    <div class="font-bold">{{ $basket->user->nama_lengkap ?? $basket->user->username ?? 'Pelanggan' }}</div>
                     <span style="font-size: 11px; color: #8e8077;">{{ $basket->user->no_telp ?? '-' }}</span>
                   </td>
-                  <td>{{ $basket->product->nama_produk ?? 'Produk #' . $basket->produk_id }}</td>
+                  <td>{{ $basket->product->nama_produk ?? '-' }}</td>
                   <td>{{ $basket->jumlah }} item</td>
                   <td>{{ $basket->tanggal_acara ? \Carbon\Carbon::parse($basket->tanggal_acara)->format('d M Y') : '-' }}</td>
                   <td class="font-bold">Rp {{ number_format(($basket->product->harga_sewa ?? 0) * $basket->jumlah, 0, ',', '.') }}</td>
