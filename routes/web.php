@@ -147,4 +147,9 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// KOLEKSI
+Route::get('/koleksi', function () {
+    return view('koleksi');
+});
+
 require __DIR__.'/auth.php';

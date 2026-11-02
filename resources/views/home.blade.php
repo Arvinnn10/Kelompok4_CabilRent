@@ -21,7 +21,7 @@
       <!-- Menu tengah -->
       <ul class="nav-menu">
         <li><a href="{{ url('/') }}" class="nav-link active">Home</a></li>
-        <li><a href="#collection" class="nav-link">Collection</a></li>
+         <li><a href="{{ url('/koleksi') }}" class="nav-link">Collection</a></li>
         <li><a href="#about" class="nav-link">About</a></li>
         <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
@@ -33,7 +33,7 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" placeholder="Search">
+          <input type="text" placeholder="Cari koleksi">
         </div>
 
         <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
