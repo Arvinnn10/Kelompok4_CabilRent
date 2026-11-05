@@ -21,9 +21,9 @@
       <!-- Menu tengah -->
       <ul class="nav-menu">
         <li><a href="{{ url('/') }}" class="nav-link active">Home</a></li>
-         <li><a href="{{ url('/koleksi') }}" class="nav-link">Collection</a></li>
-        <li><a href="#about" class="nav-link">About</a></li>
-        <li><a href="#contact" class="nav-link">Contact</a></li>
+         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
+        <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
+        <li><a href="{{ url('/kontak') }}" class="nav-link">Contact</a></li>
       </ul>
 
       <!-- Bagian search dan tombol kanan -->
@@ -240,9 +240,6 @@
             </a>
             <a href="#" class="social-circle" title="WhatsApp">
            <img src="images/wa.png" alt="WhatsApp">
-            </a>
-            <a href="#" class="social-circle" title="TikTok">
-           <img src="images/tiktok.png" alt="TikTok">
             </a>
           </div>
         </div>
