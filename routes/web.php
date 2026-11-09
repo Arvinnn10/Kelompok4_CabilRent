@@ -152,4 +152,9 @@ Route::get('/koleksi', function () {
     return view('koleksi');
 });
 
+// KOLEKSI
+Route::get('/tentang', function () {
+    return view('tentang');
+});
+
 require __DIR__.'/auth.php';

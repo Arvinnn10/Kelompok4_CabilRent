@@ -472,6 +472,23 @@ img {
   background-color: #caa98e;
 }
 
+/* Kartu yang disembunyikan filter kategori (js/koleksi.js) */
+.produk-card.is-hidden {
+  display: none;
+}
+
+/* Foto produk belum diunggah: tampil kotak coklat saja */
+.produk-image img.is-missing {
+  visibility: hidden;
+}
+
+.produk-empty {
+  text-align: center;
+  font-size: 13px;
+  color: #f0dfd5;
+  padding: 40px 0;
+}
+
 /* Judul blok umum (cara sewa, galeri, testimoni) */
 .block-title {
   font-family: 'Playfair Display', serif;
