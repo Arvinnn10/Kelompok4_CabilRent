@@ -21,7 +21,7 @@
       <!-- Menu tengah -->
       <ul class="nav-menu">
         <li><a href="{{ url('/') }}" class="nav-link active">Home</a></li>
-         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
+        <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Contact</a></li>
       </ul>
