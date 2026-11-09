@@ -480,10 +480,10 @@
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="{{ asset('images/icon-instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="{{ asset('images/icon-whatsapp.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
         </div>

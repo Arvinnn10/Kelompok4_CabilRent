@@ -105,19 +105,16 @@
         <div class="about-moment-img">
           <img src="{{ asset('images/tentang/foto3.png') }}" alt="Momen wisuda">
         </div>
-        <figcaption>Wisuda</figcaption>
       </figure>
       <figure class="about-moment about-moment-short">
         <div class="about-moment-img">
           <img src="{{ asset('images/tentang/foto4.png') }}" alt="Momen lamaran">
         </div>
-        <figcaption>Lamaran</figcaption>
       </figure>
       <figure class="about-moment">
         <div class="about-moment-img">
           <img src="{{ asset('images/tentang/foto5.png') }}" alt="Momen pesta">
         </div>
-        <figcaption>Pesta</figcaption>
       </figure>
     </div>
   </section>
@@ -164,10 +161,10 @@
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="{{ asset('images/icon-instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="{{ asset('images/icon-whatsapp.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
         </div>
