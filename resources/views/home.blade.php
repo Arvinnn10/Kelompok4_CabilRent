@@ -128,7 +128,7 @@
           <h2>Galeri Momen</h2>
           <!-- <p>Pelanggan kami di hari-hari spesialnya</p> -->
         </div>
-        <a href="#" class="galeri-link">Lihat lebih banyak &rarr;</a>
+        <a href="#" class="galeri-link"></a>
       </div>
 
       <!-- Baris atas -->
@@ -248,10 +248,10 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Collection</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="{{ url('/home') }}">Home</a></li>
+            <li><a href="{{ url('/koleksi') }}">Koleksi</a></li>
+            <li><a href="{{ url('/tentang') }}">Tentang</a></li>
+            <li><a href="{{ url('/kontak') }}">Kontak</a></li>
           </ul>
         </div>
 
@@ -259,9 +259,9 @@
         <div class="footer-col">
           <h4>KATEGORI</h4>
           <ul>
-            <li><a href="#">Paket Kebaya</a></li>
-            <li><a href="#">Heels</a></li>
-            <li><a href="#">Kemben</a></li>
+            <li><a href="{{ url('/koleksi') }}">Paket Kebaya</a></li>
+            <li><a href="{{ url('/koleksi') }}">Heels</a></li>
+            <li><a href="{{ url('/koleksi') }}">Kemben</a></li>
           </ul>
         </div>
 

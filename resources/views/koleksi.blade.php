@@ -20,7 +20,7 @@
       <!-- Menu tengah -->
       <ul class="nav-menu">
         <li><a href="{{ url('/home') }}" class="nav-link active">Home</a></li>
-         <li><a href="{{ url('/') }}" class="nav-link">Koleksi</a></li>
+         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
       </ul>
@@ -46,7 +46,7 @@
           </svg>
         </a>
 
-        <a href="#" class="nav-icon-btn" title="Akun Saya">
+        <a href="{{ Auth::check() ? route('logout') : route('login') }}" class="nav-icon-btn" title="{{ Auth::check() ? 'Keluar / Logout (' . (Auth::user()->nama_lengkap ?? Auth::user()->username) . ')' : 'Masuk / Login' }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="9"/>
             <circle cx="12" cy="10" r="3"/>
@@ -493,9 +493,9 @@
           <h4>JELAJAHI</h4>
           <ul>
             <li><a href="{{ url('/home') }}">Home</a></li>
-            <li><a href="{{ url('/koleksi') }}">Collection</a></li>
-            <li><a href="{{ url('/tentang') }}">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="{{ url('/koleksi') }}">Koleksi</a></li>
+            <li><a href="{{ url('/tentang') }}">Tentang</a></li>
+            <li><a href="{{ url('/kontak') }}">Kontak</a></li>
           </ul>
         </div>
 
@@ -503,9 +503,9 @@
         <div class="footer-col">
           <h4>KATEGORI</h4>
           <ul>
-            <li><a href="{{ url('/koleksi') }}?kategori=kebaya">Paket Kebaya</a></li>
-            <li><a href="{{ url('/koleksi') }}?kategori=heels">Heels</a></li>
-            <li><a href="{{ url('/koleksi') }}?kategori=kamisol">Kamisol</a></li>
+            <li><a href="{{ url('/koleksi') }}">Paket Kebaya</a></li>
+            <li><a href="{{ url('/koleksi') }}">Heels</a></li>
+            <li><a href="{{ url('/koleksi') }}">Kemben</a></li>
           </ul>
         </div>
 

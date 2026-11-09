@@ -152,9 +152,15 @@ Route::get('/koleksi', function () {
     return view('koleksi');
 });
 
-// KOLEKSI
+// TENTANG
 Route::get('/tentang', function () {
     return view('tentang');
 });
+
+// TENTANG
+Route::get('/keranjang', function () {
+    return view('keranjang');
+});
+
 
 require __DIR__.'/auth.php';
