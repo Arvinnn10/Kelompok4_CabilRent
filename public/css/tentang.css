@@ -390,7 +390,7 @@ img {
 
 /* Bagian footer */
 .footer-section {
-  background-color: #f6efe4;
+  background-color: #D8C3A5;
   padding: 50px 0 25px;
   color: #271a13;
 }
@@ -443,7 +443,7 @@ img {
   transition: opacity 0.2s;
 }
 
-/* Semua ikon dipaksa masuk kotak 24x24 yang sama, di tengah, tanpa terpotong */
+/* sosial icon */
 .social-icon img {
   width: 100%;
   height: 100%;
