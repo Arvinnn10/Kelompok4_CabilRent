@@ -58,7 +58,7 @@
     </div>
   </header>
 
-  <!-- Banner utama -->
+    <!-- Banner utama -->
   <section class="hero-section">
     <div class="container hero-wrapper">
       <div class="hero-content">
@@ -67,8 +67,8 @@
           Temukan kebaya impianmu untuk acara spesial. Pilihan kebaya cantik dengan desain elegan yang siap membuatmu tampil percaya diri.
         </p>
         <div class="hero-buttons">
-          <a href="#populer" class="btn-primary">MULAI SEWA</a>
-          <a href="#collection" class="btn-secondary">WHATSAPP</a>
+          <a href="{{ url('/koleksi') }}" class="btn-primary">MULAI SEWA</a>
+          <a href="#" class="btn-secondary">WHATSAPP</a>
         </div>
       </div>
 
@@ -80,55 +80,59 @@
   </section>
 
   <!-- Bagian koleksi -->
-  <section class="collection-section" id="collection">
+  <section class="collection-section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Collection</h2>
-        <a href="#populer" class="section-link">
+        <a href="{{ url('/koleksi') }}" class="section-link">
           Lihat semua &rarr;
         </a>
       </div>
 
       <div class="collection-grid">
-        <!-- Paket kebaya -->
-        <div class="collection-card">
-          <img src="{{ asset('images/produk-rose-dusty.png') }}" alt="Paket Kebaya">
-          <div class="card-badge">
-            <span class="badge-title">Paket Kebaya</span>
-            <span class="badge-count">78 produk &rarr;</span>
+        <!-- Pakaian kebaya -->
+        <a href="{{ url('/koleksi') }}?kategori=kebaya" class="collection-card">
+          <div class="collection-image">
+            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Pakaian Kebaya">
           </div>
-        </div>
+          <div class="collection-info">
+            <span class="collection-name">Pakaian Kebaya</span>
+            <span class="collection-count">9 produk</span>
+          </div>
+        </a>
 
         <!-- Heels -->
-        <div class="collection-card">
-          <img src="{{ asset('images/kategori-heels.png') }}" alt="Heels">
-          <div class="card-badge">
-            <span class="badge-title">Heels</span>
-            <span class="badge-count">62 produk &rarr;</span>
+        <a href="{{ url('/koleksi') }}?kategori=heels" class="collection-card">
+          <div class="collection-image">
+            <img src="{{ asset('images/sepatu1.png') }}" alt="Heels">
           </div>
-        </div>
+          <div class="collection-info">
+            <span class="collection-name">Heels</span>
+            <span class="collection-count">4 produk</span>
+          </div>
+        </a>
 
-        <!-- Kemben -->
-        <div class="collection-card">
-          <img src="{{ asset('images/kemben.png') }}" alt="Kemben">
-          <div class="card-badge">
-            <span class="badge-title">Kemben</span>
-            <span class="badge-count">44 produk &rarr;</span>
+        <!-- Kamisol -->
+        <a href="{{ url('/koleksi') }}?kategori=kamisol" class="collection-card">
+          <div class="collection-image">
+            <img src="{{ asset('images/kemben.png') }}" alt="Kamisol">
           </div>
-        </div>
+          <div class="collection-info">
+            <span class="collection-name">Kamisol</span>
+            <span class="collection-count">3 produk</span>
+          </div>
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Galeri momen -->
-  <section class="galeri-section" id="about">
+  <section class="galeri-section">
     <div class="container">
       <div class="galeri-header">
         <div class="galeri-title-group">
           <h2>Galeri Momen</h2>
-          <!-- <p>Pelanggan kami di hari-hari spesialnya</p> -->
         </div>
-        <a href="#" class="galeri-link"></a>
       </div>
 
       <!-- Baris atas -->
@@ -160,68 +164,50 @@
   </section>
 
   <!-- Produk populer -->
-  <section class="populer-section" id="populer">
+  <section class="populer-section">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header populer-header">
         <h2 class="section-title">Koleksi Populer</h2>
-        <a href="#collection" class="section-link">Lihat semua &rarr;</a>
+        <a href="{{ url('/koleksi') }}" class="section-link">Lihat semua &rarr;</a>
       </div>
 
       <div class="populer-grid">
         <!-- Produk 1 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/produk-brokat-maroon.png') }}" alt="Brokat Maroon">
+            <img src="{{ asset('images/foto4.png') }}" alt="Tulle Sage Green">
+            <span class="product-badge">Paket Kebaya</span>
           </div>
-          <h3 class="product-title">Brokat Maroon</h3>
-          <p class="product-tag">Akad &bull; S M L XL</p>
-          <div class="product-footer">
-            <span class="product-price">Rp 250.000</span>
-            <a href="#populer" class="btn-sewa">Sewa</a>
-          </div>
+          <h3 class="product-title">Tulle Sage Green</h3>
+          <p class="product-tag">Satu ukuran</p>
+          <span class="product-price">Rp 50.000</span>
         </div>
 
         <!-- Produk 2 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/produk-tulle-sage.png') }}" alt="Tulle Sage Green">
+            <img src="{{ asset('images/sepatu1.png') }}" alt="Tulle Sage Green">
+            <span class="product-badge">Heels</span>
           </div>
           <h3 class="product-title">Tulle Sage Green</h3>
-          <p class="product-tag">Wisuda &bull; S M L</p>
-          <div class="product-footer">
-            <span class="product-price">Rp 200.000</span>
-            <a href="#populer" class="btn-sewa">Sewa</a>
-          </div>
+          <p class="product-tag">Satu ukuran</p>
+          <span class="product-price">Rp 50.000</span>
         </div>
 
         <!-- Produk 3 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik">
+            <img src="{{ asset('images/kemben.png') }}" alt="Tulle Sage Green">
+            <span class="product-badge">Kamisol</span>
           </div>
-          <h3 class="product-title">Encim Gold Klasik</h3>
-          <p class="product-tag">Adat &bull; M L XL</p>
-          <div class="product-footer">
-            <span class="product-price">Rp 230.000</span>
-            <a href="#populer" class="btn-sewa">Sewa</a>
-          </div>
-        </div>
-
-        <!-- Produk 4 -->
-        <div class="product-card">
-          <div class="product-image-box">
-            <img src="{{ asset('images/produk-modern-navy.png') }}" alt="Modern Navy Lace">
-          </div>
-          <h3 class="product-title">Modern Navy Lace</h3>
-          <p class="product-tag">Pesta &bull; S M L</p>
-          <div class="product-footer">
-            <span class="product-price">Rp 240.000</span>
-            <a href="#populer" class="btn-sewa">Sewa</a>
-          </div>
+          <h3 class="product-title">Tulle Sage Green</h3>
+          <p class="product-tag">Satu ukuran</p>
+          <span class="product-price">Rp 50.000</span>
         </div>
       </div>
     </div>
   </section>
+
 
   <!-- Bagian footer -->
     <footer class="footer-section">

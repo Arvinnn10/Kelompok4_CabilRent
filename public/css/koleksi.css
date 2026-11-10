@@ -552,43 +552,51 @@ img {
 
 .momen-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+.momen-header .block-title {
+  margin-bottom: 0;
 }
 
 .momen-link {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: #5b3724;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .momen-link:hover {
-  text-decoration: underline;
+  color: #482a1b;
 }
 
+/* Foto kiri & kanan sejajar di tengah tumpukan foto tengah */
 .momen-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  align-items: start;
+  gap: 17px;
+  align-items: center;
 }
 
 .momen-stack {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .momen-card {
   position: relative;
-  height: 190px;
+  height: 193px;
   border-radius: 14px;
   overflow: hidden;
   background-color: #5b3724;
 }
 
 .momen-card.momen-tall {
-  height: 300px;
+  height: 294px;
 }
 
 .momen-card img {
@@ -701,14 +709,19 @@ img {
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   transition: background-color 0.2s;
 }
 
-.btn-cta:hover {
-  background-color: #482a1b;
+/* Ikon WhatsApp di kiri tulisan tombol */
+.btn-cta-icon {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
-
 /* Bagian footer */
 .footer-section {
   background-color: #D8C3A5;

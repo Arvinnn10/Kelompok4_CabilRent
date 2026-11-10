@@ -391,7 +391,7 @@
     </div>
   </section>
 
-  <!-- Galeri momen -->
+   <!-- Galeri momen -->
   <section class="momen-section">
     <div class="container">
       <div class="momen-header">
@@ -462,8 +462,11 @@
     <div class="container cta-wrapper">
       <h2 class="cta-title">Tidak menemukan yang dicari?</h2>
       <p class="cta-desc">Hubungi kami, tim CABIL.RENT akan bantu carikan pilihan yang sesuai.</p>
-      <a href="#" class="btn-cta">Chat WhatsApp</a>
-    </div>
+      <a href="#" class="btn-cta">
+        <!-- icon whatsapp bosqu -->
+        <img src="{{ asset('images/koleksi/whatsapp2.png') }}" alt="" class="btn-cta-icon">
+        <span>Chat WhatsApp</span>
+      </a>
   </section>
 
   <!-- Bagian footer (sama dengan halaman home) -->

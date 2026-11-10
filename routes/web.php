@@ -157,10 +157,14 @@ Route::get('/tentang', function () {
     return view('tentang');
 });
 
-// TENTANG
+// KERANJANG
 Route::get('/keranjang', function () {
     return view('keranjang');
 });
 
+// KONTAK
+Route::get('/kontak', function () {
+    return view('kontak');
+});
 
 require __DIR__.'/auth.php';
