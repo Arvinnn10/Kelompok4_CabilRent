@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cabil.Rent</title>
+
+  <!-- Preconnect & Google Fonts (Non-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
 <body>
@@ -14,7 +20,7 @@
     <div class="container nav-container">
       <!-- Logo cabil.rent -->
       <a href="{{ url('/') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
+        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" decoding="async">
         <span>CABIL.RENT</span>
       </a>
 
@@ -74,7 +80,7 @@
 
       <!-- Foto model sebelah kanan -->
       <div class="hero-image-box">
-        <img src="{{ asset('images/hero-model.png') }}" alt="Model Kebaya Anggun Cabil Rent">
+        <img src="{{ asset('images/hero-model.png') }}" alt="Model Kebaya Anggun Cabil Rent" fetchpriority="high" decoding="async">
       </div>
     </div>
   </section>
@@ -93,7 +99,7 @@
         <!-- Pakaian kebaya -->
         <a href="{{ url('/koleksi') }}?kategori=kebaya" class="collection-card">
           <div class="collection-image">
-            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Pakaian Kebaya">
+            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Pakaian Kebaya" loading="lazy" decoding="async">
           </div>
           <div class="collection-info">
             <span class="collection-name">Pakaian Kebaya</span>
@@ -104,7 +110,7 @@
         <!-- Heels -->
         <a href="{{ url('/koleksi') }}?kategori=heels" class="collection-card">
           <div class="collection-image">
-            <img src="{{ asset('images/sepatu1.png') }}" alt="Heels">
+            <img src="{{ asset('images/sepatu1.png') }}" alt="Heels" loading="lazy" decoding="async">
           </div>
           <div class="collection-info">
             <span class="collection-name">Heels</span>
@@ -115,7 +121,7 @@
         <!-- Kamisol -->
         <a href="{{ url('/koleksi') }}?kategori=kamisol" class="collection-card">
           <div class="collection-image">
-            <img src="{{ asset('images/kemben.png') }}" alt="Kamisol">
+            <img src="{{ asset('images/kemben.png') }}" alt="Kamisol" loading="lazy" decoding="async">
           </div>
           <div class="collection-info">
             <span class="collection-name">Kamisol</span>
@@ -138,26 +144,26 @@
       <!-- Baris atas -->
       <div class="galeri-row galeri-row-1">
         <div class="galeri-card">
-          <img src="{{ asset('images/foto1.png') }}" alt="Galeri Momen 1">
+          <img src="{{ asset('images/foto1.png') }}" alt="Galeri Momen 1" loading="lazy" decoding="async">
         </div>
         <div class="galeri-card">
-          <img src="{{ asset('images/foto2.png') }}" alt="Galeri Momen 2">
+          <img src="{{ asset('images/foto2.png') }}" alt="Galeri Momen 2" loading="lazy" decoding="async">
         </div>
         <div class="galeri-card">
-          <img src="{{ asset('images/foto3.png') }}" alt="Galeri Momen 3">
+          <img src="{{ asset('images/foto3.png') }}" alt="Galeri Momen 3" loading="lazy" decoding="async">
         </div>
       </div>
 
       <!-- Baris bawah -->
       <div class="galeri-row galeri-row-2">
         <div class="galeri-card">
-          <img src="{{ asset('images/foto4.png') }}" alt="Galeri Momen 4">
+          <img src="{{ asset('images/foto4.png') }}" alt="Galeri Momen 4" loading="lazy" decoding="async">
         </div>
         <div class="galeri-card">
-          <img src="{{ asset('images/foto5.png') }}" alt="Galeri Momen 5">
+          <img src="{{ asset('images/foto5.png') }}" alt="Galeri Momen 5" loading="lazy" decoding="async">
         </div>
         <div class="galeri-card">
-          <img src="{{ asset('images/foto6.png') }}" alt="Galeri Momen 6">
+          <img src="{{ asset('images/foto6.png') }}" alt="Galeri Momen 6" loading="lazy" decoding="async">
         </div>
       </div>
     </div>
@@ -175,7 +181,7 @@
         <!-- Produk 1 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/foto4.png') }}" alt="Tulle Sage Green">
+            <img src="{{ asset('images/foto4.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
             <span class="product-badge">Paket Kebaya</span>
           </div>
           <h3 class="product-title">Tulle Sage Green</h3>
@@ -186,7 +192,7 @@
         <!-- Produk 2 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/sepatu1.png') }}" alt="Tulle Sage Green">
+            <img src="{{ asset('images/sepatu1.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
             <span class="product-badge">Heels</span>
           </div>
           <h3 class="product-title">Tulle Sage Green</h3>
@@ -197,7 +203,7 @@
         <!-- Produk 3 -->
         <div class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/kemben.png') }}" alt="Tulle Sage Green">
+            <img src="{{ asset('images/kemben.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
             <span class="product-badge">Kamisol</span>
           </div>
           <h3 class="product-title">Tulle Sage Green</h3>
@@ -216,16 +222,16 @@
         <!-- Profil brand dengan Logo -->
         <div class="footer-brand">
           <div class="footer-logo-box">
-            <img src="images/logo.png" alt="cabil.rent logo" class="brand-logo-img">
+            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
             <span class="footer-brand-title">CABIL.RENT</span>
           </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <a href="#" class="social-circle" title="Instagram">
-            <img src="images/instagram.png" alt="Instagram">
+            <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
             </a>
             <a href="#" class="social-circle" title="WhatsApp">
-           <img src="images/wa.png" alt="WhatsApp">
+           <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">
             </a>
           </div>
         </div>

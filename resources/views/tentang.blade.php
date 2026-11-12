@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tentang - Cabil.Rent</title>
+
+  <!-- Preconnect & Google Fonts (Non-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{{ asset('css/tentang.css') }}">
 </head>
 <body>
@@ -12,16 +18,16 @@
   <header class="navbar">
     <div class="container nav-container">
       <!-- Logo cabil.rent -->
-      <a href="{{ url('/home') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
+      <a href="{{ url('/') }}" class="nav-brand">
+        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
         <span>CABIL.RENT</span>
       </a>
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link active">Home</a></li>
-         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
-        <li><a href="{{ url('/koleksi') }}" class="nav-link">Tentang</a></li>
+        <li><a href="{{ url('/') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
+        <li><a href="{{ url('/tentang') }}" class="nav-link active">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
       </ul>
 
@@ -70,10 +76,10 @@
       <!-- Foto utama + foto kecil menumpuk -->
       <div class="about-hero-media">
         <div class="about-photo-main">
-          <img src="{{ asset('images/tentang/foto2.png') }}" alt="Kebaya wisuda cabil.rent">
+          <img src="{{ asset('images/tentang/foto2.png') }}" alt="Kebaya wisuda cabil.rent" loading="lazy" decoding="async">
         </div>
         <div class="about-photo-small">
-          <img src="{{ asset('images/tentang/sepatu1.png') }}" alt="Heels cabil.rent">
+          <img src="{{ asset('images/tentang/sepatu1.png') }}" alt="Heels cabil.rent" loading="lazy" decoding="async">
         </div>
       </div>
     </div>
@@ -103,17 +109,17 @@
     <div class="container about-moments-grid">
       <figure class="about-moment">
         <div class="about-moment-img">
-          <img src="{{ asset('images/tentang/foto3.png') }}" alt="Momen wisuda">
+          <img src="{{ asset('images/tentang/foto3.png') }}" alt="Momen wisuda" loading="lazy" decoding="async">
         </div>
       </figure>
       <figure class="about-moment about-moment-short">
         <div class="about-moment-img">
-          <img src="{{ asset('images/tentang/foto4.png') }}" alt="Momen lamaran">
+          <img src="{{ asset('images/tentang/foto4.png') }}" alt="Momen lamaran" loading="lazy" decoding="async">
         </div>
       </figure>
       <figure class="about-moment">
         <div class="about-moment-img">
-          <img src="{{ asset('images/tentang/foto5.png') }}" alt="Momen pesta">
+          <img src="{{ asset('images/tentang/foto5.png') }}" alt="Momen pesta" loading="lazy" decoding="async">
         </div>
       </figure>
     </div>
@@ -154,17 +160,17 @@
         <!-- Profil brand -->
         <div class="footer-brand">
           <div class="footer-logo-box">
-            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
+            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
             <span class="footer-brand-title">CABIL.RENT</span>
           </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">
             </a>
           </div>
         </div>

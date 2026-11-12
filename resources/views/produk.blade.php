@@ -20,7 +20,7 @@
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo" loading="lazy" decoding="async">
           <span class="sidebar-brand">CABIL.RENT</span>
         </div>
 
@@ -135,7 +135,7 @@
         <div class="product-card">
           <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-brokat-maroon.png') }}" alt="Brokat Maroon" class="product-img">
+            <img src="{{ asset('images/produk-brokat-maroon.png') }}" alt="Brokat Maroon" class="product-img" loading="lazy" decoding="async">
           </div>
           <h4 class="product-title">Brokat Maroon</h4>
           <p class="product-category-size">Akad · S M L XL</p>
@@ -149,7 +149,7 @@
         <div class="product-card">
           <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-tulle-sage.png') }}" alt="Tulle Sage Green" class="product-img">
+            <img src="{{ asset('images/produk-tulle-sage.png') }}" alt="Tulle Sage Green" class="product-img" loading="lazy" decoding="async">
           </div>
           <h4 class="product-title">Tulle Sage Green</h4>
           <p class="product-category-size">Wisuda · S M L</p>
@@ -163,7 +163,7 @@
         <div class="product-card">
           <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik" class="product-img">
+            <img src="{{ asset('images/produk-encim-gold.png') }}" alt="Encim Gold Klasik" class="product-img" loading="lazy" decoding="async">
           </div>
           <h4 class="product-title">Encim Gold Klasik</h4>
           <p class="product-category-size">Adat · M L XL</p>
@@ -177,7 +177,7 @@
         <div class="product-card">
           <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-modern-navy.png') }}" alt="Modern Navy Lace" class="product-img">
+            <img src="{{ asset('images/produk-modern-navy.png') }}" alt="Modern Navy Lace" class="product-img" loading="lazy" decoding="async">
           </div>
           <h4 class="product-title">Modern Navy Lace</h4>
           <p class="product-category-size">Pesta · S M L</p>
@@ -191,7 +191,7 @@
         <div class="product-card">
           <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-putih-gading.png') }}" alt="Putih Gading Renda" class="product-img">
+            <img src="{{ asset('images/produk-putih-gading.png') }}" alt="Putih Gading Renda" class="product-img" loading="lazy" decoding="async">
           </div>
           <h4 class="product-title">Putih Gading Renda</h4>
           <p class="product-category-size">Akad · S M L</p>
@@ -205,7 +205,7 @@
         <div class="product-card">
           <!-- Foto produk, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="product-img-container">
-            <img src="{{ asset('images/produk-rose-dusty.png') }}" alt="Rose Dusty Satin" class="product-img">
+            <img src="{{ asset('images/produk-rose-dusty.png') }}" alt="Rose Dusty Satin" class="product-img" loading="lazy" decoding="async">
           </div>
           <h4 class="product-title">Rose Dusty Satin</h4>
           <p class="product-category-size">Pesta · S M L XL</p>

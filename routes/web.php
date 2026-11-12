@@ -157,11 +157,6 @@ Route::get('/tentang', function () {
     return view('tentang');
 });
 
-// KERANJANG
-Route::get('/keranjang', function () {
-    return view('keranjang');
-});
-
 // KONTAK
 Route::get('/kontak', function () {
     return view('kontak');

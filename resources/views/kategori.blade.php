@@ -20,7 +20,7 @@
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo" loading="lazy" decoding="async">
           <span class="sidebar-brand">CABIL.RENT</span>
         </div>
 
@@ -118,7 +118,7 @@
         <div class="category-card">
           <!-- Foto kategori, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="category-img-container">
-            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Paket Kebaya" class="category-img">
+            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Paket Kebaya" class="category-img" loading="lazy" decoding="async">
           </div>
           <h3 class="category-title">Paket Kebaya</h3>
           <p class="category-count">78 produk - 21 disewa</p>
@@ -132,7 +132,7 @@
         <div class="category-card">
           <!-- Foto kategori, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="category-img-container">
-            <img src="{{ asset('images/kategori-heels.png') }}" alt="Heels" class="category-img">
+            <img src="{{ asset('images/kategori-heels.png') }}" alt="Heels" class="category-img" loading="lazy" decoding="async">
           </div>
           <h3 class="category-title">Heels</h3>
           <p class="category-count">78 produk - 21 disewa</p>
@@ -146,7 +146,7 @@
         <div class="category-card">
           <!-- Foto kategori, ganti atribut src jika ingin memakai foto sendiri -->
           <div class="category-img-container">
-            <img src="{{ asset('images/kategori-kemben.png') }}" alt="Kemben" class="category-img">
+            <img src="{{ asset('images/kategori-kemben.png') }}" alt="Kemben" class="category-img" loading="lazy" decoding="async">
           </div>
           <h3 class="category-title">Kemben</h3>
           <p class="category-count">78 produk - 21 disewa</p>

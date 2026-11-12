@@ -20,7 +20,7 @@
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo" loading="lazy" decoding="async">
           <span class="sidebar-brand">CABIL.RENT</span>
         </div>
 

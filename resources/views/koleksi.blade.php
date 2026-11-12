@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koleksi - Cabil.Rent</title>
+
+  <!-- Preconnect & Google Fonts (Non-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{{ asset('css/koleksi.css') }}">
 </head>
 <body>
@@ -12,15 +18,15 @@
   <header class="navbar">
     <div class="container nav-container">
       <!-- Logo cabil.rent -->
-      <a href="{{ url('/home') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
+      <a href="{{ url('/') }}" class="nav-brand">
+        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
         <span>CABIL.RENT</span>
       </a>
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link active">Home</a></li>
-         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
+        <li><a href="{{ url('/') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/koleksi') }}" class="nav-link active">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
       </ul>
@@ -79,7 +85,7 @@
           <a href="#" class="btn-promo">Lihat paket</a>
         </div>
         <div class="promo-image">
-          <img src="{{ asset('images/koleksi/foto1.png') }}" alt="Koleksi Terbaru 2026">
+          <img src="{{ asset('images/koleksi/foto1.png') }}" alt="Koleksi Terbaru 2026" loading="lazy" decoding="async">
         </div>
       </div>
     </div>
@@ -91,7 +97,7 @@
       <div class="kategori-grid">
         <a href="{{ url('/koleksi') }}?kategori=kebaya" class="kategori-card">
           <div class="kategori-image">
-            <img src="{{ asset('images/koleksi/kategori-kebaya.png') }}" alt="Pakaian Kebaya">
+            <img src="{{ asset('images/koleksi/kategori-kebaya.png') }}" alt="Pakaian Kebaya" loading="lazy" decoding="async">
           </div>
           <div class="kategori-info">
             <span class="kategori-name">Pakaian Kebaya</span>
@@ -101,7 +107,7 @@
 
         <a href="{{ url('/koleksi') }}?kategori=heels" class="kategori-card">
           <div class="kategori-image">
-            <img src="{{ asset('images/koleksi/sepatu1.png') }}" alt="Heels">
+            <img src="{{ asset('images/koleksi/sepatu1.png') }}" alt="Heels" loading="lazy" decoding="async">
           </div>
           <div class="kategori-info">
             <span class="kategori-name">Heels</span>
@@ -111,7 +117,7 @@
 
         <a href="{{ url('/koleksi') }}?kategori=kamisol" class="kategori-card">
           <div class="kategori-image">
-            <img src="{{ asset('images/koleksi/kemben.png') }}" alt="Kamisol">
+            <img src="{{ asset('images/koleksi/kemben.png') }}" alt="Kamisol" loading="lazy" decoding="async">
           </div>
           <div class="kategori-info">
             <span class="kategori-name">Kamisol</span>
@@ -156,7 +162,7 @@
       <div class="produk-grid">
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-coco.png') }}" alt="Coco Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-coco.png') }}" alt="Coco Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Coco Kebaya</h3>
@@ -169,7 +175,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-ivory-palazzo.png') }}" alt="Ivory Palazzo Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-ivory-palazzo.png') }}" alt="Ivory Palazzo Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Ivory Palazzo Kebaya</h3>
@@ -182,7 +188,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-aira.png') }}" alt="Aira Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-aira.png') }}" alt="Aira Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Aira Kebaya</h3>
@@ -195,7 +201,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-ayana.png') }}" alt="Ayana Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-ayana.png') }}" alt="Ayana Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Ayana Kebaya</h3>
@@ -208,7 +214,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-ayuna.png') }}" alt="Ayuna Kebaya (non hijab)">
+            <img src="{{ asset('images/koleksi/kebaya-ayuna.png') }}" alt="Ayuna Kebaya (non hijab)" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Ayuna Kebaya (non hijab)</h3>
@@ -221,7 +227,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-kiona.png') }}" alt="Kiona Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-kiona.png') }}" alt="Kiona Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Kiona Kebaya</h3>
@@ -234,7 +240,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-meira.png') }}" alt="Meira Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-meira.png') }}" alt="Meira Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Meira Kebaya</h3>
@@ -247,7 +253,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-arella.png') }}" alt="Arella Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-arella.png') }}" alt="Arella Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Arella Kebaya</h3>
@@ -260,7 +266,7 @@
 
         <div class="produk-card" data-kategori="kebaya">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kebaya-rose.png') }}" alt="Rose Kebaya">
+            <img src="{{ asset('images/koleksi/kebaya-rose.png') }}" alt="Rose Kebaya" loading="lazy" decoding="async">
             <span class="produk-badge">Pakaian Kebaya</span>
           </div>
           <h3 class="produk-name">Rose Kebaya</h3>
@@ -273,7 +279,7 @@
 
         <div class="produk-card" data-kategori="heels">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/heels-arin.png') }}" alt="Arin Heels">
+            <img src="{{ asset('images/koleksi/heels-arin.png') }}" alt="Arin Heels" loading="lazy" decoding="async">
             <span class="produk-badge">Heels</span>
           </div>
           <h3 class="produk-name">Arin Heels</h3>
@@ -286,7 +292,7 @@
 
         <div class="produk-card" data-kategori="heels">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/heels-aqila.png') }}" alt="Aqila Heels">
+            <img src="{{ asset('images/koleksi/heels-aqila.png') }}" alt="Aqila Heels" loading="lazy" decoding="async">
             <span class="produk-badge">Heels</span>
           </div>
           <h3 class="produk-name">Aqila Heels</h3>
@@ -299,7 +305,7 @@
 
         <div class="produk-card" data-kategori="heels">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/heels-aura.png') }}" alt="Aura Heels">
+            <img src="{{ asset('images/koleksi/heels-aura.png') }}" alt="Aura Heels" loading="lazy" decoding="async">
             <span class="produk-badge">Heels</span>
           </div>
           <h3 class="produk-name">Aura Heels</h3>
@@ -312,7 +318,7 @@
 
         <div class="produk-card" data-kategori="heels">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/heels-kayla.png') }}" alt="Kayla Heels">
+            <img src="{{ asset('images/koleksi/heels-kayla.png') }}" alt="Kayla Heels" loading="lazy" decoding="async">
             <span class="produk-badge">Heels</span>
           </div>
           <h3 class="produk-name">Kayla Heels</h3>
@@ -325,7 +331,7 @@
 
         <div class="produk-card" data-kategori="kamisol">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kamisol-m.png') }}" alt="Kamisol">
+            <img src="{{ asset('images/koleksi/kamisol-m.png') }}" alt="Kamisol" loading="lazy" decoding="async">
             <span class="produk-badge">Kamisol</span>
           </div>
           <h3 class="produk-name">Kamisol</h3>
@@ -338,7 +344,7 @@
 
         <div class="produk-card" data-kategori="kamisol">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kamisol-s.png') }}" alt="Kamisol">
+            <img src="{{ asset('images/koleksi/kamisol-s.png') }}" alt="Kamisol" loading="lazy" decoding="async">
             <span class="produk-badge">Kamisol</span>
           </div>
           <h3 class="produk-name">Kamisol</h3>
@@ -351,7 +357,7 @@
 
         <div class="produk-card" data-kategori="kamisol">
           <div class="produk-image">
-            <img src="{{ asset('images/koleksi/kamisol-l.png') }}" alt="Kamisol">
+            <img src="{{ asset('images/koleksi/kamisol-l.png') }}" alt="Kamisol" loading="lazy" decoding="async">
             <span class="produk-badge">Kamisol</span>
           </div>
           <h3 class="produk-name">Kamisol</h3>
@@ -401,7 +407,7 @@
 
       <div class="momen-grid">
         <div class="momen-card momen-tall">
-          <img src="{{ asset('images/koleksi/foto2.png') }}" alt="Brokat Maroon">
+          <img src="{{ asset('images/koleksi/foto2.png') }}" alt="Brokat Maroon" loading="lazy" decoding="async">
           <div class="momen-caption">
             <span class="momen-tag">Wisuda</span>
             <span class="momen-name">Brokat Maroon</span>
@@ -410,14 +416,14 @@
 
         <div class="momen-stack">
           <div class="momen-card">
-            <img src="{{ asset('images/koleksi/foto3.png') }}" alt="Tulle Sage Green">
+            <img src="{{ asset('images/koleksi/foto3.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
             <div class="momen-caption">
               <span class="momen-tag">Pesta</span>
               <span class="momen-name">Tulle Sage Green</span>
             </div>
           </div>
           <div class="momen-card">
-            <img src="{{ asset('images/koleksi/foto4.png') }}" alt="Modern Navy Lane">
+            <img src="{{ asset('images/koleksi/foto4.png') }}" alt="Modern Navy Lane" loading="lazy" decoding="async">
             <div class="momen-caption">
               <span class="momen-tag">Wisuda</span>
               <span class="momen-name">Modern Navy Lane</span>
@@ -426,7 +432,7 @@
         </div>
 
         <div class="momen-card momen-tall">
-          <img src="{{ asset('images/koleksi/foto5.png') }}" alt="Kebaya Putih Akad">
+          <img src="{{ asset('images/koleksi/foto5.png') }}" alt="Kebaya Putih Akad" loading="lazy" decoding="async">
           <div class="momen-caption">
             <span class="momen-tag">Lamaran</span>
             <span class="momen-name">Kebaya Putih Akad</span>
@@ -464,7 +470,7 @@
       <p class="cta-desc">Hubungi kami, tim CABIL.RENT akan bantu carikan pilihan yang sesuai.</p>
       <a href="#" class="btn-cta">
         <!-- icon whatsapp bosqu -->
-        <img src="{{ asset('images/koleksi/whatsapp2.png') }}" alt="" class="btn-cta-icon">
+        <img src="{{ asset('images/koleksi/whatsapp2.png') }}" alt="" class="btn-cta-icon" loading="lazy" decoding="async">
         <span>Chat WhatsApp</span>
       </a>
   </section>
@@ -476,17 +482,17 @@
         <!-- Profil brand -->
         <div class="footer-brand">
           <div class="footer-logo-box">
-            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
+            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
             <span class="footer-brand-title">CABIL.RENT</span>
           </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">
             </a>
           </div>
         </div>

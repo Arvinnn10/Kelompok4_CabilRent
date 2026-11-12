@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kontak - Cabil.Rent</title>
-  <link rel="stylesheet" href="css/kontak.css">
+
+  <!-- Preconnect & Google Fonts (Non-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ asset('css/kontak.css') }}">
 </head>
 <body>
 
@@ -12,21 +18,21 @@
   <header class="navbar">
     <div class="container nav-container">
       <!-- Logo cabil.rent -->
-      <a href="home.html" class="nav-brand">
-        <img src="images/logo.png" alt="cabil.rent logo" class="brand-logo-img">
+      <a href="{{ url('/') }}" class="nav-brand">
+        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
         <span>CABIL.RENT</span>
       </a>
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link active">Home</a></li>
-         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
+        <li><a href="{{ url('/') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
-        <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
+        <li><a href="{{ url('/kontak') }}" class="nav-link active">Kontak</a></li>
       </ul>
       <!-- Bagian search dan tombol kanan -->
       <div class="nav-actions">
-        <form class="nav-search" action="koleksi.html" method="GET">
+        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -208,17 +214,17 @@
         <!-- Profil brand -->
         <div class="footer-brand">
           <div class="footer-logo-box">
-            <img src="images/logo.png" alt="cabil.rent logo" class="brand-logo-img">
+            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
             <span class="footer-brand-title">CABIL.RENT</span>
           </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="images/instagram.png" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="images/wa.png" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">
             </a>
           </div>
         </div>
@@ -227,10 +233,10 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="koleksi.html">Collection</a></li>
-            <li><a href="tentang.html">About</a></li>
-            <li><a href="kontak.html">Contact</a></li>
+            <li><a href="{{ url('/') }}">Home</a></li>
+            <li><a href="{{ url('/koleksi') }}">Collection</a></li>
+            <li><a href="{{ url('/tentang') }}">About</a></li>
+            <li><a href="{{ url('/kontak') }}">Contact</a></li>
           </ul>
         </div>
 
@@ -238,9 +244,9 @@
         <div class="footer-col">
           <h4>KATEGORI</h4>
           <ul>
-            <li><a href="koleksi.html?kategori=kebaya">Paket Kebaya</a></li>
-            <li><a href="koleksi.html?kategori=heels">Heels</a></li>
-            <li><a href="koleksi.html?kategori=kamisol">Kamisol</a></li>
+            <li><a href="{{ url('/koleksi') }}?kategori=kebaya">Paket Kebaya</a></li>
+            <li><a href="{{ url('/koleksi') }}?kategori=heels">Heels</a></li>
+            <li><a href="{{ url('/koleksi') }}?kategori=kamisol">Kamisol</a></li>
           </ul>
         </div>
 
@@ -267,6 +273,6 @@
     </div>
   </footer>
 
-  <script src="js/kontak.js"></script>
+  <script src="{{ asset('js/kontak.js') }}"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@
     <aside class="sidebar">
       <div>
         <div class="sidebar-header">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo" loading="lazy" decoding="async">
           <span class="sidebar-brand">CABIL.RENT</span>
         </div>
 
@@ -141,7 +141,7 @@
                   </td>
                   <td>
                     <div class="product-cell">
-                      <img src="{{ asset('images/' . ($basket->product->foto_produk ?? 'produk-brokat-maroon.png')) }}" alt="{{ $basket->product->nama_produk ?? 'Produk' }}" class="product-thumb">
+                      <img src="{{ asset('images/' . ($basket- loading="lazy" decoding="async">product->foto_produk ?? 'produk-brokat-maroon.png')) }}" alt="{{ $basket->product->nama_produk ?? 'Produk' }}" class="product-thumb">
                       <div>
                         <div class="font-bold">{{ $basket->product->nama_produk ?? 'Produk #' . $basket->produk_id }}</div>
                         <span style="font-size: 11px; color: #8e8077;">{{ $basket->product->category->nama_kategori ?? 'Kategori' }}</span>

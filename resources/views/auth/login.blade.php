@@ -18,7 +18,7 @@
   <div class="login-container">
     <!-- Banner sebelah kiri  -->
     <div class="login-banner">
-      <img src="{{ asset('images/login-banner.png') }}" alt="cabil.rent Illustration" class="login-banner-img">
+      <img src="{{ asset('images/login-banner.png') }}" alt="cabil.rent Illustration" class="login-banner-img" loading="lazy" decoding="async">
       
       <!-- Teks pembuka di atas gambar banner -->
       <div class="login-banner-overlay">
