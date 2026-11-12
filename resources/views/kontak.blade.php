@@ -215,10 +215,10 @@
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="images/icon-instagram.png" alt="Instagram">
+              <img src="images/instagram.png" alt="Instagram">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="images/icon-whatsapp.png" alt="WhatsApp">
+              <img src="images/wa.png" alt="WhatsApp">
             </a>
           </div>
         </div>
