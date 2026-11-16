@@ -162,4 +162,14 @@ Route::get('/kontak', function () {
     return view('kontak');
 });
 
+// KERANJANG
+Route::get('/keranjang', function () {
+    return view('keranjang');
+});
+
+// DETAIL PRODUK
+Route::get('/detail', function () {
+    return view('detail');
+});
+
 require __DIR__.'/auth.php';

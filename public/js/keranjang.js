@@ -1,0 +1,55 @@
+// Halaman keranjang: menampilkan isi keranjang dari js/cart.js,
+// menghitung ringkasan biaya, dan menghapus produk.
+document.addEventListener('DOMContentLoaded', function () {
+  var list = document.getElementById('cart-list');
+  var template = document.getElementById('cart-item-template');
+  var emptyBox = document.getElementById('cart-empty');
+  var summaryRows = document.getElementById('summary-rows');
+  var btnLanjut = document.getElementById('btn-lanjut');
+
+  function tampilkan() {
+    var daftar = CabilCart.ambil();
+    list.innerHTML = '';
+
+    daftar.forEach(function (item) {
+      var li = template.content.firstElementChild.cloneNode(true);
+      var img = li.querySelector('img');
+
+      img.src = item.gambar;
+      img.alt = item.nama;
+      img.addEventListener('error', function () {
+        img.classList.add('is-missing');
+      });
+
+      li.querySelector('.cart-item-name').textContent = item.nama;
+      li.querySelector('.cart-item-meta').textContent = item.kategori + ' · ' + item.keterangan;
+      li.querySelector('.cart-item-durasi').textContent = 'Sewa ' + item.durasi + ' hari';
+      li.querySelector('.cart-item-price').textContent = CabilCart.keRupiah(item.harga);
+      li.querySelector('.cart-item-hapus').addEventListener('click', function () {
+        CabilCart.hapus(item.id);
+        tampilkan();
+      });
+
+      list.appendChild(li);
+    });
+
+    // Ringkasan biaya
+    var subtotal = daftar.reduce(function (total, item) {
+      return total + item.harga;
+    }, 0);
+    var deposit = daftar.length * CabilCart.DEPOSIT_PER_PRODUK;
+
+    document.getElementById('summary-subtotal').textContent = CabilCart.keRupiah(subtotal);
+    document.getElementById('summary-deposit').textContent = CabilCart.keRupiah(deposit);
+    document.getElementById('summary-total').textContent = CabilCart.keRupiah(subtotal + deposit);
+
+    // Keranjang kosong vs berisi
+    var kosong = daftar.length === 0;
+    emptyBox.hidden = !kosong;
+    summaryRows.hidden = kosong;
+    btnLanjut.classList.toggle('is-disabled', kosong);
+    btnLanjut.setAttribute('aria-disabled', kosong);
+  }
+
+  tampilkan();
+});

@@ -74,7 +74,7 @@
         </p>
         <div class="hero-buttons">
           <a href="{{ url('/koleksi') }}" class="btn-primary">MULAI SEWA</a>
-          <a href="#" class="btn-secondary">WHATSAPP</a>
+          <a href="https://wa.me/6289518062255" class="btn-secondary">WHATSAPP</a>
         </div>
       </div>
 

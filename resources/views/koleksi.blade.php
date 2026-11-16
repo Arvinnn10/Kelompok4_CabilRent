@@ -468,7 +468,7 @@
     <div class="container cta-wrapper">
       <h2 class="cta-title">Tidak menemukan yang dicari?</h2>
       <p class="cta-desc">Hubungi kami, tim CABIL.RENT akan bantu carikan pilihan yang sesuai.</p>
-      <a href="#" class="btn-cta">
+      <a href="https://wa.me/6289518062255" class="btn-cta">
         <!-- icon whatsapp bosqu -->
         <img src="{{ asset('images/koleksi/whatsapp2.png') }}" alt="" class="btn-cta-icon" loading="lazy" decoding="async">
         <span>Chat WhatsApp</span>
