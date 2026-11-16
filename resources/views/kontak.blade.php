@@ -40,7 +40,7 @@
           <input type="text" name="q" placeholder="Cari koleksi">
         </form>
 
-        <a href="#" class="nav-icon-btn" title="Keranjang">
+        <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 10h16l-2 10H6L4 10z"/>
             <path d="M4 10l5-6"/>
