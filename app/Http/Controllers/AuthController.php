@@ -86,7 +86,7 @@ class AuthController extends Controller
             'username'     => 'required|max:50|unique:users,username',
             'email'        => 'required|email|max:100|unique:users,email',
             'no_telp'      => 'required|max:20|unique:users,no_telp',
-            'password'     => 'required|min:4',
+            'password'     => 'required|min:6',
         ], [
             'nama_lengkap.required' => 'Nama lengkap wajib diisi',
             'username.required'     => 'Username wajib diisi',
@@ -97,7 +97,7 @@ class AuthController extends Controller
             'no_telp.required'      => 'Nomor telepon wajib diisi',
             'no_telp.unique'        => 'Nomor telepon sudah terdaftar',
             'password.required'     => 'Password wajib diisi',
-            'password.min'          => 'Password minimal 4 karakter',
+            'password.min'          => 'Password minimal 6 karakter',
         ]);
 
         User::create([

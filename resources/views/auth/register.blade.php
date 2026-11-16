@@ -91,7 +91,7 @@
           <div class="form-group">
             <label for="password" class="form-label">Password</label>
             <div class="input-wrapper">
-              <input type="password" id="password" name="password" class="form-input" placeholder="Minimal 4 karakter" required>
+              <input type="password" id="password" name="password" class="form-input" placeholder="Minimal 6 karakter" minlength="6" required>
               <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Lihat Password">
                 <!-- Ikon mata -->
                 <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
