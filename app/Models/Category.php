@@ -8,6 +8,7 @@ class Category extends Model
 {
     protected $fillable = [
         'nama_kategori',
+        'slug',
     ];
 
     // Relasi: satu kategori punya banyak produk

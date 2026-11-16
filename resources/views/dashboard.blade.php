@@ -66,7 +66,7 @@
           </a>
 
           <!-- Menu keranjang -->
-          <a href="{{ url('/keranjang') }}" class="nav-item">
+          <a href="{{ url('/admin/keranjang') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>

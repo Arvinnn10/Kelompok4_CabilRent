@@ -46,7 +46,7 @@
           </svg>
         </a>
 
-        <a href="#" class="nav-icon-btn" title="Akun Saya">
+        <a href="{{ Auth::check() ? route('logout') : route('login') }}" class="nav-icon-btn" title="{{ Auth::check() ? 'Keluar / Logout (' . (Auth::user()->nama_lengkap ?? Auth::user()->username) . ')' : 'Masuk / Login' }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="9"/>
             <circle cx="12" cy="10" r="3"/>
@@ -57,32 +57,43 @@
     </div>
   </header>
 
-  <!-- Detail produk (diisi ulang oleh js/detail.js sesuai produk yang diklik di halaman koleksi) -->
+  @php
+    $prodId = $product->slug ?: $product->id;
+    $fotoPath = $product->foto_produk;
+    if (!str_starts_with($fotoPath, 'http')) {
+        $fotoPath = asset('images/' . (str_starts_with($fotoPath, 'koleksi/') ? $fotoPath : 'koleksi/' . $fotoPath));
+    }
+    $categoryName = $product->category->nama_kategori ?? 'Busana';
+  @endphp
+
+  <!-- Detail produk -->
   <section class="detail-section">
     <div class="container detail-container detail-grid" id="detail-produk"
-         data-id="kebaya-coco"
-         data-nama="Coco Kebaya"
-         data-kategori="Pakaian Kebaya"
-         data-harga="200000"
-         data-keterangan="Inc : Rok, kamisol, selendang dan hijab."
-         data-gambar="{{ asset('images/koleksi/kebaya-coco.png') }}">
+         data-id="{{ $prodId }}"
+         data-nama="{{ $product->nama_produk }}"
+         data-kategori="{{ $categoryName }}"
+         data-harga="{{ $product->harga_sewa }}"
+         data-keterangan="{{ $product->desk_produk ?: 'Kondisi siap pakai dan diperiksa sebelum dikirim.' }}"
+         data-gambar="{{ $fotoPath }}">
 
       <div class="detail-image">
-        <img src="{{ asset('images/koleksi/kebaya-coco.png') }}" alt="Coco Kebaya" id="detail-gambar">
+        <img src="{{ $fotoPath }}" alt="{{ $product->nama_produk }}" id="detail-gambar">
       </div>
 
       <div class="detail-info">
-        <span class="detail-kategori" id="detail-kategori">PAKAIAN KEBAYA</span>
-        <h1 class="detail-nama" id="detail-nama">Coco Kebaya</h1>
+        <span class="detail-kategori" id="detail-kategori">{{ strtoupper($categoryName) }}</span>
+        <h1 class="detail-nama" id="detail-nama">{{ $product->nama_produk }}</h1>
         <p class="detail-harga">
-          <span id="detail-harga">Rp 200.000</span>
+          <span id="detail-harga">Rp {{ number_format($product->harga_sewa, 0, ',', '.') }}</span>
           <small>/ 3 hari sewa</small>
         </p>
-        <p class="detail-keterangan" id="detail-keterangan">Inc : Rok, kamisol, selendang dan hijab.</p>
+        <p class="detail-keterangan" id="detail-keterangan">{{ $product->desk_produk ?: 'Inc : Rok, kamisol, selendang dan hijab.' }}</p>
 
-        <form class="detail-form" id="detail-form" data-keranjang="{{ url('/keranjang') }}">
+        <form class="detail-form" id="detail-form" data-keranjang="{{ url('/keranjang') }}" action="{{ route('cart.add') }}" method="POST">
+          @csrf
+          <input type="hidden" name="produk_id" value="{{ $prodId }}">
           <label for="tanggal-pesanan" class="detail-label">TANGGAL PESANAN</label>
-          <input type="date" id="tanggal-pesanan" name="tanggal" required>
+          <input type="date" id="tanggal-pesanan" name="tanggal" min="{{ date('Y-m-d') }}" required>
           <p class="detail-note">Ketersediaan dikonfirmasi admin lewat WhatsApp.</p>
 
           <div class="detail-buttons">
@@ -91,7 +102,8 @@
           </div>
         </form>
 
-        <a href="https://wa.me/6289518062255" class="btn-tanya" id="btn-tanya" data-wa="6289518062255" target="_blank" rel="noopener">Tanya via WhatsApp</a>
+        <a href="https://wa.me/6287894302894?text={{ urlencode('Halo cabil.rent, saya ingin tanya ketersediaan sewa untuk busana ' . $product->nama_produk . '.') }}"
+           class="btn-tanya" id="btn-tanya" data-wa="6287894302894" target="_blank" rel="noopener">Tanya via WhatsApp</a>
 
         <div class="detail-accordion">
           <details class="detail-item" open>

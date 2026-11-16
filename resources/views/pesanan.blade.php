@@ -66,7 +66,7 @@
           </a>
 
           <!-- Menu keranjang -->
-          <a href="{{ url('/keranjang') }}" class="nav-item">
+          <a href="{{ url('/admin/keranjang') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
@@ -113,23 +113,26 @@
 
       <!-- Filter status pesanan dan kolom pencarian -->
       <div class="pesanan-filter-bar">
-        <!-- Pilihan filter kategori -->
+        <!-- Pilihan filter status -->
         <div class="filter-tabs">
-          <button class="filter-tab active">Semua</button>
-          <button class="filter-tab">Tertunda</button>
-          <button class="filter-tab">Dikonfirmasi</button>
-          <button class="filter-tab">Selesai</button>
-          <button class="filter-tab">Dibatalkan</button>
+          <a href="{{ url('/pesanan') }}" class="filter-tab {{ !request('status') || request('status') === 'Semua' ? 'active' : '' }}">Semua</a>
+          <a href="{{ url('/pesanan') }}?status=pending" class="filter-tab {{ request('status') === 'pending' ? 'active' : '' }}">Tertunda</a>
+          <a href="{{ url('/pesanan') }}?status=dikonfirmasi" class="filter-tab {{ request('status') === 'dikonfirmasi' ? 'active' : '' }}">Dikonfirmasi</a>
+          <a href="{{ url('/pesanan') }}?status=selesai" class="filter-tab {{ request('status') === 'selesai' ? 'active' : '' }}">Selesai</a>
+          <a href="{{ url('/pesanan') }}?status=dibatalkan" class="filter-tab {{ request('status') === 'dibatalkan' ? 'active' : '' }}">Dibatalkan</a>
         </div>
 
         <!-- Kolom pencarian -->
-        <div class="search-bar">
+        <form method="GET" action="{{ url('/pesanan') }}" class="search-bar">
+          @if(request('status'))
+            <input type="hidden" name="status" value="{{ request('status') }}">
+          @endif
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" class="search-input" placeholder="Cari id atau nama pelanggan" style="width: 260px;">
-        </div>
+          <input type="text" name="search" class="search-input" placeholder="Cari id, whatsapp, domisili, atau nama" value="{{ request('search') }}" style="width: 260px;">
+        </form>
       </div>
 
       <!-- Tabel rincian data pesanan -->
@@ -157,8 +160,25 @@
                   <td>{{ $order->no_whatsapp ?? '-' }}</td>
                   <td class="font-bold">{{ $order->domisili ?? '-' }}</td>
                   <td class="font-bold">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
-                  <td><span class="badge badge-outline">{{ ucfirst($order->status_pesan) }}</span></td>
-                  <td><a href="#" class="action-link">Detail &#9656;</a></td>
+                  <td>
+                    <form action="{{ route('pesanan.status', $order->id) }}" method="POST" style="margin: 0;">
+                      @csrf
+                      @method('PATCH')
+                      <select name="status_pesan" onchange="this.form.submit()" style="padding: 4px 8px; border-radius: 6px; font-size: 12px; border: 1px solid #d4c8bd; background: #fff; cursor: pointer;">
+                        <option value="pending" {{ $order->status_pesan === 'pending' ? 'selected' : '' }}>Tertunda</option>
+                        <option value="dikonfirmasi" {{ $order->status_pesan === 'dikonfirmasi' ? 'selected' : '' }}>Dikonfirmasi</option>
+                        <option value="selesai" {{ $order->status_pesan === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        <option value="dibatalkan" {{ $order->status_pesan === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                      </select>
+                    </form>
+                  </td>
+                  <td>
+                    @if($order->no_whatsapp)
+                      <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->no_whatsapp) }}" target="_blank" class="action-link" style="color: #2e7d32; font-weight: 600;">Chat WA &#9656;</a>
+                    @else
+                      -
+                    @endif
+                  </td>
                 </tr>
               @empty
                 <tr>

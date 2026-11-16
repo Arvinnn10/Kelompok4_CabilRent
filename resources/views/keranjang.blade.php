@@ -46,7 +46,7 @@
           </svg>
         </a>
 
-        <a href="#" class="nav-icon-btn" title="Akun Saya">
+        <a href="{{ Auth::check() ? route('logout') : route('login') }}" class="nav-icon-btn" title="{{ Auth::check() ? 'Keluar / Logout (' . (Auth::user()->nama_lengkap ?? Auth::user()->username) . ')' : 'Masuk / Login' }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="9"/>
             <circle cx="12" cy="10" r="3"/>
@@ -101,6 +101,190 @@
       </div>
     </div>
   </section>
+
+  <!-- Modal Formulir Pemesanan Sewa -->
+  <div id="checkout-modal" class="checkout-modal-overlay" style="display: none;">
+    <div class="checkout-modal-card">
+      <div class="checkout-modal-header">
+        <h3 class="checkout-modal-title">Formulir Pemesanan Sewa</h3>
+        <button type="button" class="checkout-modal-close" id="checkout-modal-close">&times;</button>
+      </div>
+
+      <p class="checkout-modal-subtitle">Lengkapi data untuk konfirmasi ketersediaan busana dan fitting ukuran melalui WhatsApp Admin.</p>
+
+      <form id="checkout-form" action="{{ route('order.checkout') }}" method="POST">
+        @csrf
+        <input type="hidden" name="items" id="checkout-items">
+
+        <div class="checkout-form-group">
+          <label for="nama_lengkap">Nama Lengkap *</label>
+          <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Contoh: Siti Rahma" value="{{ Auth::user()->nama_lengkap ?? '' }}" required>
+        </div>
+
+        <div class="checkout-form-row">
+          <div class="checkout-form-group">
+            <label for="no_whatsapp">No. WhatsApp *</label>
+            <input type="tel" id="no_whatsapp" name="no_whatsapp" placeholder="08xxxxxxxxxx" value="{{ Auth::user()->no_telp ?? '' }}" required>
+          </div>
+          <div class="checkout-form-group">
+            <label for="instagram">Instagram (Opsional)</label>
+            <input type="text" id="instagram" name="instagram" placeholder="@username">
+          </div>
+        </div>
+
+        <div class="checkout-form-row">
+          <div class="checkout-form-group">
+            <label for="domisili">Domisili / Kota *</label>
+            <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" required>
+          </div>
+          <div class="checkout-form-group">
+            <label for="tb_bb">Tinggi / Berat Badan (TB/BB) *</label>
+            <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160cm / 48kg" required>
+          </div>
+        </div>
+
+        <div class="checkout-form-group">
+          <label for="tanggal_acara">Tanggal Acara *</label>
+          <input type="date" id="tanggal_acara" name="tanggal_acara" min="{{ date('Y-m-d') }}" required>
+        </div>
+
+        <div class="checkout-summary-mini">
+          <div>Item Sewa: <strong id="checkout-item-count">0 busana</strong></div>
+          <div>Total Estimasi: <strong id="checkout-total-price">Rp 0</strong></div>
+        </div>
+
+        <div class="checkout-modal-actions">
+          <button type="button" class="btn-modal-cancel" id="btn-modal-cancel">Batal</button>
+          <button type="submit" class="btn-modal-submit" id="btn-modal-submit">Konfirmasi &amp; Chat WhatsApp</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+  .checkout-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(39, 26, 19, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .checkout-modal-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    max-width: 540px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(98, 62, 43, 0.15);
+  }
+  .checkout-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .checkout-modal-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    color: #3d2010;
+    font-weight: 700;
+  }
+  .checkout-modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #8e8077;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .checkout-modal-subtitle {
+    font-size: 13px;
+    color: #7a6b61;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .checkout-form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .checkout-form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #3d2010;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .checkout-form-group input {
+    padding: 12px 14px;
+    border: 1.5px solid #e2d9cf;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #271a13;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .checkout-form-group input:focus {
+    border-color: #623e2b;
+  }
+  .checkout-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    .checkout-form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .checkout-summary-mini {
+    background-color: #f6efe4;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 13px;
+    color: #3d2010;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid rgba(98, 62, 43, 0.12);
+  }
+  .checkout-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .btn-modal-cancel {
+    background: none;
+    border: 1.5px solid #d4c8bd;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #5c4b40;
+    cursor: pointer;
+  }
+  .btn-modal-submit {
+    background-color: #623e2b;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .btn-modal-submit:hover {
+    background-color: #4a2e20;
+  }
+  </style>
 
   <!-- Template satu produk di keranjang -->
   <template id="cart-item-template">

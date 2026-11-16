@@ -69,6 +69,22 @@ document.addEventListener('DOMContentLoaded', function () {
     produk.tanggal = form.tanggal.value;
     CabilCart.tambah(produk);
 
+    var csrfInput = form.querySelector('input[name="_token"]');
+    if (csrfInput) {
+      fetch('/keranjang/tambah', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfInput.value
+        },
+        body: JSON.stringify({
+          produk_id: produk.id,
+          tanggal_acara: produk.tanggal,
+          jumlah: 1
+        })
+      }).catch(function () {});
+    }
+
     if (aksi === 'sewa') {
       window.location.href = form.dataset.keranjang;
     } else {

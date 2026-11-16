@@ -65,7 +65,7 @@
           </a>
 
           <!-- Menu keranjang -->
-          <a href="{{ url('/keranjang') }}" class="nav-item">
+          <a href="{{ url('/admin/keranjang') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
@@ -106,58 +106,48 @@
         </div>
 
         <div class="header-actions">
-          <button class="btn-primary">
+          <button class="btn-primary" onclick="var nama = prompt('Masukkan nama kategori baru:'); if(nama) { var f = document.getElementById('form-tambah-kategori'); f.nama_kategori.value = nama; f.submit(); }">
             <span>+</span> Tambah Kategori Baru
           </button>
         </div>
       </div>
 
+      <form id="form-tambah-kategori" action="{{ route('kategori.store') }}" method="POST" style="display:none;">
+        @csrf
+        <input type="hidden" name="nama_kategori">
+      </form>
+
+      @if(session('success'))
+        <div style="background-color: #e8f5e9; color: #2e7d32; padding: 12px 18px; border-radius: 10px; margin-bottom: 20px; font-size: 13px;">
+          {{ session('success') }}
+        </div>
+      @endif
+
       <!-- Kartu pilihan kategori produk -->
       <div class="category-cards-grid">
-        <!-- Kartu kategori paket kebaya -->
-        <div class="category-card">
-          <!-- Foto kategori, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="category-img-container">
-            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Paket Kebaya" class="category-img" loading="lazy" decoding="async">
+        @foreach($categories as $cat)
+          @php
+            $catSlug = $cat->slug ?: \Illuminate\Support\Str::slug($cat->nama_kategori);
+            $catImg = match($catSlug) {
+              'heels' => asset('images/kategori-heels.png'),
+              'kamisol', 'kemben' => asset('images/kategori-kemben.png'),
+              default => asset('images/kategori-kebaya.png'),
+            };
+          @endphp
+          <div class="category-card">
+            <div class="category-img-container">
+              <img src="{{ $catImg }}" alt="{{ $cat->nama_kategori }}" class="category-img" loading="lazy" decoding="async">
+            </div>
+            <h3 class="category-title">{{ $cat->nama_kategori }}</h3>
+            <p class="category-count">{{ $cat->products_count }} produk</p>
+            <div class="category-btn-row">
+              <a href="{{ url('/produk?kategori=' . $cat->id) }}" class="btn-soft-blue" style="width: 100%; text-align: center;">Lihat produk</a>
+            </div>
           </div>
-          <h3 class="category-title">Paket Kebaya</h3>
-          <p class="category-count">78 produk - 21 disewa</p>
-          <div class="category-btn-row">
-            <button class="btn-tan">Edit</button>
-            <a href="{{ url('/produk') }}" class="btn-soft-blue">Lihat produk</a>
-          </div>
-        </div>
-
-        <!-- Kartu kategori heels -->
-        <div class="category-card">
-          <!-- Foto kategori, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="category-img-container">
-            <img src="{{ asset('images/kategori-heels.png') }}" alt="Heels" class="category-img" loading="lazy" decoding="async">
-          </div>
-          <h3 class="category-title">Heels</h3>
-          <p class="category-count">78 produk - 21 disewa</p>
-          <div class="category-btn-row">
-            <button class="btn-tan">Edit</button>
-            <a href="{{ url('/produk') }}" class="btn-soft-blue">Lihat produk</a>
-          </div>
-        </div>
-
-        <!-- Kartu kategori kemben -->
-        <div class="category-card">
-          <!-- Foto kategori, ganti atribut src jika ingin memakai foto sendiri -->
-          <div class="category-img-container">
-            <img src="{{ asset('images/kategori-kemben.png') }}" alt="Kemben" class="category-img" loading="lazy" decoding="async">
-          </div>
-          <h3 class="category-title">Kemben</h3>
-          <p class="category-count">78 produk - 21 disewa</p>
-          <div class="category-btn-row">
-            <button class="btn-tan">Edit</button>
-            <a href="{{ url('/produk') }}" class="btn-soft-blue">Lihat produk</a>
-          </div>
-        </div>
+        @endforeach
       </div>
 
-      <!-- Tabel daftar kategori dan status aktif -->
+      <!-- Tabel daftar kategori -->
       <div class="table-card">
         <div class="card-panel-header">
           <h3 class="card-panel-title">Daftar Kategori</h3>
@@ -168,61 +158,34 @@
             <thead>
               <tr>
                 <th>Nama</th>
-                <th>Deskripsi</th>
-                <th>Produk</th>
+                <th>Kode / Slug</th>
+                <th>Total Produk</th>
                 <th>Status</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="font-bold">Paket Kebaya</td>
-                <td>Kebaya putih & pastel untuk ijab kabul</td>
-                <td>30</td>
-                <td>
-                  <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                  </label>
-                  <span style="font-size: 12px; margin-left: 8px; font-weight: 600;">Aktif</span>
-                </td>
-                <td>
-                  <a href="#" class="action-link">Edit</a>
-                  <a href="#" class="action-danger">Hapus</a>
-                </td>
-              </tr>
-              <tr>
-                <td class="font-bold">Heels</td>
-                <td>Berbagai heels untuk acara</td>
-                <td>45</td>
-                <td>
-                  <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                  </label>
-                  <span style="font-size: 12px; margin-left: 8px; font-weight: 600;">Aktif</span>
-                </td>
-                <td>
-                  <a href="#" class="action-link">Edit</a>
-                  <a href="#" class="action-danger">Hapus</a>
-                </td>
-              </tr>
-              <tr>
-                <td class="font-bold">Kemben</td>
-                <td>Brokat & payet untuk resepsi dan gala</td>
-                <td>25</td>
-                <td>
-                  <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                  </label>
-                  <span style="font-size: 12px; margin-left: 8px; font-weight: 600;">Aktif</span>
-                </td>
-                <td>
-                  <a href="#" class="action-link">Edit</a>
-                  <a href="#" class="action-danger">Hapus</a>
-                </td>
-              </tr>
+              @forelse($categories as $cat)
+                <tr>
+                  <td class="font-bold">{{ $cat->nama_kategori }}</td>
+                  <td>{{ $cat->slug ?: \Illuminate\Support\Str::slug($cat->nama_kategori) }}</td>
+                  <td>{{ $cat->products_count }} produk</td>
+                  <td>
+                    <span class="badge badge-outline" style="background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9;">Aktif</span>
+                  </td>
+                  <td>
+                    <form action="{{ route('kategori.destroy', $cat->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus kategori ini?')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="action-danger" style="background:none; border:none; cursor:pointer;">Hapus</button>
+                    </form>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="5" style="text-align: center; color: #8e8077; padding: 25px;">Belum ada kategori.</td>
+                </tr>
+              @endforelse
             </tbody>
           </table>
         </div>

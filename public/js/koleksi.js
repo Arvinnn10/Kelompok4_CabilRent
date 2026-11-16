@@ -60,6 +60,24 @@ document.addEventListener('DOMContentLoaded', function () {
     img.addEventListener('error', tandaiKosong);
   });
 
+  // Simpan data produk yang dipilih ke localStorage saat tombol Sewa diklik
+  document.querySelectorAll('.btn-sewa').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var dipilih = {
+        id: btn.dataset.id,
+        nama: btn.dataset.nama,
+        kategori: btn.dataset.kategori,
+        keterangan: btn.dataset.keterangan,
+        harga: parseInt(btn.dataset.harga, 10),
+        gambar: btn.dataset.gambar,
+        durasi: 3
+      };
+      try {
+        localStorage.setItem('cabilrent-produk-dipilih', JSON.stringify(dipilih));
+      } catch (e) {}
+    });
+  });
+
   // Saat halaman dibuka dengan ?kategori=... (misal dari footer atau home)
   var awal = new URLSearchParams(window.location.search).get('kategori');
   var valid = Array.prototype.some.call(chips, function (chip) {

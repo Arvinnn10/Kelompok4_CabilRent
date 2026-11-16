@@ -44,90 +44,171 @@ class DatabaseSeeder extends Seeder
         );
 
         // 2. Seed Categories
-        $catKebaya = Category::firstOrCreate(['nama_kategori' => 'Paket Kebaya']);
-        $catHeels  = Category::firstOrCreate(['nama_kategori' => 'Heels']);
-        $catKemben = Category::firstOrCreate(['nama_kategori' => 'Kemben']);
+        $catKebaya = Category::updateOrCreate(
+            ['nama_kategori' => 'Paket Kebaya'],
+            ['slug' => 'kebaya']
+        );
+        $catHeels = Category::updateOrCreate(
+            ['nama_kategori' => 'Heels'],
+            ['slug' => 'heels']
+        );
+        $catKamisol = Category::updateOrCreate(
+            ['nama_kategori' => 'Kamisol'],
+            ['slug' => 'kamisol']
+        );
 
         // 3. Seed Products
         $productsData = [
             [
-                'nama_produk'   => 'Kebaya Brokat Maroon',
+                'nama_produk'   => 'Coco Kebaya',
+                'slug'          => 'kebaya-coco',
                 'kategori_id'   => $catKebaya->id,
-                'desk_produk'   => 'Kebaya brokat maroon elegan dengan detail payet cantik, cocok untuk wisuda dan kondangan.',
-                'harga_sewa'    => 250000,
-                'foto_produk'   => 'produk-brokat-maroon.png',
+                'desk_produk'   => 'Inc : Rok, kamisol, selendang dan hijab.',
+                'harga_sewa'    => 200000,
+                'foto_produk'   => 'koleksi/kebaya-coco.png',
                 'status_produk' => 'tersedia',
             ],
             [
-                'nama_produk'   => 'Kebaya Tulle Sage Green',
+                'nama_produk'   => 'Ivory Palazzo Kebaya',
+                'slug'          => 'kebaya-ivory-palazzo',
                 'kategori_id'   => $catKebaya->id,
-                'desk_produk'   => 'Kebaya modern warna sage green berbahan tulle premium dengan aksen bordir bunga.',
-                'harga_sewa'    => 275000,
-                'foto_produk'   => 'produk-tulle-sage.png',
-                'status_produk' => 'tersedia',
-            ],
-            [
-                'nama_produk'   => 'Kebaya Modern Navy',
-                'kategori_id'   => $catKebaya->id,
-                'desk_produk'   => 'Kebaya navy bernuansa modern dan mewah, sangat anggun untuk acara formal malam hari.',
-                'harga_sewa'    => 280000,
-                'foto_produk'   => 'produk-modern-navy.png',
-                'status_produk' => 'tidak_tersedia',
-            ],
-            [
-                'nama_produk'   => 'Kebaya Putih Gading',
-                'kategori_id'   => $catKebaya->id,
-                'desk_produk'   => 'Kebaya putih gading klasik dengan sentuhan mutiara, sempurna untuk akad dan lamaran.',
+                'desk_produk'   => 'Inc : Rok, kamisol, selendang dan hijab.',
                 'harga_sewa'    => 300000,
-                'foto_produk'   => 'produk-putih-gading.png',
+                'foto_produk'   => 'koleksi/kebaya-ivory-palazzo.png',
                 'status_produk' => 'tersedia',
             ],
             [
-                'nama_produk'   => 'Kebaya Rose Dusty',
+                'nama_produk'   => 'Aira Kebaya',
+                'slug'          => 'kebaya-aira',
                 'kategori_id'   => $catKebaya->id,
-                'desk_produk'   => 'Kebaya warna dusty rose bernuansa manis dan feminin dengan bahan tile halus.',
-                'harga_sewa'    => 260000,
-                'foto_produk'   => 'produk-rose-dusty.png',
+                'desk_produk'   => 'Inc : Rok, kamisol, selendang dan hijab.',
+                'harga_sewa'    => 450000,
+                'foto_produk'   => 'koleksi/kebaya-aira.png',
                 'status_produk' => 'tersedia',
             ],
             [
-                'nama_produk'   => 'Kebaya Encim Gold Klasik',
+                'nama_produk'   => 'Ayana Kebaya',
+                'slug'          => 'kebaya-ayana',
                 'kategori_id'   => $catKebaya->id,
-                'desk_produk'   => 'Kebaya encim tradisional warna keemasan dengan motif bordir halus khas nusantara.',
-                'harga_sewa'    => 290000,
-                'foto_produk'   => 'produk-encim-gold.png',
+                'desk_produk'   => 'Inc : Rok, kamisol, selendang dan hijab.',
+                'harga_sewa'    => 250000,
+                'foto_produk'   => 'koleksi/kebaya-ayana.png',
                 'status_produk' => 'tersedia',
             ],
             [
-                'nama_produk'   => 'Kemben Satin Premium',
-                'kategori_id'   => $catKemben->id,
-                'desk_produk'   => 'Kemben satin halus dan nyaman sebagai dalaman kebaya atau busana tradisional.',
+                'nama_produk'   => 'Ayuna Kebaya (non hijab)',
+                'slug'          => 'kebaya-ayuna',
+                'kategori_id'   => $catKebaya->id,
+                'desk_produk'   => 'Inc : Rok, kamisol, dan selendang.',
+                'harga_sewa'    => 300000,
+                'foto_produk'   => 'koleksi/kebaya-ayuna.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Kiona Kebaya',
+                'slug'          => 'kebaya-kiona',
+                'kategori_id'   => $catKebaya->id,
+                'desk_produk'   => 'Inc : Rok, kamisol, selendang dan hijab.',
+                'harga_sewa'    => 350000,
+                'foto_produk'   => 'koleksi/kebaya-kiona.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Meira Kebaya',
+                'slug'          => 'kebaya-meira',
+                'kategori_id'   => $catKebaya->id,
+                'desk_produk'   => 'Inc : Rok, kamisol, selendang dan hijab.',
+                'harga_sewa'    => 350000,
+                'foto_produk'   => 'koleksi/kebaya-meira.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Arella Kebaya',
+                'slug'          => 'kebaya-arella',
+                'kategori_id'   => $catKebaya->id,
+                'desk_produk'   => 'Inc : Rok, kamisol, dan hijab.',
+                'harga_sewa'    => 350000,
+                'foto_produk'   => 'koleksi/kebaya-arella.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Rose Kebaya',
+                'slug'          => 'kebaya-rose',
+                'kategori_id'   => $catKebaya->id,
+                'desk_produk'   => 'Inc : Rok, kamisol, dan hijab.',
+                'harga_sewa'    => 650000,
+                'foto_produk'   => 'koleksi/kebaya-rose.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Arin Heels',
+                'slug'          => 'heels-arin',
+                'kategori_id'   => $catHeels->id,
+                'desk_produk'   => 'Heels 5cm ukuran 37 cm',
                 'harga_sewa'    => 50000,
-                'foto_produk'   => 'kemben.png',
+                'foto_produk'   => 'koleksi/heels-arin.png',
                 'status_produk' => 'tersedia',
             ],
             [
-                'nama_produk'   => 'Heels Pesta Pearl White',
+                'nama_produk'   => 'Aqila Heels',
+                'slug'          => 'heels-aqila',
                 'kategori_id'   => $catHeels->id,
-                'desk_produk'   => 'Sepatu heels pesta berhias manik mutiara cantik, tinggi hak 5cm nyaman dipakai.',
-                'harga_sewa'    => 85000,
-                'foto_produk'   => 'kategori-heels.png',
+                'desk_produk'   => 'Heels 7cm ukuran 39 cm',
+                'harga_sewa'    => 40000,
+                'foto_produk'   => 'koleksi/heels-aqila.png',
                 'status_produk' => 'tersedia',
             ],
             [
-                'nama_produk'   => 'Heels Pesta Glitter Gold',
+                'nama_produk'   => 'Aura Heels',
+                'slug'          => 'heels-aura',
                 'kategori_id'   => $catHeels->id,
-                'desk_produk'   => 'Heels elegan bertabur glitter keemasan untuk melengkapi busana kebaya pesta.',
-                'harga_sewa'    => 90000,
-                'foto_produk'   => 'sepatu1.png',
+                'desk_produk'   => 'Heels 5cm ukuran 37 cm',
+                'harga_sewa'    => 45000,
+                'foto_produk'   => 'koleksi/heels-aura.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Kayla Heels',
+                'slug'          => 'heels-kayla',
+                'kategori_id'   => $catHeels->id,
+                'desk_produk'   => 'Heels 5cm ukuran 37 cm',
+                'harga_sewa'    => 50000,
+                'foto_produk'   => 'koleksi/heels-kayla.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Kamisol Ukuran M',
+                'slug'          => 'kamisol-m',
+                'kategori_id'   => $catKamisol->id,
+                'desk_produk'   => 'Kamisol ukuran M untuk dalaman kebaya.',
+                'harga_sewa'    => 200000,
+                'foto_produk'   => 'koleksi/kamisol-m.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Kamisol Ukuran S',
+                'slug'          => 'kamisol-s',
+                'kategori_id'   => $catKamisol->id,
+                'desk_produk'   => 'Kamisol ukuran S untuk dalaman kebaya.',
+                'harga_sewa'    => 300000,
+                'foto_produk'   => 'koleksi/kamisol-s.png',
+                'status_produk' => 'tersedia',
+            ],
+            [
+                'nama_produk'   => 'Kamisol Ukuran L',
+                'slug'          => 'kamisol-l',
+                'kategori_id'   => $catKamisol->id,
+                'desk_produk'   => 'Kamisol ukuran L untuk dalaman kebaya.',
+                'harga_sewa'    => 450000,
+                'foto_produk'   => 'koleksi/kamisol-l.png',
                 'status_produk' => 'tersedia',
             ],
         ];
 
         $createdProducts = [];
         foreach ($productsData as $data) {
-            $createdProducts[] = Product::firstOrCreate(
-                ['nama_produk' => $data['nama_produk']],
+            $createdProducts[] = Product::updateOrCreate(
+                ['slug' => $data['slug']],
                 $data
             );
         }
