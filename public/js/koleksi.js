@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     img.addEventListener('error', tandaiKosong);
   });
 
+<<<<<<< HEAD
   // Simpan data produk yang dipilih ke localStorage saat tombol Sewa diklik
   document.querySelectorAll('.btn-sewa').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -75,6 +76,26 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         localStorage.setItem('cabilrent-produk-dipilih', JSON.stringify(dipilih));
       } catch (e) {}
+=======
+  // Klik foto produk: simpan data produk untuk halaman detail (js/detail.js)
+  document.querySelectorAll('.produk-image').forEach(function (link) {
+    link.addEventListener('click', function () {
+      var card = link.closest('.produk-card');
+      var produk = {
+        id: card.dataset.id,
+        nama: card.querySelector('.produk-name').textContent.trim(),
+        kategori: card.querySelector('.produk-badge').textContent.trim(),
+        keterangan: card.querySelector('.produk-size').textContent.trim(),
+        harga: CabilCart.keAngka(card.querySelector('.produk-price').textContent),
+        gambar: card.querySelector('.produk-image img').getAttribute('src'),
+        durasi: 3
+      };
+      try {
+        localStorage.setItem('cabilrent-produk-dipilih', JSON.stringify(produk));
+      } catch (e) {
+        // Penyimpanan diblokir browser: detail memakai data bawaan
+      }
+>>>>>>> d0dfb69 (halaman pemesanan dan perbaikan halaman koleksi agar bisa masuk ke halaman whatsapp otomatis UPDATE V2)
     });
   });
 

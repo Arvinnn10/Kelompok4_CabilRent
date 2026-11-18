@@ -93,7 +93,7 @@
             </div>
           </div>
 
-          <a href="#" class="btn-lanjut" id="btn-lanjut">Lanjut ke Pemesanan</a>
+          <a href="{{ url('/pemesanan') }}" class="btn-lanjut" id="btn-lanjut">Lanjut ke Pemesanan</a>
           <a href="{{ url('/koleksi') }}" class="btn-tambah">Tambah busana lain</a>
 
           <p class="summary-note">Deposit dikembalikan penuh setelah busana diterima dalam kondisi baik.</p>
@@ -318,10 +318,10 @@
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="{{ asset('images/icon-instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="{{ asset('images/icon-whatsapp.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
         </div>

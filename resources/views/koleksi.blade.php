@@ -151,38 +151,213 @@
 
       <!-- Grid produk -->
       <div class="produk-grid">
-        @forelse ($products as $prod)
-          @php
-            $prodCatSlug = $prod->category->slug ?? \Illuminate\Support\Str::slug($prod->category->nama_kategori ?? 'kebaya');
-            $prodId = $prod->slug ?: $prod->id;
-            $fotoPath = $prod->foto_produk;
-            if (!str_starts_with($fotoPath, 'http')) {
-                $fotoPath = asset('images/' . (str_starts_with($fotoPath, 'koleksi/') ? $fotoPath : 'koleksi/' . $fotoPath));
-            }
-          @endphp
-          <div class="produk-card" data-kategori="{{ $prodCatSlug }}" data-id="{{ $prodId }}">
-            <div class="produk-image">
-              <img src="{{ $fotoPath }}" alt="{{ $prod->nama_produk }}">
-              <span class="produk-badge">{{ $prod->category->nama_kategori ?? 'Busana' }}</span>
-            </div>
-            <h3 class="produk-name">{{ $prod->nama_produk }}</h3>
-            <p class="produk-size">{{ $prod->desk_produk ?: 'Koleksi busana pilihan cabil.rent' }}</p>
-            <div class="produk-footer">
-              <span class="produk-price">Rp {{ number_format($prod->harga_sewa, 0, ',', '.') }}{{ $prodCatSlug === 'heels' ? '/3 hari' : '' }}</span>
-              <a href="{{ url('/detail/' . $prodId) }}" class="btn-sewa"
-                 data-id="{{ $prodId }}"
-                 data-nama="{{ $prod->nama_produk }}"
-                 data-kategori="{{ $prod->category->nama_kategori ?? 'Busana' }}"
-                 data-harga="{{ $prod->harga_sewa }}"
-                 data-gambar="{{ $fotoPath }}"
-                 data-keterangan="{{ $prod->desk_produk }}">Sewa</a>
-            </div>
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-coco">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-coco.png') }}" alt="Coco Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
           </div>
-        @empty
-          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #8e8077;">
-            Belum ada produk yang sesuai dengan kategori atau pencarian Anda.
+          <h3 class="produk-name">Coco Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, selendang dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 200.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-coco" class="btn-sewa">Sewa</a>
           </div>
-        @endforelse
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-ivory-palazzo">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-ivory-palazzo.png') }}" alt="Ivory Palazzo Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Ivory Palazzo Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, selendang dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 300.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-ivory-palazzo" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-aira">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-aira.png') }}" alt="Aira Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Aira Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, selendang dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 450.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-aira" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-ayana">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-ayana.png') }}" alt="Ayana Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Ayana Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, selendang dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 250.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-ayana" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-ayuna">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-ayuna.png') }}" alt="Ayuna Kebaya (non hijab)">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Ayuna Kebaya (non hijab)</h3>
+          <p class="produk-size">inc : rok, kamisol, dan selendang</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 300.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-ayuna" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-kiona">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-kiona.png') }}" alt="Kiona Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Kiona Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, selendang dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 350.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-kiona" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-meira">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-meira.png') }}" alt="Meira Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Meira Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, selendang dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 350.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-meira" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-arella">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-arella.png') }}" alt="Arella Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Arella Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 350.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-arella" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kebaya" data-id="kebaya-rose">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kebaya-rose.png') }}" alt="Rose Kebaya">
+            <span class="produk-badge">Pakaian Kebaya</span>
+          </div>
+          <h3 class="produk-name">Rose Kebaya</h3>
+          <p class="produk-size">inc : rok, kamisol, dan hijab</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 650.000</span>
+            <a href="{{ url('/detail') }}?id=kebaya-rose" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="heels" data-id="heels-arin">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/heels-arin.png') }}" alt="Arin Heels">
+            <span class="produk-badge">Heels</span>
+          </div>
+          <h3 class="produk-name">Arin Heels</h3>
+          <p class="produk-size">heels 5cm ukuran 37 cm</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 50.000/3 hari</span>
+            <a href="{{ url('/detail') }}?id=heels-arin" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="heels" data-id="heels-aqila">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/heels-aqila.png') }}" alt="Aqila Heels">
+            <span class="produk-badge">Heels</span>
+          </div>
+          <h3 class="produk-name">Aqila Heels</h3>
+          <p class="produk-size">heels 7cm ukuran 39 cm</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 40.000/3 hari</span>
+            <a href="{{ url('/detail') }}?id=heels-aqila" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="heels" data-id="heels-aura">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/heels-aura.png') }}" alt="Aura Heels">
+            <span class="produk-badge">Heels</span>
+          </div>
+          <h3 class="produk-name">Aura Heels</h3>
+          <p class="produk-size">heels 5cm ukuran 37 cm</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 45.000/3 hari</span>
+            <a href="{{ url('/detail') }}?id=heels-aura" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="heels" data-id="heels-kayla">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/heels-kayla.png') }}" alt="Kayla Heels">
+            <span class="produk-badge">Heels</span>
+          </div>
+          <h3 class="produk-name">Kayla Heels</h3>
+          <p class="produk-size">heels 5cm ukuran 37 cm</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 50.000/3 hari</span>
+            <a href="{{ url('/detail') }}?id=heels-kayla" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kamisol" data-id="kamisol-m">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kamisol-m.png') }}" alt="Kamisol">
+            <span class="produk-badge">Kamisol</span>
+          </div>
+          <h3 class="produk-name">Kamisol</h3>
+          <p class="produk-size">Ukuran M</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 200.000</span>
+            <a href="{{ url('/detail') }}?id=kamisol-m" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kamisol" data-id="kamisol-s">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kamisol-s.png') }}" alt="Kamisol">
+            <span class="produk-badge">Kamisol</span>
+          </div>
+          <h3 class="produk-name">Kamisol</h3>
+          <p class="produk-size">Ukuran S</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 300.000</span>
+            <a href="{{ url('/detail') }}?id=kamisol-s" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
+
+        <div class="produk-card" data-kategori="kamisol" data-id="kamisol-l">
+          <div class="produk-image">
+            <img src="{{ asset('images/koleksi/kamisol-l.png') }}" alt="Kamisol">
+            <span class="produk-badge">Kamisol</span>
+          </div>
+          <h3 class="produk-name">Kamisol</h3>
+          <p class="produk-size">Ukuran L</p>
+          <div class="produk-footer">
+            <span class="produk-price">Rp 450.000</span>
+            <a href="{{ url('/detail') }}?id=kamisol-l" class="btn-sewa">Sewa</a>
+          </div>
+        </div>
       </div>
 
       <p class="produk-empty" id="produk-empty" hidden>Belum ada produk di kategori ini.</p>
@@ -286,7 +461,7 @@
       <p class="cta-desc">Hubungi kami, tim CABIL.RENT akan bantu carikan pilihan yang sesuai.</p>
       <a href="#" class="btn-cta">
         <!-- Ganti file ikon di images/koleksi/ (ukuran diatur di CSS) -->
-        <img src="{{ asset('images/koleksi/icon-whatsapp.png') }}" alt="" class="btn-cta-icon">
+        <img src="{{ asset('images/wa2.png') }}" alt="" class="btn-cta-icon">
         <span>Chat WhatsApp</span>
       </a>
     </div>
@@ -306,10 +481,10 @@
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="#" class="social-icon" title="Instagram">
-              <img src="{{ asset('images/icon-instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
             <a href="#" class="social-icon" title="WhatsApp">
-              <img src="{{ asset('images/icon-whatsapp.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
         </div>

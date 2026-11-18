@@ -1,0 +1,267 @@
+/* Halaman Data Pemesanan (dipakai bersama css/keranjang.css untuk navbar, footer, dan ringkasan) */
+
+.order-section {
+  background-color: #f6efe4;
+  padding: 70px 0 90px;
+}
+
+.order-container {
+  max-width: 1052px;
+}
+
+.order-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #5b3724;
+  margin-bottom: 40px;
+}
+
+.order-grid {
+  display: grid;
+  grid-template-columns: 1fr 424px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Form */
+.order-card {
+  background-color: #f3ebdd;
+  border: 1px solid #ebd9c8;
+  border-radius: 16px;
+  padding: 22px 22px 24px;
+  min-width: 0;
+}
+
+.order-legend,
+.order-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  color: #5b3724;
+}
+
+.order-legend {
+  float: left;
+  width: 100%;
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+
+.order-legend + * {
+  clear: both;
+}
+
+.order-subtitle {
+  font-size: 20px;
+  margin: 40px 0 18px;
+}
+
+.order-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.order-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.order-field-wide {
+  margin-bottom: 22px;
+  max-width: 551px;
+}
+
+.order-field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #271a13;
+}
+
+.order-field input,
+.order-field textarea {
+  width: 100%;
+  background-color: #fdf8ee;
+  border: 1px solid #ebd9c8;
+  border-radius: 8px;
+  padding: 0 14px;
+  height: 46px;
+  font-size: 13px;
+  color: #271a13;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.order-field textarea {
+  height: 100px;
+  padding: 12px 14px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.order-field input::placeholder,
+.order-field textarea::placeholder {
+  color: #8a7a6e;
+}
+
+.order-field input:focus,
+.order-field textarea:focus {
+  border-color: #5b3724;
+  box-shadow: 0 0 0 3px rgba(91, 55, 36, 0.12);
+}
+
+.order-field.has-error input {
+  border-color: #9b1c3c;
+}
+
+.order-error {
+  font-size: 11px;
+  color: #9b1c3c;
+}
+
+.order-error:empty {
+  display: none;
+}
+
+/* Ringkasan */
+.order-summary {
+  padding: 22px 22px 25px;
+  background-color: #fdf8ee;
+}
+
+.order-summary .summary-title {
+  font-size: 22px;
+  color: #271a13;
+  margin-bottom: 22px;
+}
+
+.order-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ebd9c8;
+}
+
+.order-items:empty {
+  display: none;
+}
+
+.order-item {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.order-item-img {
+  flex: 0 0 62px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #5b3724;
+}
+
+.order-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-item-img img.is-missing {
+  visibility: hidden;
+}
+
+.order-item-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #271a13;
+}
+
+.order-item-meta {
+  font-size: 11px;
+  color: #5c4738;
+  margin: 2px 0 6px;
+}
+
+.order-item-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9b1c3c;
+}
+
+.order-empty {
+  text-align: center;
+  padding: 12px 0 20px;
+  border-bottom: 1px solid #ebd9c8;
+  font-size: 13px;
+  color: #5c4738;
+}
+
+.order-empty[hidden] {
+  display: none;
+}
+
+.order-empty p {
+  margin-bottom: 12px;
+}
+
+.order-rows {
+  margin: 16px 0 18px;
+}
+
+.order-summary .summary-value {
+  font-size: 13px;
+  color: #271a13;
+}
+
+.order-summary .summary-total-value {
+  font-size: 20px;
+  color: #9b1c3c;
+}
+
+.btn-kirim {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background-color: #5b3724;
+  font-size: 12px;
+  margin-bottom: 0;
+}
+
+.btn-kirim:disabled {
+  background-color: #86695a;
+  color: #cbb8a8;
+  cursor: not-allowed;
+}
+
+.order-note {
+  text-align: center;
+  font-size: 10px;
+  margin-top: 18px;
+}
+
+/* Tablet dan HP */
+@media (max-width: 900px) {
+  .order-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-field-wide {
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .order-title {
+    font-size: 30px;
+  }
+
+  .order-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

@@ -234,4 +234,23 @@ Route::get('/kontak', function () {
     return view('kontak');
 })->name('kontak');
 
+<<<<<<< HEAD
 require __DIR__.'/auth.php';
+=======
+// KERANJANG
+Route::get('/keranjang', function () {
+    return view('keranjang');
+});
+
+// PEMESANAN
+Route::get('/pemesanan', function () {
+    return view('pemesanan');
+});
+
+// DETAIL PRODUK
+Route::get('/detail', function () {
+    return view('detail');
+});
+
+require __DIR__.'/auth.php';
+>>>>>>> d0dfb69 (halaman pemesanan dan perbaikan halaman koleksi agar bisa masuk ke halaman whatsapp otomatis UPDATE V2)

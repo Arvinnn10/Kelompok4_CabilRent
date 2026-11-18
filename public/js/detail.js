@@ -40,6 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
   gambar.src = produk.gambar;
   gambar.alt = produk.nama;
 
+  // Data sudah terisi: tampilkan (sebelumnya disembunyikan agar produk bawaan tidak sempat terlihat)
+  root.style.visibility = 'visible';
+
   // Foto yang belum ada tampil kotak coklat
   function tandaiKosong() {
     gambar.classList.add('is-missing');

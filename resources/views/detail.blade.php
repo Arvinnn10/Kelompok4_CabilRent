@@ -68,6 +68,7 @@
 
   <!-- Detail produk -->
   <section class="detail-section">
+<<<<<<< HEAD
     <div class="container detail-container detail-grid" id="detail-produk"
          data-id="{{ $prodId }}"
          data-nama="{{ $product->nama_produk }}"
@@ -75,6 +76,15 @@
          data-harga="{{ $product->harga_sewa }}"
          data-keterangan="{{ $product->desk_produk ?: 'Kondisi siap pakai dan diperiksa sebelum dikirim.' }}"
          data-gambar="{{ $fotoPath }}">
+=======
+    <div class="container detail-container detail-grid" id="detail-produk" style="visibility:hidden"
+         data-id="kebaya-coco"
+         data-nama="Coco Kebaya"
+         data-kategori="Pakaian Kebaya"
+         data-harga="200000"
+         data-keterangan="Inc : Rok, kamisol, selendang dan hijab."
+         data-gambar="{{ asset('images/koleksi/kebaya-coco.png') }}">
+>>>>>>> d0dfb69 (halaman pemesanan dan perbaikan halaman koleksi agar bisa masuk ke halaman whatsapp otomatis UPDATE V2)
 
       <div class="detail-image">
         <img src="{{ $fotoPath }}" alt="{{ $product->nama_produk }}" id="detail-gambar">
@@ -189,6 +199,7 @@
     </div>
   </footer>
 
+  <noscript><style>#detail-produk { visibility: visible !important; }</style></noscript>
   <script src="{{ asset('js/cart.js') }}"></script>
   <script src="{{ asset('js/detail.js') }}"></script>
 </body>
