@@ -14,7 +14,7 @@
   font-size: 38px;
   font-weight: 500;
   line-height: 1.2;
-  color: #5b3724;
+  color: #623e2b;
   margin-bottom: 40px;
 }
 
@@ -27,8 +27,8 @@
 
 /* Form */
 .order-card {
-  background-color: #f3ebdd;
-  border: 1px solid #ebd9c8;
+  background-color: #f6efe4;
+  border: 1px solid #ebdeca;
   border-radius: 16px;
   padding: 22px 22px 24px;
   min-width: 0;
@@ -38,7 +38,7 @@
 .order-subtitle {
   font-family: 'Playfair Display', serif;
   font-weight: 500;
-  color: #5b3724;
+  color: #623e2b;
 }
 
 .order-legend {
@@ -78,19 +78,19 @@
 .order-field label {
   font-size: 12px;
   font-weight: 500;
-  color: #271a13;
+  color: #33241b;
 }
 
 .order-field input,
 .order-field textarea {
   width: 100%;
-  background-color: #fdf8ee;
-  border: 1px solid #ebd9c8;
+  background-color: #fffaf1;
+  border: 1px solid #ebdeca;
   border-radius: 8px;
   padding: 0 14px;
   height: 46px;
   font-size: 13px;
-  color: #271a13;
+  color: #33241b;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -109,17 +109,17 @@
 
 .order-field input:focus,
 .order-field textarea:focus {
-  border-color: #5b3724;
+  border-color: #623e2b;
   box-shadow: 0 0 0 3px rgba(91, 55, 36, 0.12);
 }
 
 .order-field.has-error input {
-  border-color: #9b1c3c;
+  border-color: #8b1e3f;
 }
 
 .order-error {
   font-size: 11px;
-  color: #9b1c3c;
+  color: #8b1e3f;
 }
 
 .order-error:empty {
@@ -129,12 +129,12 @@
 /* Ringkasan */
 .order-summary {
   padding: 22px 22px 25px;
-  background-color: #fdf8ee;
+  background-color: #fffaf1;
 }
 
 .order-summary .summary-title {
   font-size: 22px;
-  color: #271a13;
+  color: #33241b;
   margin-bottom: 22px;
 }
 
@@ -144,7 +144,7 @@
   flex-direction: column;
   gap: 14px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #ebd9c8;
+  border-bottom: 1px solid #ebdeca;
 }
 
 .order-items:empty {
@@ -162,7 +162,7 @@
   height: 80px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #5b3724;
+  background-color: #623e2b;
 }
 
 .order-item-img img {
@@ -178,7 +178,7 @@
 .order-item-name {
   font-size: 13px;
   font-weight: 500;
-  color: #271a13;
+  color: #33241b;
 }
 
 .order-item-meta {
@@ -190,13 +190,13 @@
 .order-item-price {
   font-size: 12px;
   font-weight: 600;
-  color: #9b1c3c;
+  color: #8b1e3f;
 }
 
 .order-empty {
   text-align: center;
   padding: 12px 0 20px;
-  border-bottom: 1px solid #ebd9c8;
+  border-bottom: 1px solid #ebdeca;
   font-size: 13px;
   color: #5c4738;
 }
@@ -215,19 +215,19 @@
 
 .order-summary .summary-value {
   font-size: 13px;
-  color: #271a13;
+  color: #33241b;
 }
 
 .order-summary .summary-total-value {
   font-size: 20px;
-  color: #9b1c3c;
+  color: #8b1e3f;
 }
 
 .btn-kirim {
   width: 100%;
   border: none;
   cursor: pointer;
-  background-color: #5b3724;
+  background-color: #623e2b;
   font-size: 12px;
   margin-bottom: 0;
 }

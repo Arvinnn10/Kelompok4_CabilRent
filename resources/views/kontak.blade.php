@@ -25,7 +25,7 @@
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/') }}" class="nav-link">Beranda</a></li>
         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link active">Kontak</a></li>
@@ -78,7 +78,7 @@
       <div class="kontak-info">
         <div class="info-card">
           <span class="info-label">WHATSAPP</span>
-          <span class="info-value">0895&ndash;1806&ndash;2255</span>
+          <span class="info-value">0878&ndash;9430&ndash;2894</span>
         </div>
         <div class="info-card">
           <span class="info-label">ALAMAT</span>
@@ -93,12 +93,14 @@
           <span class="info-value">@cabil.rent di Instagram dan TikTok</span>
         </div>
 
-        <!-- Ganti dengan <iframe> Google Maps bila sudah ada -->
-        <div class="kontak-map">Peta lokasi (contoh)</div>
+        <!-- Foto toko cabil.rent -->
+        <div class="kontak-map">
+          <img src="{{ asset('images/kontak/toko.png') }}" alt="Toko cabil.rent" loading="lazy" decoding="async">
+        </div>
       </div>
 
       <!-- Form pesan, dikirim ke WhatsApp oleh js/kontak.js -->
-      <form class="kontak-form" id="kontak-form" action="#" method="POST" data-wa="6289518062255">
+      <form class="kontak-form" id="kontak-form" action="#" method="POST" data-wa="6287894302894">
         <div class="form-group">
           <label for="nama" class="form-label-lg">Nama</label>
           <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required>
@@ -131,7 +133,7 @@
   <!-- Jalur kontak -->
   <section class="kontak-channel">
     <div class="container kontak-container channel-grid">
-      <a href="https://wa.me/6289518062255" class="channel-card" target="_blank" rel="noopener">
+      <a href="https://wa.me/6287894302894" class="channel-card" target="_blank" rel="noopener">
         <span class="channel-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>
@@ -144,7 +146,7 @@
         </span>
       </a>
 
-      <a href="#" class="channel-card">
+      <a href="https://www.instagram.com/cabil.rent/" class="channel-card" target="_blank" rel="noopener">
         <span class="channel-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="5"/>
@@ -158,7 +160,7 @@
         </span>
       </a>
 
-      <a href="#" class="channel-card">
+      <a href="https://www.google.com/maps/search/?api=1&query=Antaran+Besar%2C+Kota+Banjarmasin%2C+Kalimantan+Selatan" class="channel-card" target="_blank" rel="noopener">
         <span class="channel-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 9l1.5-5h13L20 9"/>
@@ -183,7 +185,7 @@
           <h2 class="cta-banner-title">Butuh cepat?</h2>
           <p class="cta-banner-desc">Chat langsung, biasanya kami balas dalam hitungan menit.</p>
         </div>
-        <a href="https://wa.me/6289518062255" class="btn-chat" target="_blank" rel="noopener">Chat sekarang</a>
+        <a href="https://wa.me/6287894302894" class="btn-chat" target="_blank" rel="noopener">Chat sekarang</a>
       </div>
     </div>
   </section>
@@ -220,10 +222,10 @@
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
-            <a href="#" class="social-icon" title="Instagram">
+            <a href="https://www.instagram.com/cabil.rent/" class="social-icon" title="Instagram" target="_blank" rel="noopener">
               <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
             </a>
-            <a href="#" class="social-icon" title="WhatsApp">
+            <a href="https://wa.me/6287894302894" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
               <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">
             </a>
           </div>
@@ -233,7 +235,7 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="{{ url('/') }}">Home</a></li>
+            <li><a href="{{ url('/') }}">Beranda</a></li>
             <li><a href="{{ url('/koleksi') }}">Collection</a></li>
             <li><a href="{{ url('/tentang') }}">About</a></li>
             <li><a href="{{ url('/kontak') }}">Contact</a></li>

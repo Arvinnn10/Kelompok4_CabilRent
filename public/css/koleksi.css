@@ -9,6 +9,15 @@
   box-sizing: border-box;
 }
 
+/* Klik tautan #... menggulir halaman dengan halus (mis. tombol "Lihat paket" ke "Semua Koleksi") */
+html {
+  scroll-behavior: smooth;
+}
+
+#semua-koleksi {
+  scroll-margin-top: 60px; /* sisakan ruang untuk navbar yang menempel di atas */
+}
+
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: #f6efe4;
@@ -89,14 +98,19 @@ img {
 .nav-link {
   font-size: 13px;
   font-weight: 500;
-  color: #271a13;
+  color: #623e2b;
   transition: opacity 0.2s;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  font-weight: 600;
+.nav-link:hover {
   opacity: 0.85;
+}
+
+/* Menu halaman yang sedang dibuka diberi garis bawah */
+.nav-link.active {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
 }
 
 /* Search dan tombol di kanan */
@@ -179,7 +193,7 @@ img {
 /* Banner promo */
 .promo-section {
   background-color: #f6efe4;
-  padding: 12px 0 40px;
+  padding: 12px 0 72px;
 }
 
 .promo-banner {
@@ -400,6 +414,17 @@ img {
   border-radius: 16px;
   padding: 10px 10px 14px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Satu kotak produk bisa diklik: seluruh kotak zoom sedikit saat disorot */
+.produk-card:hover,
+.produk-card:focus-within {
+  transform: scale(1.03);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 
 .produk-image {
@@ -408,29 +433,24 @@ img {
   height: 290px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #5b3724;
+  background-color: #ffffff;
   margin-bottom: 12px;
 }
 
+/* Foto tampil utuh di tengah kotak, latar putih seperti desain (tidak terpotong, tidak ada coklat yang terlihat) */
 .produk-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-/* Foto bisa diklik (menuju halaman detail): zoom sedikit saat disorot */
-.produk-image:hover img,
-.produk-image:focus-visible img {
-  transform: scale(1.06);
+  object-fit: contain;
+  object-position: center;
 }
 
 .produk-badge {
   position: absolute;
   left: 10px;
   bottom: 10px;
-  background-color: #ffffff;
-  color: #271a13;
+  background-color: #623e2b;
+  color: #ffffff;
   font-size: 10px;
   font-weight: 600;
   padding: 3px 10px;
@@ -659,15 +679,18 @@ img {
 }
 
 .testimoni-text {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 15px;
-  line-height: 1.6;
+  font-weight: 400;
+  line-height: 1.5;
   color: #ffffff;
 }
 
 .testimoni-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
-  color: #D8C3A5;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* Ajakan hubungi */

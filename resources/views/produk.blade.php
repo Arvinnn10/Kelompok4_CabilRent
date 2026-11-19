@@ -3,285 +3,457 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kelola Produk - Cabil.Rent</title>
-  
-  <!-- CSS Khusus Halaman Produk  -->
+  <title>Produk - Cabil.Rent</title>
+
+  <!-- Tata letak admin (sidebar, bar atas, kartu, badge) dipakai bersama dashboard -->
+  <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+  <!-- CSS khusus halaman Produk -->
   <link rel="stylesheet" href="{{ asset('css/produk.css') }}">
-  
-  <!-- Font Google -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    .badge-toggle-btn {
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      transition: opacity 0.2s;
-    }
-    .badge-toggle-btn:hover {
-      opacity: 0.85;
-    }
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      z-index: 999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-box {
-      background: #ffffff;
-      border-radius: 16px;
-      max-width: 500px;
-      width: 100%;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .form-group-admin {
-      margin-bottom: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .form-group-admin label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #3d2010;
-    }
-    .form-group-admin input, .form-group-admin select, .form-group-admin textarea {
-      padding: 10px 12px;
-      border: 1px solid #d4c8bd;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-    }
-  </style>
+
+  <!-- Saat halaman dibuka tanpa pilihan kategori, langsung tampilkan kategori Pakaian Kebaya (atau kategori pertama) -->
+  @php
+    $kategoriAwal = $categories->first(function ($c) {
+        return stripos($c->nama_kategori, 'kebaya') !== false;
+    }) ?? $categories->first();
+  @endphp
+  @if ($kategoriAwal)
+    <script>
+      if (!new URLSearchParams(window.location.search).has('kategori')) {
+        window.location.replace('{{ url('/produk') }}?kategori={{ $kategoriAwal->id }}');
+      }
+    </script>
+  @endif
 </head>
 <body>
 
-  <div class="app-container">
+  <div class="app-container" id="app">
     <!-- Sidebar navigasi -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div>
         <div class="sidebar-header">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo" loading="lazy" decoding="async">
-          <span class="sidebar-brand">CABIL.RENT</span>
+          <img src="{{ asset('images/logo.png') }}" alt="Logo cabil.rent" class="sidebar-logo" decoding="async">
+          <div>
+            <span class="sidebar-brand">CABIL.RENT</span>
+            <span class="sidebar-sub">ADMIN PANEL</span>
+          </div>
         </div>
 
         <nav class="sidebar-nav">
-          <!-- Menu dashboard -->
+          <p class="nav-section">UTAMA</p>
           <a href="{{ url('/dashboard') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="5" rx="1.5"></rect>
+              <rect x="14" y="12" width="7" height="9" rx="1.5"></rect>
               <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
             </svg>
             <span>Dashboard</span>
           </a>
-
-          <!-- Menu kategori -->
-          <a href="{{ url('/kategori') }}" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <span>Kategori</span>
-          </a>
-
-          <!-- Menu produk -->
-          <a href="{{ url('/produk') }}" class="nav-item active">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
-            </svg>
-            <span>Produk</span>
-          </a>
-
-          <!-- Menu pesanan -->
           <a href="{{ url('/pesanan') }}" class="nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-              <line x1="2" y1="10" x2="22" y2="10"></line>
+              <path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2z"></path>
+              <line x1="9" y1="8" x2="15" y2="8"></line>
+              <line x1="9" y1="12" x2="15" y2="12"></line>
             </svg>
             <span>Pesanan</span>
           </a>
 
-          <!-- Menu keranjang -->
-          <a href="{{ url('/admin/keranjang') }}" class="nav-item">
+          <p class="nav-section">KATALOG</p>
+          <a href="{{ url('/produk') }}" class="nav-item active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.3 7 12 12 20.7 7"></polyline>
+              <line x1="12" y1="22" x2="12" y2="12"></line>
             </svg>
-            <span>Keranjang</span>
+            <span>Produk</span>
+          </a>
+          <a href="{{ url('/kategori') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            <span>Kategori</span>
+          </a>
+
+          <p class="nav-section">PENGGUNA</p>
+          <a href="{{ url('/pengguna') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="8" r="4"></circle>
+              <path d="M2 21a7 7 0 0 1 14 0"></path>
+              <path d="M16 4a4 4 0 0 1 0 8"></path>
+              <path d="M22 21a7 7 0 0 0-4-6.3"></path>
+            </svg>
+            <span>Pengguna</span>
           </a>
         </nav>
       </div>
 
-      <!-- Profil admin di bagian bawah sidebar -->
+      <!-- Profil admin dan tombol keluar -->
       <div class="sidebar-footer">
-        <a href="{{ route('logout') }}" class="user-profile" title="Klik untuk Logout">
-          <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin'), 0, 1)) }}</div>
-          <div class="user-info">
-            <span class="user-name">{{ Auth::user()->nama_lengkap ?? (Auth::user()->username ?? 'Admin') }}</span>
-            <span class="user-role">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</span>
+        <div class="admin-card">
+          <span class="avatar avatar-dark">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->username ?? 'A', 0, 1)) }}</span>
+          <div class="admin-info">
+            <span class="admin-name">{{ Auth::user()->nama_lengkap ?? Auth::user()->username }}</span>
+            <span class="admin-email">{{ Auth::user()->email }}</span>
           </div>
-        </a>
+        </div>
+        <button type="button" class="btn-keluar" data-open-logout>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Keluar</span>
+        </button>
       </div>
     </aside>
 
-    <!-- Konten utama produk -->
-    <main class="main-wrapper">
-      <!-- Bagian atas judul halaman dan tombol -->
-      <div class="top-header">
-        <div class="header-title-box">
-          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+    <div class="main-area">
+      <!-- Bar atas -->
+      <header class="topbar">
+        <span class="icon-btn icon-static" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.3 7 12 12 20.7 7"></polyline>
+            <line x1="12" y1="22" x2="12" y2="12"></line>
           </svg>
-          <div>
-            <h1 class="header-title">Produk</h1>
-            <p class="header-desc">{{ $totalProducts ?? 0 }} busana terdaftar &bull; {{ $availableProducts ?? 0 }} tersedia</p>
-          </div>
-        </div>
+        </span>
 
-        <div class="header-actions">
-          <button class="btn-primary" onclick="document.getElementById('modal-tambah-produk').style.display='flex'">
-            <span>+</span> Tambah Produk
-          </button>
-        </div>
-      </div>
-
-      @if(session('success'))
-        <div style="background-color: #e8f5e9; color: #2e7d32; padding: 12px 18px; border-radius: 10px; margin-bottom: 20px; font-size: 13px;">
-          {{ session('success') }}
-        </div>
-      @endif
-
-      <!-- Kolom cari dan tombol filter kategori -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
-        <form method="GET" action="{{ url('/produk') }}" class="search-bar">
+        <div class="search-bar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" name="search" class="search-input" placeholder="Cari nama busana" value="{{ request('search') }}" style="width: 280px;">
-        </form>
-
-        <div class="filter-tabs">
-          <a href="{{ url('/produk') }}" class="filter-tab {{ !request('kategori') ? 'active' : '' }}">Semua</a>
-          @foreach($categories as $cat)
-            <a href="{{ url('/produk') }}?kategori={{ $cat->id }}" class="filter-tab {{ request('kategori') == $cat->id ? 'active' : '' }}">
-              {{ $cat->nama_kategori }}
-            </a>
-          @endforeach
+          <input type="text" placeholder="Cari nama kebaya" aria-label="Cari nama kebaya">
         </div>
-      </div>
 
-      <!-- Daftar produk -->
-      <div class="product-grid">
-        @forelse($products as $prod)
-          @php
-            $fotoPath = $prod->foto_produk;
-            if (!str_starts_with($fotoPath, 'http')) {
-                $fotoPath = asset('images/' . (str_starts_with($fotoPath, 'koleksi/') ? $fotoPath : 'koleksi/' . $fotoPath));
-            }
-          @endphp
-          <div class="product-card">
-            <div class="product-img-container">
-              <img src="{{ $fotoPath }}" alt="{{ $prod->nama_produk }}" class="product-img" loading="lazy" decoding="async">
-            </div>
-            <h4 class="product-title">{{ $prod->nama_produk }}</h4>
-            <p class="product-category-size">{{ $prod->category->nama_kategori ?? 'Kategori' }} &bull; {{ $prod->desk_produk ?: '-' }}</p>
-            <div class="product-footer">
-              <div class="product-price">Rp {{ number_format($prod->harga_sewa, 0, ',', '.') }}<span>/sewa</span></div>
-              <form action="{{ route('produk.toggle', $prod->id) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('PATCH')
-                <button type="submit" class="badge-toggle-btn {{ $prod->status_produk === 'tersedia' ? 'badge-available' : 'badge-waiting' }}" title="Klik untuk ubah status ketersediaan">
-                  {{ $prod->status_produk === 'tersedia' ? 'Tersedia' : 'Disewa / Habis' }}
-                </button>
-              </form>
+        <div class="topbar-actions">
+          <!-- Notifikasi -->
+          <div class="dropdown">
+            <button type="button" class="icon-btn btn-notif" id="btn-notif" title="Notifikasi"
+                    aria-haspopup="true" aria-expanded="false" aria-controls="menu-notif">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </button>
+
+            <div class="dropdown-menu notif-menu" id="menu-notif" hidden>
+              <div class="notif-head">
+                <span class="notif-title">Notifikasi</span>
+                <button type="button" class="link-btn" id="btn-baca">Tandai dibaca</button>
+              </div>
+              <ul class="notif-list">
+                <!-- BACKEND: ganti dengan daftar notifikasi asli -->
+                <li class="notif-item is-unread">
+                  <p class="notif-judul">Pesanan baru CR-1044</p>
+                  <p class="notif-detail">Bella Safira · 12 Des</p>
+                </li>
+                <li class="notif-item is-unread">
+                  <p class="notif-judul">Pesanan baru CR-1043</p>
+                  <p class="notif-detail">Anisa Rahma · 3 Des</p>
+                </li>
+                <li class="notif-item is-unread">
+                  <p class="notif-judul">Aura Heels tinggal 2</p>
+                  <p class="notif-detail">Perlu restok</p>
+                </li>
+              </ul>
             </div>
           </div>
-        @empty
-          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #8e8077;">
-            Belum ada produk yang ditemukan.
-          </div>
-        @endforelse
-      </div>
 
-      @if(method_exists($products, 'links') && $products->hasPages())
-        <div style="margin-top: 24px;">
-          {{ $products->links() }}
+          <!-- Akun -->
+          <div class="dropdown">
+            <button type="button" class="avatar avatar-light avatar-btn" id="btn-akun" title="Akun"
+                    aria-haspopup="true" aria-expanded="false" aria-controls="menu-akun">{{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->username ?? 'A', 0, 1)) }}</button>
+
+            <div class="dropdown-menu akun-menu" id="menu-akun" hidden>
+              <div class="akun-head">
+                <p class="akun-nama">{{ Auth::user()->nama_lengkap ?? Auth::user()->username }}</p>
+                <p class="akun-email">{{ Auth::user()->email }}</p>
+              </div>
+              <button type="button" class="akun-keluar" data-open-logout>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>Keluar</span>
+              </button>
+            </div>
+          </div>
         </div>
-      @endif
-    </main>
+      </header>
+
+      <main class="main-content">
+        <h1 class="page-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.3 7 12 12 20.7 7"></polyline>
+            <line x1="12" y1="22" x2="12" y2="12"></line>
+          </svg>
+          Produk
+        </h1>
+
+        @if (session('success'))
+          <p class="flash-success">{{ session('success') }}</p>
+        @endif
+        @if ($errors->any())
+          <p class="flash-error">{{ $errors->first() }}</p>
+        @endif
+
+        <!-- Kartu ringkasan -->
+        <section class="pr-stats">
+          <div class="stat-card">
+            <p class="pr-stat-label">Total produk</p>
+            <p class="pr-stat-value">{{ $totalProducts ?? 0 }}</p>
+          </div>
+          <!-- BACKEND: "Stok menipis" dan "Stok habis" masih angka contoh dari desain -->
+          <div class="stat-card">
+            <p class="pr-stat-label">Stok menipis</p>
+            <p class="pr-stat-value">2</p>
+          </div>
+          <div class="stat-card">
+            <p class="pr-stat-label">Stok habis</p>
+            <p class="pr-stat-value">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="pr-stat-label">Disembunyikan</p>
+            <p class="pr-stat-value">{{ ($totalProducts ?? 0) - ($availableProducts ?? 0) }}</p>
+          </div>
+        </section>
+
+        <!-- Cari, filter kategori, dan tombol tambah -->
+        <div class="pr-toolbar">
+          <form method="GET" action="{{ url('/produk') }}" class="pr-search">
+            @if (request('kategori'))
+              <input type="hidden" name="kategori" value="{{ request('kategori') }}">
+            @endif
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kebaya" aria-label="Cari nama kebaya">
+          </form>
+
+          <div class="pr-chips">
+            @foreach ($categories as $cat)
+              <a href="{{ url('/produk') }}?kategori={{ $cat->id }}"
+                 class="pr-chip {{ request('kategori') == $cat->id ? 'is-active' : '' }}">{{ $cat->nama_kategori }}</a>
+            @endforeach
+          </div>
+
+          <button type="button" class="btn-tambah" id="btn-tambah">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Tambah Produk
+          </button>
+        </div>
+
+        <!-- Daftar produk -->
+        <section class="pr-panel">
+          <div class="pr-grid">
+            @forelse ($products as $prod)
+              @php
+                $foto = $prod->foto_produk;
+                if (!str_starts_with($foto, 'http')) {
+                    $foto = asset('images/' . (str_starts_with($foto, 'koleksi/') || file_exists(public_path('images/' . $foto)) ? '' : 'koleksi/') . $foto);
+                }
+              @endphp
+              <article class="pr-card">
+                <div class="pr-foto">
+                  <img src="{{ $foto }}" alt="{{ $prod->nama_produk }}" loading="lazy" decoding="async">
+                </div>
+                <div class="pr-info">
+                  <h2 class="pr-nama">{{ $prod->nama_produk }}</h2>
+                  <div class="pr-baris">
+                    <span class="pr-harga">Rp {{ number_format($prod->harga_sewa, 0, ',', '.') }} / 3 hari</span>
+                    <!-- BACKEND: tampil jika tabel products punya kolom stok -->
+                    @isset($prod->stok)
+                      <span class="pr-stok">{{ $prod->stok > 0 ? $prod->stok . ' pcs' : 'Habis' }}</span>
+                    @endisset
+                  </div>
+
+                  <div class="pr-aksi">
+                    <!-- Sakelar tampil/sembunyikan di website -->
+                    <form action="{{ route('produk.toggle', $prod->id) }}" method="POST">
+                      @csrf
+                      @method('PATCH')
+                      <button type="submit" class="pr-switch {{ $prod->status_produk === 'tersedia' ? 'is-on' : '' }}"
+                              role="switch" aria-checked="{{ $prod->status_produk === 'tersedia' ? 'true' : 'false' }}"
+                              title="{{ $prod->status_produk === 'tersedia' ? 'Tampil di website' : 'Disembunyikan' }}"></button>
+                    </form>
+
+                    <div class="pr-icons">
+                      <!-- Ubah: membuka panel dengan data produk (js/produk.js membaca data-*) -->
+                      <button type="button" class="pr-icon btn-ubah" title="Ubah"
+                              data-action="{{ url('/produk/' . $prod->id) }}"
+                              data-nama="{{ $prod->nama_produk }}"
+                              data-kategori="{{ $prod->kategori_id }}"
+                              data-ukuran="{{ $prod->ukuran ?? '' }}"
+                              data-harga="{{ $prod->harga_sewa }}"
+                              data-stok="{{ $prod->stok ?? 1 }}"
+                              data-desk="{{ $prod->desk_produk }}"
+                              data-tampil="{{ $prod->status_produk === 'tersedia' ? '1' : '0' }}"
+                              data-foto="{{ $foto }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 20h9"></path>
+                          <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                      </button>
+
+                      <form action="{{ route('produk.destroy', $prod->id) }}" method="POST" data-konfirmasi="Hapus {{ $prod->nama_produk }}?">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="pr-icon" title="Hapus">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                            <path d="M10 11v6"></path>
+                            <path d="M14 11v6"></path>
+                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                          </svg>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            @empty
+              <p class="pr-kosong">Belum ada produk yang ditemukan.</p>
+            @endforelse
+          </div>
+
+          <!-- Navigasi halaman -->
+          <div class="pr-pagination">
+            <nav class="pr-pages" aria-label="Halaman">
+              @if ($products->onFirstPage())
+                <span class="pr-page is-disabled" aria-disabled="true">&lsaquo;</span>
+              @else
+                <a href="{{ $products->previousPageUrl() }}" class="pr-page" aria-label="Sebelumnya">&lsaquo;</a>
+              @endif
+
+              @foreach (range(1, $products->lastPage()) as $halaman)
+                <a href="{{ $products->url($halaman) }}" class="pr-page {{ $halaman === $products->currentPage() ? 'is-active' : '' }}">{{ $halaman }}</a>
+              @endforeach
+
+              @if ($products->hasMorePages())
+                <a href="{{ $products->nextPageUrl() }}" class="pr-page" aria-label="Berikutnya">&rsaquo;</a>
+              @else
+                <span class="pr-page is-disabled" aria-disabled="true">&rsaquo;</span>
+              @endif
+            </nav>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
 
-  <!-- Modal Tambah Produk Baru -->
-  <div id="modal-tambah-produk" class="modal-overlay">
-    <div class="modal-box">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 18px; color: #3d2010; font-weight: 700;">Tambah Produk Busana Baru</h3>
-        <button type="button" style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="document.getElementById('modal-tambah-produk').style.display='none'">&times;</button>
+  <!-- Panel Tambah / Ubah Produk (satu form dipakai untuk keduanya, diatur js/produk.js) -->
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-judul" hidden>
+    <div class="drawer-head">
+      <h2 class="drawer-id" id="drawer-judul">Tambah Produk</h2>
+      <button type="button" class="drawer-x" id="drawer-x" aria-label="Tutup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <form class="drawer-form" id="form-produk" method="POST" action="{{ route('produk.store') }}"
+          data-action-tambah="{{ route('produk.store') }}" enctype="multipart/form-data">
+      @csrf
+      <!-- Aktif hanya saat mode Ubah (BACKEND: route PUT /produk/{id}) -->
+      <input type="hidden" name="_method" value="PUT" id="field-method" disabled>
+
+      <div class="drawer-body">
+        <label class="pf-upload" for="field-foto">
+          <img src="" alt="" class="pf-upload-img" id="pf-preview" hidden>
+          <span class="pf-upload-teks" id="pf-upload-teks">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            Klik untuk unggah foto
+          </span>
+        </label>
+        <input type="file" name="foto_produk" id="field-foto" accept="image/*" hidden>
+
+        <div class="pf-field">
+          <label for="field-nama">Nama produk</label>
+          <input type="text" name="nama_produk" id="field-nama" maxlength="100" required>
+        </div>
+
+        <div class="pf-row">
+          <div class="pf-field">
+            <label for="field-kategori">Kategori</label>
+            <select name="kategori_id" id="field-kategori" required>
+              @foreach ($categories as $cat)
+                <option value="{{ $cat->id }}">{{ $cat->nama_kategori }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="pf-field">
+            <label for="field-ukuran">Ukuran</label>
+            <input type="text" name="ukuran" id="field-ukuran" maxlength="30">
+          </div>
+        </div>
+
+        <div class="pf-row">
+          <div class="pf-field">
+            <label for="field-harga">Harga sewa / 3 hari (Rp)</label>
+            <input type="number" name="harga_sewa" id="field-harga" min="0" required>
+          </div>
+          <div class="pf-field">
+            <label for="field-stok">Stok</label>
+            <input type="number" name="stok" id="field-stok" min="0" value="1">
+          </div>
+        </div>
+
+        <div class="pf-field">
+          <label for="field-desk">Deskripsi</label>
+          <textarea name="desk_produk" id="field-desk" rows="3"></textarea>
+        </div>
+
+        <div class="pf-tampil">
+          <div>
+            <p class="pf-tampil-judul">Tampilkan di website</p>
+            <p class="pf-tampil-ket">Produk tersembunyi tidak terlihat pelanggan</p>
+          </div>
+          <!-- Nilai hidden dikirim bila sakelar mati; bila hidup, nilai "tersedia" menimpanya -->
+          <input type="hidden" name="status_produk" value="tidak_tersedia">
+          <label class="pf-toggle">
+            <input type="checkbox" name="status_produk" value="tersedia" id="field-tampil" checked>
+            <span class="pf-toggle-track"></span>
+          </label>
+        </div>
       </div>
 
-      <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
+      <div class="drawer-foot">
+        <button type="button" class="btn-batal" id="drawer-batal">Batal</button>
+        <button type="submit" class="btn-ya">Simpan</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- Konfirmasi keluar -->
+  <div class="modal-overlay" id="modal-logout" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-logout-title">
+      <h2 class="modal-title" id="modal-logout-title">Keluar dari panel admin?</h2>
+      <p class="modal-text">Kamu perlu masuk lagi untuk mengelola produk dan pesanan.</p>
+      <form action="{{ route('logout') }}" method="POST" class="modal-actions">
         @csrf
-        <div class="form-group-admin">
-          <label>Nama Produk *</label>
-          <input type="text" name="nama_produk" placeholder="Misal: Kebaya Brokat Maroon" required>
-        </div>
-
-        <div class="form-group-admin">
-          <label>Kategori *</label>
-          <select name="kategori_id" required>
-            @foreach($categories as $cat)
-              <option value="{{ $cat->id }}">{{ $cat->nama_kategori }}</option>
-            @endforeach
-          </select>
-        </div>
-
-        <div class="form-group-admin">
-          <label>Harga Sewa (Rp) *</label>
-          <input type="number" name="harga_sewa" placeholder="Misal: 250000" min="0" required>
-        </div>
-
-        <div class="form-group-admin">
-          <label>Deskripsi / Kelengkapan</label>
-          <textarea name="desk_produk" rows="3" placeholder="Inc : Rok, kamisol, selendang dan hijab"></textarea>
-        </div>
-
-        <div class="form-group-admin">
-          <label>Status Ketersediaan</label>
-          <select name="status_produk">
-            <option value="tersedia">Tersedia</option>
-            <option value="tidak_tersedia">Tidak Tersedia</option>
-          </select>
-        </div>
-
-        <div class="form-group-admin">
-          <label>Upload Foto Produk</label>
-          <input type="file" name="foto_produk" accept="image/*">
-        </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-          <button type="button" style="padding: 10px 16px; border: 1px solid #d4c8bd; background: none; border-radius: 8px; cursor: pointer;" onclick="document.getElementById('modal-tambah-produk').style.display='none'">Batal</button>
-          <button type="submit" style="padding: 10px 20px; background: #623e2b; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Simpan Produk</button>
-        </div>
+        <button type="button" class="btn-batal" data-close-logout>Batal</button>
+        <button type="submit" class="btn-ya">Ya, keluar</button>
       </form>
     </div>
   </div>
 
+  <script src="{{ asset('js/dashboard.js') }}"></script>
+  <script src="{{ asset('js/produk.js') }}"></script>
 </body>
 </html>

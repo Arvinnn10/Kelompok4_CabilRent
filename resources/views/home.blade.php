@@ -26,7 +26,7 @@
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/') }}" class="nav-link active">Home</a></li>
+        <li><a href="{{ url('/') }}" class="nav-link active">Beranda</a></li>
         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
@@ -96,36 +96,39 @@
       </div>
 
       <div class="collection-grid">
-        <!-- Pakaian kebaya -->
+        <!-- Aira Kebaya -->
         <a href="{{ url('/koleksi') }}?kategori=kebaya" class="collection-card">
           <div class="collection-image">
-            <img src="{{ asset('images/kategori-kebaya.png') }}" alt="Pakaian Kebaya" loading="lazy" decoding="async">
+            <img src="{{ asset('images/koleksi/kebaya-aira.png') }}" alt="Aira Kebaya" loading="lazy" decoding="async">
+            <span class="collection-badge">Pakaian Kebaya</span>
           </div>
           <div class="collection-info">
-            <span class="collection-name">Pakaian Kebaya</span>
-            <span class="collection-count">9 produk</span>
+            <span class="collection-name">Aira Kebaya</span>
+            <span class="collection-count">inc : rok, kamisol, selendang dan hijab</span>
           </div>
         </a>
 
-        <!-- Heels -->
+        <!-- Aqila Heels -->
         <a href="{{ url('/koleksi') }}?kategori=heels" class="collection-card">
           <div class="collection-image">
-            <img src="{{ asset('images/sepatu1.png') }}" alt="Heels" loading="lazy" decoding="async">
+            <img src="{{ asset('images/koleksi/heels-aqila.png') }}" alt="Aqila Heels" loading="lazy" decoding="async">
+            <span class="collection-badge">Heels</span>
           </div>
           <div class="collection-info">
-            <span class="collection-name">Heels</span>
-            <span class="collection-count">4 produk</span>
+            <span class="collection-name">Aqila Heels</span>
+            <span class="collection-count">heels 7cm ukuran 39 cm</span>
           </div>
         </a>
 
-        <!-- Kamisol -->
+        <!-- Kamisol Burgundy -->
         <a href="{{ url('/koleksi') }}?kategori=kamisol" class="collection-card">
           <div class="collection-image">
-            <img src="{{ asset('images/kemben.png') }}" alt="Kamisol" loading="lazy" decoding="async">
+            <img src="{{ asset('images/koleksi/kamisol-m.png') }}" alt="Kamisol Burgundy" loading="lazy" decoding="async">
+            <span class="collection-badge">Kamisol</span>
           </div>
           <div class="collection-info">
-            <span class="collection-name">Kamisol</span>
-            <span class="collection-count">3 produk</span>
+            <span class="collection-name">Kamisol Burgundy</span>
+            <span class="collection-count">Ukuran M</span>
           </div>
         </a>
       </div>
@@ -178,38 +181,37 @@
       </div>
 
       <div class="populer-grid">
-        <!-- Produk 1 -->
-        <div class="product-card">
+        <!-- Produk 1: label "Paket Kebaya" sudah menyatu di foto -->
+        <a href="{{ url('/koleksi') }}?kategori=kebaya" class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/foto4.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
-            <span class="product-badge">Paket Kebaya</span>
+            <img src="{{ asset('images/populer-arella.png') }}" alt="Arella Kebaya" loading="lazy" decoding="async">
           </div>
-          <h3 class="product-title">Tulle Sage Green</h3>
+          <h3 class="product-title">Arella Kebaya</h3>
           <p class="product-tag">Satu ukuran</p>
           <span class="product-price">Rp 50.000</span>
-        </div>
+        </a>
 
         <!-- Produk 2 -->
-        <div class="product-card">
+        <a href="{{ url('/koleksi') }}?kategori=heels" class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/sepatu1.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
+            <img src="{{ asset('images/koleksi/heels-aqila.png') }}" alt="Aqila Heels" loading="lazy" decoding="async">
             <span class="product-badge">Heels</span>
           </div>
-          <h3 class="product-title">Tulle Sage Green</h3>
-          <p class="product-tag">Satu ukuran</p>
+          <h3 class="product-title">Aqila Heels</h3>
+          <p class="product-tag">heels 7cm ukuran 39 cm</p>
           <span class="product-price">Rp 50.000</span>
-        </div>
+        </a>
 
         <!-- Produk 3 -->
-        <div class="product-card">
+        <a href="{{ url('/koleksi') }}?kategori=kamisol" class="product-card">
           <div class="product-image-box">
-            <img src="{{ asset('images/kemben.png') }}" alt="Tulle Sage Green" loading="lazy" decoding="async">
+            <img src="{{ asset('images/koleksi/kamisol-l.png') }}" alt="Kamisol Ivory" loading="lazy" decoding="async">
             <span class="product-badge">Kamisol</span>
           </div>
-          <h3 class="product-title">Tulle Sage Green</h3>
-          <p class="product-tag">Satu ukuran</p>
+          <h3 class="product-title">Kamisol Ivory</h3>
+          <p class="product-tag">Ukuran L, S dan M</p>
           <span class="product-price">Rp 50.000</span>
-        </div>
+        </a>
       </div>
     </div>
   </section>
@@ -227,10 +229,10 @@
           </div>
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
-            <a href="#" class="social-circle" title="Instagram">
+            <a href="https://www.instagram.com/cabil.rent/" class="social-circle" title="Instagram" target="_blank" rel="noopener">
             <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
             </a>
-            <a href="#" class="social-circle" title="WhatsApp">
+            <a href="https://wa.me/6287894302894" class="social-circle" title="WhatsApp" target="_blank" rel="noopener">
            <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">
             </a>
           </div>
@@ -240,7 +242,7 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="{{ url('/home') }}">Home</a></li>
+            <li><a href="{{ url('/home') }}">Beranda</a></li>
             <li><a href="{{ url('/koleksi') }}">Koleksi</a></li>
             <li><a href="{{ url('/tentang') }}">Tentang</a></li>
             <li><a href="{{ url('/kontak') }}">Kontak</a></li>

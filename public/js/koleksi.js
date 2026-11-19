@@ -5,13 +5,23 @@ document.addEventListener('DOMContentLoaded', function () {
   var chips = document.querySelectorAll('.chip[data-filter]');
   var cards = document.querySelectorAll('.produk-card[data-kategori]');
   var countLabel = document.getElementById('katalog-count');
+  var judul = document.getElementById('katalog-title');
   var emptyText = document.getElementById('produk-empty');
+
+  // Di database kategorinya masih bernama "Kemben" (slug "kemben"), sedangkan kartu memakai "kamisol"
+  function samakan(kategori) {
+    return kategori.replace('kemben', 'kamisol');
+  }
 
   function terapkanFilter(kategori) {
     var jumlah = 0;
 
     cards.forEach(function (card) {
-      var cocok = kategori === 'semua' || card.dataset.kategori === kategori;
+      // Chip memakai slug dari database (mis. "pakaian-kebaya"), kartu memakai kata kunci ("kebaya")
+      var kunci = samakan(kategori);
+      var cocok = kunci === 'semua' ||
+        card.dataset.kategori === kunci ||
+        kunci.indexOf(card.dataset.kategori) !== -1;
       card.classList.toggle('is-hidden', !cocok);
       if (cocok) jumlah++;
     });
@@ -19,6 +29,13 @@ document.addEventListener('DOMContentLoaded', function () {
     chips.forEach(function (chip) {
       chip.classList.toggle('active', chip.dataset.filter === kategori);
     });
+
+    // Judul ikut kategori: "Semua Koleksi", "Semua Koleksi Kebaya", "Semua Koleksi Heels", ...
+    if (judul) {
+      var aktif = document.querySelector('.chip.active');
+      var nama = aktif && kategori !== 'semua' ? aktif.textContent.replace(/^(Pakaian|Paket)\s+/i, '').trim() : '';
+      judul.textContent = nama ? 'Semua Koleksi ' + nama : 'Semua Koleksi';
+    }
 
     if (countLabel) countLabel.textContent = jumlah + ' produk';
     if (emptyText) emptyText.hidden = jumlah > 0;
@@ -60,27 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
     img.addEventListener('error', tandaiKosong);
   });
 
-<<<<<<< HEAD
-  // Simpan data produk yang dipilih ke localStorage saat tombol Sewa diklik
-  document.querySelectorAll('.btn-sewa').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var dipilih = {
-        id: btn.dataset.id,
-        nama: btn.dataset.nama,
-        kategori: btn.dataset.kategori,
-        keterangan: btn.dataset.keterangan,
-        harga: parseInt(btn.dataset.harga, 10),
-        gambar: btn.dataset.gambar,
-        durasi: 3
-      };
-      try {
-        localStorage.setItem('cabilrent-produk-dipilih', JSON.stringify(dipilih));
-      } catch (e) {}
-=======
-  // Klik foto produk: simpan data produk untuk halaman detail (js/detail.js)
-  document.querySelectorAll('.produk-image').forEach(function (link) {
-    link.addEventListener('click', function () {
-      var card = link.closest('.produk-card');
+  // Klik di mana saja pada kotak produk: simpan data produk untuk halaman detail (js/detail.js), lalu buka detail
+  document.querySelectorAll('.produk-card').forEach(function (card) {
+    // Alamat detail: dari tautan /detail di dalam kotak (foto atau tombol Sewa); jika tidak ada, dibuat dari data-id
+    var tautan = card.querySelector('a[href*="/detail"]');
+    var alamatDetail = tautan ? tautan.href : window.location.origin + '/detail?id=' + encodeURIComponent(card.dataset.id);
+
+    function simpan() {
       var produk = {
         id: card.dataset.id,
         nama: card.querySelector('.produk-name').textContent.trim(),
@@ -95,7 +98,14 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (e) {
         // Penyimpanan diblokir browser: detail memakai data bawaan
       }
->>>>>>> d0dfb69 (halaman pemesanan dan perbaikan halaman koleksi agar bisa masuk ke halaman whatsapp otomatis UPDATE V2)
+    }
+
+    card.addEventListener('click', function (event) {
+      simpan();
+      // Klik pada tautan foto sudah membuka detail sendiri; klik di bagian lain kotak diarahkan ke sana
+      if (!event.target.closest('a')) {
+        window.location.href = alamatDetail;
+      }
     });
   });
 

@@ -19,7 +19,7 @@
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/home') }}" class="nav-link">Beranda</a></li>
         <li><a href="{{ url('/koleksi') }}" class="nav-link active">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
@@ -76,77 +76,32 @@
           <p class="promo-desc">
             Set kebaya, kain, dan heels yang dipadukan khusus untuk hari wisuda. Sewa satu paket, lebih hemat.
           </p>
-          <a href="#" class="btn-promo">Lihat paket</a>
+          <a href="#semua-koleksi" class="btn-promo">Lihat paket</a>
         </div>
         <div class="promo-image">
-          <img src="{{ asset('images/koleksi/foto1.png') }}" alt="Koleksi Terbaru 2026">
+          <img src="{{ asset('images/koleksi/banner.png') }}" alt="Koleksi Terbaru 2026">
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Kategori -->
-  <section class="kategori-section">
-    <div class="container">
-      <div class="kategori-grid">
-        @foreach ($categories as $cat)
-          @php
-            $catSlug = $cat->slug ?: \Illuminate\Support\Str::slug($cat->nama_kategori);
-            $catImg = match($catSlug) {
-              'heels' => asset('images/koleksi/sepatu1.png'),
-              'kamisol', 'kemben' => asset('images/koleksi/kemben.png'),
-              default => asset('images/koleksi/kategori-kebaya.png'),
-            };
-          @endphp
-          <a href="{{ url('/koleksi') }}?kategori={{ $catSlug }}" class="kategori-card">
-            <div class="kategori-image">
-              <img src="{{ $catImg }}" alt="{{ $cat->nama_kategori }}">
-            </div>
-            <div class="kategori-info">
-              <span class="kategori-name">{{ $cat->nama_kategori }}</span>
-              <span class="kategori-count">{{ $cat->products_count ?? $cat->products()->count() }} produk</span>
-            </div>
-          </a>
-        @endforeach
       </div>
     </div>
   </section>
 
   <!-- Semua koleksi -->
-  <section class="katalog-section">
+  <section class="katalog-section" id="semua-koleksi">
     <div class="container">
       <div class="katalog-header">
-        <h2 class="katalog-title">Semua Koleksi</h2>
+        <h2 class="katalog-title" id="katalog-title">Semua Koleksi</h2>
         <span class="katalog-count" id="katalog-count">{{ $totalProducts ?? count($products) }} produk</span>
       </div>
 
-      <!-- Filter kategori & urutan -->
+      <!-- Filter kategori -->
       <div class="katalog-toolbar">
         <div class="filter-chips">
           <a href="{{ url('/koleksi') }}" class="chip {{ empty($kategoriParam) || $kategoriParam === 'semua' ? 'active' : '' }}" data-filter="semua">Semua</a>
           @foreach ($categories as $cat)
             @php $catSlug = $cat->slug ?: \Illuminate\Support\Str::slug($cat->nama_kategori); @endphp
-            <a href="{{ url('/koleksi') }}?kategori={{ $catSlug }}" class="chip {{ ($kategoriParam ?? '') === $catSlug ? 'active' : '' }}" data-filter="{{ $catSlug }}">{{ $cat->nama_kategori }}</a>
+            <a href="{{ url('/koleksi') }}?kategori={{ $catSlug }}" class="chip {{ ($kategoriParam ?? '') === $catSlug ? 'active' : '' }}" data-filter="{{ $catSlug }}">{{ str_ireplace('kemben', 'Kamisol', $cat->nama_kategori) }}</a>
           @endforeach
         </div>
-
-        <form class="sort-form" action="{{ url('/koleksi') }}" method="GET">
-          @if(request('kategori'))
-            <input type="hidden" name="kategori" value="{{ request('kategori') }}">
-          @endif
-          @if(request('q') || request('search'))
-            <input type="hidden" name="q" value="{{ request('q') ?? request('search') }}">
-          @endif
-          <label class="sort-select">
-            <span>Urutkan:</span>
-            <select name="urut" onchange="this.form.submit()">
-              <option value="terbaru" {{ ($urut ?? '') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-              <option value="harga-terendah" {{ ($urut ?? '') === 'harga-terendah' ? 'selected' : '' }}>Harga terendah</option>
-              <option value="harga-tertinggi" {{ ($urut ?? '') === 'harga-tertinggi' ? 'selected' : '' }}>Harga tertinggi</option>
-              <option value="populer" {{ ($urut ?? '') === 'populer' ? 'selected' : '' }}>Terpopuler</option>
-            </select>
-          </label>
-        </form>
       </div>
 
       <!-- Grid produk -->
@@ -459,7 +414,7 @@
     <div class="container cta-wrapper">
       <h2 class="cta-title">Tidak menemukan yang dicari?</h2>
       <p class="cta-desc">Hubungi kami, tim CABIL.RENT akan bantu carikan pilihan yang sesuai.</p>
-      <a href="#" class="btn-cta">
+      <a href="https://wa.me/6287894302894?text={{ urlencode('Halo cabil.rent, saya belum menemukan busana yang saya cari. Bisa dibantu?') }}" class="btn-cta" target="_blank" rel="noopener">
         <!-- Ganti file ikon di images/koleksi/ (ukuran diatur di CSS) -->
         <img src="{{ asset('images/wa2.png') }}" alt="" class="btn-cta-icon">
         <span>Chat WhatsApp</span>
@@ -480,10 +435,10 @@
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
-            <a href="#" class="social-icon" title="Instagram">
+            <a href="https://www.instagram.com/cabil.rent/" class="social-icon" title="Instagram" target="_blank" rel="noopener">
               <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
-            <a href="#" class="social-icon" title="WhatsApp">
+            <a href="https://wa.me/6287894302894" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
               <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
@@ -493,7 +448,7 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="{{ url('/home') }}">Home</a></li>
+            <li><a href="{{ url('/home') }}">Beranda</a></li>
             <li><a href="{{ url('/koleksi') }}">Collection</a></li>
             <li><a href="{{ url('/tentang') }}">About</a></li>
             <li><a href="{{ url('/kontak') }}">Contact</a></li>

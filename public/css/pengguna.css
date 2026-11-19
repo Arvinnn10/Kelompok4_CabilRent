@@ -1,0 +1,349 @@
+/* Halaman Pengguna admin.
+   Sidebar, bar atas, tabel, badge, panel geser (drawer), dan modal keluar memakai css/dashboard.css. */
+
+.page-title {
+  margin-bottom: 26px;
+}
+
+.flash-success {
+  background-color: #e3efe4;
+  color: #2b6b45;
+  border: 1px solid #c4dcc8;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+
+/* Warna status pengguna (dipakai badge di tabel dan di panel) */
+.status-aktif { --warna: #2f855a; --latar: #dae0d1; }
+.status-diblokir { --warna: #c0392b; --latar: #eed5ca; }
+
+/* Avatar ukuran sedang dan besar */
+.avatar-md {
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+  background-color: #d8c3a5;
+  color: #33241b;
+}
+
+.avatar-lg {
+  width: 48px;
+  height: 48px;
+  font-size: 13px;
+  background-color: #d8c3a5;
+  color: #33241b;
+}
+
+/* Pencarian dan jumlah */
+.pg-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.pg-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 331px;
+  height: 42px;
+  padding: 0 14px;
+  background-color: #f6efe4;
+  border: 1px solid #e9dbc6;
+  border-radius: 8px;
+}
+
+.pg-search svg {
+  width: 14px;
+  height: 14px;
+  color: #6f5b4d;
+  flex-shrink: 0;
+}
+
+.pg-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+  color: #33241b;
+}
+
+.pg-search input::placeholder {
+  color: #6f5b4d;
+}
+
+.pg-jumlah {
+  font-size: 12px;
+  font-weight: 500;
+  color: #33241b;
+}
+
+/* Tabel */
+.pg-panel {
+  box-shadow: 0 3px 6px rgba(98, 62, 43, 0.14);
+}
+
+.pg-table {
+  min-width: 900px;
+}
+
+.pg-table th {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #33241b;
+  padding: 18px 16px 14px;
+  white-space: nowrap;
+}
+
+.pg-table th:first-child,
+.pg-table td:first-child {
+  padding-left: 16px;
+}
+
+.pg-table td {
+  vertical-align: middle;
+  padding: 14px 16px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.pg-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pg-nama {
+  font-size: 13px;
+  font-weight: 600;
+  color: #623e2b;
+}
+
+.pg-wa {
+  color: #33241b;
+}
+
+.pg-total {
+  font-weight: 700;
+  color: #623e2b;
+}
+
+.pg-aksi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pg-aksi form {
+  margin: 0;
+}
+
+.btn-lihat {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6efe4;
+  border: 1px solid #ebdeca;
+  border-radius: 8px;
+  color: #33241b;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+.btn-lihat svg {
+  width: 15px;
+  height: 15px;
+}
+
+.btn-lihat:hover {
+  background-color: #ece1cf;
+}
+
+.btn-blokir {
+  height: 30px;
+  min-width: 55px;
+  padding: 0 12px;
+  background-color: #ede2d0;
+  color: #623e2b;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.btn-blokir:hover {
+  background-color: #e6d8c3;
+}
+
+/* Navigasi halaman */
+.pg-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px;
+  border-top: 1px solid #d8c3a5;
+}
+
+.pg-pagination-info {
+  font-size: 10px;
+  font-weight: 500;
+  color: #33241b;
+}
+
+.pg-pages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pg-page {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fffdf9;
+  border: 1px solid #e0d3bd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #33241b;
+}
+
+a.pg-page:hover {
+  background-color: #ede2d0;
+}
+
+.pg-page.is-active {
+  background-color: #623e2b;
+  border-color: #623e2b;
+  color: #ffffff;
+}
+
+.pg-page.is-disabled {
+  color: #33241b;
+}
+
+/* ========== Panel detail pengguna (drawer) ========== */
+.drawer-id {
+  font-size: 24px;
+}
+
+.pg-profil {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.pg-profil-info {
+  min-width: 0;
+}
+
+.pg-profil-wa {
+  font-size: 13px;
+  font-weight: 700;
+  color: #33241b;
+}
+
+.pg-profil-gabung {
+  font-size: 11px;
+  color: #33241b;
+}
+
+.pg-profil .badge {
+  margin-left: auto;
+}
+
+.pg-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.pg-stat {
+  padding: 18px 18px 16px;
+  background-color: #f6efe4;
+  border: 1px solid #e0d3bd;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(98, 62, 43, 0.12);
+}
+
+.pg-stat-label {
+  font-size: 11px;
+  color: #33241b;
+}
+
+.pg-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #33241b;
+  margin-top: 6px;
+}
+
+.pg-riwayat-judul {
+  font-size: 13px;
+  font-weight: 700;
+  color: #623e2b;
+  margin-bottom: 14px;
+}
+
+.pg-riwayat {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pg-riwayat li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 12px;
+}
+
+.pg-riwayat-id {
+  font-size: 12px;
+  font-weight: 700;
+  color: #33241b;
+}
+
+.pg-riwayat-produk,
+.pg-riwayat-desk {
+  font-size: 11px;
+  color: #5c4738;
+}
+
+.pg-riwayat-kosong {
+  font-size: 12px;
+  color: #8e8077;
+}
+
+/* ========== Responsif ========== */
+@media (max-width: 600px) {
+  .pg-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pg-stats {
+    grid-template-columns: 1fr;
+  }
+}

@@ -19,7 +19,7 @@
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/home') }}" class="nav-link">Beranda</a></li>
         <li><a href="{{ url('/koleksi') }}" class="nav-link active">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
@@ -68,7 +68,6 @@
 
   <!-- Detail produk -->
   <section class="detail-section">
-<<<<<<< HEAD
     <div class="container detail-container detail-grid" id="detail-produk"
          data-id="{{ $prodId }}"
          data-nama="{{ $product->nama_produk }}"
@@ -76,15 +75,6 @@
          data-harga="{{ $product->harga_sewa }}"
          data-keterangan="{{ $product->desk_produk ?: 'Kondisi siap pakai dan diperiksa sebelum dikirim.' }}"
          data-gambar="{{ $fotoPath }}">
-=======
-    <div class="container detail-container detail-grid" id="detail-produk" style="visibility:hidden"
-         data-id="kebaya-coco"
-         data-nama="Coco Kebaya"
-         data-kategori="Pakaian Kebaya"
-         data-harga="200000"
-         data-keterangan="Inc : Rok, kamisol, selendang dan hijab."
-         data-gambar="{{ asset('images/koleksi/kebaya-coco.png') }}">
->>>>>>> d0dfb69 (halaman pemesanan dan perbaikan halaman koleksi agar bisa masuk ke halaman whatsapp otomatis UPDATE V2)
 
       <div class="detail-image">
         <img src="{{ $fotoPath }}" alt="{{ $product->nama_produk }}" id="detail-gambar">
@@ -107,7 +97,7 @@
           <p class="detail-note">Ketersediaan dikonfirmasi admin lewat WhatsApp.</p>
 
           <div class="detail-buttons">
-            <button type="submit" name="aksi" value="sewa" class="btn-sewa-sekarang">Sewa Sekarang</button>
+            <button type="button" class="btn-sewa-sekarang" id="btn-beli-wa">Beli Langsung via WhatsApp</button>
             <button type="submit" name="aksi" value="tambah" class="btn-tambah-keranjang" id="btn-tambah-keranjang">Tambah ke Keranjang</button>
           </div>
         </form>
@@ -146,10 +136,10 @@
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
-            <a href="#" class="social-icon" title="Instagram">
+            <a href="https://www.instagram.com/cabil.rent/" class="social-icon" title="Instagram" target="_blank" rel="noopener">
               <img src="{{ asset('images/icon-instagram.png') }}" alt="Instagram">
             </a>
-            <a href="#" class="social-icon" title="WhatsApp">
+            <a href="https://wa.me/6287894302894" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
               <img src="{{ asset('images/icon-whatsapp.png') }}" alt="WhatsApp">
             </a>
           </div>
@@ -159,7 +149,7 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="{{ url('/home') }}">Home</a></li>
+            <li><a href="{{ url('/home') }}">Beranda</a></li>
             <li><a href="{{ url('/koleksi') }}">Koleksi</a></li>
             <li><a href="{{ url('/tentang') }}">Tentang</a></li>
             <li><a href="{{ url('/kontak') }}">Kontak</a></li>

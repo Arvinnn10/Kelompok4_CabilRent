@@ -63,7 +63,23 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   if (sudahAda) tandaiDiKeranjang();
 
-  // Sewa Sekarang -> masuk keranjang lalu buka halaman keranjang
+  // Beli Langsung via WhatsApp -> chat admin dengan pesan pesanan yang sudah terisi
+  document.getElementById('btn-beli-wa').addEventListener('click', function () {
+    if (!form.reportValidity()) return;
+
+    var teks = [
+      'Halo cabil.rent, saya ingin menyewa:',
+      '',
+      produk.nama + ' (' + produk.kategori + ')',
+      'Harga: ' + CabilCart.keRupiah(produk.harga) + ' / ' + produk.durasi + ' hari',
+      'Tanggal acara: ' + form.tanggal.value,
+      '',
+      'Mohon dicek ketersediaannya. Terima kasih.'
+    ].join('\n');
+
+    window.open('https://wa.me/' + btnTanya.dataset.wa + '?text=' + encodeURIComponent(teks), '_blank', 'noopener');
+  });
+
   // Tambah ke Keranjang -> masuk keranjang, tetap di halaman ini
   form.addEventListener('submit', function (event) {
     event.preventDefault();

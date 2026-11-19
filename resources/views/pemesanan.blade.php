@@ -20,7 +20,7 @@
 
       <!-- Menu tengah -->
       <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url('/home') }}" class="nav-link">Beranda</a></li>
         <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
         <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
         <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
@@ -122,7 +122,7 @@
           </div>
 
           <button type="submit" form="order-form" class="btn-lanjut btn-kirim" id="btn-kirim"
-                  data-wa="6289518062255">Kirim Pesanan lewat Whatsapp</button>
+                  data-wa="6287894302894">Kirim Pesanan lewat Whatsapp</button>
 
           <p class="summary-note order-note">Pesanan dikirim ke admin lewat WhatsApp, lalu ketersediaan dikonfirmasi.</p>
         </aside>
@@ -155,10 +155,10 @@
           <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
-            <a href="#" class="social-icon" title="Instagram">
+            <a href="https://www.instagram.com/cabil.rent/" class="social-icon" title="Instagram" target="_blank" rel="noopener">
               <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
-            <a href="#" class="social-icon" title="WhatsApp">
+            <a href="https://wa.me/6287894302894" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
               <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
@@ -168,7 +168,7 @@
         <div class="footer-col">
           <h4>JELAJAHI</h4>
           <ul>
-            <li><a href="{{ url('/home') }}">Home</a></li>
+            <li><a href="{{ url('/home') }}">Beranda</a></li>
             <li><a href="{{ url('/koleksi') }}">Koleksi</a></li>
             <li><a href="{{ url('/tentang') }}">Tentang</a></li>
             <li><a href="{{ url('/kontak') }}">Kontak</a></li>

@@ -81,6 +81,12 @@ Route::middleware(['auth'])->group(function () {
         })->name('kategori.destroy');
 
 
+        // PENGGUNA ADMIN (hanya menampilkan view; data pengguna menunggu backend)
+        Route::get('/pengguna', function () {
+            return view('pengguna');
+        })->name('pengguna.index');
+
+
         // PRODUK ADMIN
         Route::get('/produk', function (Request $request) {
             $categories = Category::all();
@@ -234,23 +240,9 @@ Route::get('/kontak', function () {
     return view('kontak');
 })->name('kontak');
 
-<<<<<<< HEAD
-require __DIR__.'/auth.php';
-=======
-// KERANJANG
-Route::get('/keranjang', function () {
-    return view('keranjang');
-});
-
-// PEMESANAN
+// PEMESANAN 
 Route::get('/pemesanan', function () {
     return view('pemesanan');
-});
-
-// DETAIL PRODUK
-Route::get('/detail', function () {
-    return view('detail');
-});
+})->name('pemesanan');
 
 require __DIR__.'/auth.php';
->>>>>>> d0dfb69 (halaman pemesanan dan perbaikan halaman koleksi agar bisa masuk ke halaman whatsapp otomatis UPDATE V2)

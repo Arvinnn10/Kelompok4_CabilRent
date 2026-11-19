@@ -551,14 +551,19 @@ img {
 .nav-link {
   font-size: 13px;
   font-weight: 500;
-  color: #271a13;
+  color: #623e2b;
   transition: opacity 0.2s;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  font-weight: 600;
+.nav-link:hover {
   opacity: 0.85;
+}
+
+/* Menu halaman yang sedang dibuka diberi garis bawah */
+.nav-link.active {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
 }
 
 /* Search dan tombol di kanan */
