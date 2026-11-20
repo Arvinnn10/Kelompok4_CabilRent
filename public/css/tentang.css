@@ -599,3 +599,31 @@ img {
     gap: 10px;
   }
 }
+
+/* Angka jumlah busana di ikon keranjang */
+.nav-icon-btn {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -7px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #8b1e3f;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.cart-badge[hidden] {
+  display: none;
+}

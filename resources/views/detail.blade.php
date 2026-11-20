@@ -36,6 +36,7 @@
         </div>
 
         <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
+          <span class="cart-badge" id="cart-badge" hidden></span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 10h16l-2 10H6L4 10z"/>
             <path d="M4 10l5-6"/>
@@ -137,10 +138,10 @@
           <div class="footer-socials">
             <!-- Ganti file ikon di folder images/ (ukuran diatur di CSS) -->
             <a href="https://www.instagram.com/cabil.rent/" class="social-icon" title="Instagram" target="_blank" rel="noopener">
-              <img src="{{ asset('images/icon-instagram.png') }}" alt="Instagram">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             </a>
             <a href="https://wa.me/6287894302894" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
-              <img src="{{ asset('images/icon-whatsapp.png') }}" alt="WhatsApp">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
             </a>
           </div>
         </div>

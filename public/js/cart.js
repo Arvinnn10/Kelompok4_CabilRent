@@ -19,7 +19,28 @@ var CabilCart = (function () {
     } catch (e) {
       // Penyimpanan diblokir browser: keranjang tidak tersimpan
     }
+    perbaruiBadge();
   }
+
+  // Angka jumlah busana di ikon keranjang navbar (#cart-badge); disembunyikan saat keranjang kosong
+  function perbaruiBadge() {
+    var badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    var jumlah = ambil().length;
+    badge.textContent = jumlah > 9 ? '9+' : String(jumlah);
+    badge.hidden = jumlah === 0;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', perbaruiBadge);
+  } else {
+    perbaruiBadge();
+  }
+
+  // Keranjang diubah di tab lain: ikut perbarui angka
+  window.addEventListener('storage', function (e) {
+    if (e.key === KUNCI || e.key === null) perbaruiBadge();
+  });
 
   // Menambah produk; produk yang sama tidak dimasukkan dua kali
   function tambah(produk) {
@@ -52,6 +73,7 @@ var CabilCart = (function () {
 
   return {
     ambil: ambil,
+    perbaruiBadge: perbaruiBadge,
     tambah: tambah,
     hapus: hapus,
     keAngka: keAngka,
