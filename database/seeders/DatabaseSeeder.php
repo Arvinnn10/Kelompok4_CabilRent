@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
                 'email'        => 'admin@cabilrent.com',
                 'no_telp'      => '081234567890',
                 'role'         => 'admin',
+                'status'       => 'aktif',
             ]
         );
 
@@ -40,21 +41,31 @@ class DatabaseSeeder extends Seeder
                 'email'        => 'customer@cabilrent.com',
                 'no_telp'      => '089876543210',
                 'role'         => 'customers',
+                'status'       => 'aktif',
             ]
         );
 
         // 2. Seed Categories
         $catKebaya = Category::updateOrCreate(
             ['nama_kategori' => 'Paket Kebaya'],
-            ['slug' => 'kebaya']
+            [
+                'slug'      => 'kebaya',
+                'deskripsi' => 'Set kebaya, rok, kamisol, selendang dan hijab untuk wisuda, lamaran, dan pesta.',
+            ]
         );
         $catHeels = Category::updateOrCreate(
             ['nama_kategori' => 'Heels'],
-            ['slug' => 'heels']
+            [
+                'slug'      => 'heels',
+                'deskripsi' => 'Koleksi heels cantik dan nyaman untuk melengkapi busana kebaya Anda.',
+            ]
         );
         $catKamisol = Category::updateOrCreate(
             ['nama_kategori' => 'Kamisol'],
-            ['slug' => 'kamisol']
+            [
+                'slug'      => 'kamisol',
+                'deskripsi' => 'Dalaman kamisol pas di badan dengan berbagai pilihan ukuran.',
+            ]
         );
 
         // 3. Seed Products
@@ -207,6 +218,12 @@ class DatabaseSeeder extends Seeder
 
         $createdProducts = [];
         foreach ($productsData as $data) {
+            if (!isset($data['ukuran'])) {
+                $data['ukuran'] = str_contains(strtolower($data['nama_produk']), 'heels') ? '37-39' : (str_contains(strtolower($data['nama_produk']), 'kamisol') ? 'M' : 'All Size');
+            }
+            if (!isset($data['stok'])) {
+                $data['stok'] = 3;
+            }
             $createdProducts[] = Product::updateOrCreate(
                 ['slug' => $data['slug']],
                 $data

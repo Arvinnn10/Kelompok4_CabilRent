@@ -63,15 +63,33 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/kategori', function (Request $request) {
             $request->validate([
                 'nama_kategori' => 'required|max:50',
+                'deskripsi'     => 'nullable|string',
             ]);
 
             Category::create([
                 'nama_kategori' => $request->nama_kategori,
                 'slug'          => Str::slug($request->nama_kategori),
+                'deskripsi'     => $request->deskripsi,
             ]);
 
             return back()->with('success', 'Kategori berhasil ditambahkan!');
         })->name('kategori.store');
+
+        Route::put('/kategori/{id}', function (Request $request, $id) {
+            $request->validate([
+                'nama_kategori' => 'required|max:50',
+                'deskripsi'     => 'nullable|string',
+            ]);
+
+            $category = Category::findOrFail($id);
+            $category->update([
+                'nama_kategori' => $request->nama_kategori,
+                'slug'          => Str::slug($request->nama_kategori),
+                'deskripsi'     => $request->deskripsi,
+            ]);
+
+            return back()->with('success', 'Kategori berhasil diperbarui!');
+        })->name('kategori.update');
 
         Route::delete('/kategori/{id}', function ($id) {
             $category = Category::findOrFail($id);
@@ -81,10 +99,40 @@ Route::middleware(['auth'])->group(function () {
         })->name('kategori.destroy');
 
 
-        // PENGGUNA ADMIN (hanya menampilkan view; data pengguna menunggu backend)
-        Route::get('/pengguna', function () {
-            return view('pengguna');
+        // PENGGUNA ADMIN
+        Route::get('/pengguna', function (Request $request) {
+            $query = User::where('role', '!=', 'admin')
+                ->withCount('orders')
+                ->withSum('orders', 'total_harga')
+                ->with(['orders.product']);
+
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama_lengkap', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('no_telp', 'like', "%{$search}%");
+                });
+            }
+
+            $users = $query->latest()->paginate(10)->withQueryString();
+            $totalUsers = User::where('role', '!=', 'admin')->count();
+
+            return view('pengguna', compact('users', 'totalUsers'));
         })->name('pengguna.index');
+
+        Route::patch('/pengguna/{id}/blokir', function ($id) {
+            $user = User::findOrFail($id);
+            $user->status = ($user->status === 'diblokir') ? 'aktif' : 'diblokir';
+            $user->save();
+
+            $pesan = $user->status === 'diblokir'
+                ? "Pengguna {$user->nama_lengkap} berhasil diblokir!"
+                : "Pengguna {$user->nama_lengkap} berhasil diaktifkan kembali!";
+
+            return back()->with('success', $pesan);
+        })->name('pengguna.blokir');
 
 
         // PRODUK ADMIN
@@ -104,8 +152,17 @@ Route::middleware(['auth'])->group(function () {
             $products = $query->latest()->paginate(12)->withQueryString();
             $totalProducts = Product::count();
             $availableProducts = Product::where('status_produk', 'tersedia')->count();
+            $stokMenipis = Product::where('stok', '>', 0)->where('stok', '<=', 2)->count();
+            $stokHabis = Product::where('stok', '<=', 0)->count();
 
-            return view('produk', compact('products', 'categories', 'totalProducts', 'availableProducts'));
+            return view('produk', compact(
+                'products',
+                'categories',
+                'totalProducts',
+                'availableProducts',
+                'stokMenipis',
+                'stokHabis'
+            ));
         })->name('produk.index');
 
         Route::post('/produk', function (Request $request) {
@@ -113,8 +170,11 @@ Route::middleware(['auth'])->group(function () {
                 'nama_produk'   => 'required|max:100',
                 'kategori_id'   => 'required|exists:categories,id',
                 'harga_sewa'    => 'required|numeric|min:0',
+                'ukuran'        => 'nullable|string|max:30',
+                'stok'          => 'nullable|integer|min:0',
                 'desk_produk'   => 'nullable|string',
                 'status_produk' => 'required|in:tersedia,tidak_tersedia',
+                'foto_produk'   => 'nullable|image|max:2048',
             ]);
 
             $fotoName = 'koleksi/kebaya-coco.png';
@@ -130,6 +190,8 @@ Route::middleware(['auth'])->group(function () {
                 'slug'          => Str::slug($request->nama_produk),
                 'kategori_id'   => $request->kategori_id,
                 'harga_sewa'    => $request->harga_sewa,
+                'ukuran'        => $request->ukuran,
+                'stok'          => $request->stok ?? 1,
                 'desk_produk'   => $request->desk_produk,
                 'foto_produk'   => $fotoName,
                 'status_produk' => $request->status_produk,
@@ -137,6 +199,43 @@ Route::middleware(['auth'])->group(function () {
 
             return back()->with('success', 'Produk berhasil ditambahkan!');
         })->name('produk.store');
+
+        Route::put('/produk/{id}', function (Request $request, $id) {
+            $request->validate([
+                'nama_produk'   => 'required|max:100',
+                'kategori_id'   => 'required|exists:categories,id',
+                'harga_sewa'    => 'required|numeric|min:0',
+                'ukuran'        => 'nullable|string|max:30',
+                'stok'          => 'nullable|integer|min:0',
+                'desk_produk'   => 'nullable|string',
+                'status_produk' => 'required|in:tersedia,tidak_tersedia',
+                'foto_produk'   => 'nullable|image|max:2048',
+            ]);
+
+            $product = Product::findOrFail($id);
+
+            $data = [
+                'nama_produk'   => $request->nama_produk,
+                'slug'          => Str::slug($request->nama_produk),
+                'kategori_id'   => $request->kategori_id,
+                'harga_sewa'    => $request->harga_sewa,
+                'ukuran'        => $request->ukuran,
+                'stok'          => $request->stok ?? 1,
+                'desk_produk'   => $request->desk_produk,
+                'status_produk' => $request->status_produk,
+            ];
+
+            if ($request->hasFile('foto_produk')) {
+                $file = $request->file('foto_produk');
+                $fotoName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('images/koleksi'), $fotoName);
+                $data['foto_produk'] = 'koleksi/' . $fotoName;
+            }
+
+            $product->update($data);
+
+            return back()->with('success', 'Produk berhasil diperbarui!');
+        })->name('produk.update');
 
         Route::patch('/produk/{id}/toggle', function ($id) {
             $product = Product::findOrFail($id);
@@ -156,7 +255,7 @@ Route::middleware(['auth'])->group(function () {
 
         // PESANAN ADMIN
         Route::get('/pesanan', function (Request $request) {
-            $query = Order::with(['basket', 'product', 'user']);
+            $query = Order::with(['basket.product', 'product', 'user']);
 
             if ($request->filled('status') && $request->status !== 'Semua') {
                 $query->where('status_pesan', $request->status);
@@ -176,8 +275,17 @@ Route::middleware(['auth'])->group(function () {
 
             $orders = $query->latest()->paginate(10)->withQueryString();
             $totalOrders = Order::count();
+            $perluDikonfirmasi = Order::where('status_pesan', 'pending')->count();
+            $sedangDisewa = Order::where('status_pesan', 'dikonfirmasi')->count();
+            $pendapatanSelesai = Order::where('status_pesan', 'selesai')->sum('total_harga');
 
-            return view('pesanan', compact('orders', 'totalOrders'));
+            return view('pesanan', compact(
+                'orders',
+                'totalOrders',
+                'perluDikonfirmasi',
+                'sedangDisewa',
+                'pendapatanSelesai'
+            ));
         })->name('pesanan.index');
 
         Route::patch('/pesanan/{id}/status', [OrderController::class, 'updateStatus'])->name('pesanan.status');
@@ -244,5 +352,10 @@ Route::get('/kontak', function () {
 Route::get('/pemesanan', function () {
     return view('pemesanan');
 })->name('pemesanan');
+
+// API Kategori (pencarian autocomplete)
+Route::get('/api/kategori', function () {
+    return \App\Models\Category::select('id', 'nama_kategori', 'slug')->get();
+});
 
 require __DIR__.'/auth.php';

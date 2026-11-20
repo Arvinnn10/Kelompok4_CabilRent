@@ -11,6 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/nav-search.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
 </head>
 <body>
 
@@ -34,13 +36,13 @@
 
       <!-- Bagian search dan tombol kanan -->
       <div class="nav-actions">
-        <div class="nav-search">
+        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" placeholder="Cari koleksi">
-        </div>
+          <input type="text" name="q" placeholder="Cari koleksi">
+        </form>
 
         <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
           <span class="cart-badge" id="cart-badge" hidden></span>
@@ -284,5 +286,7 @@
   </footer>
 
   <script src="{{ asset('js/cart.js') }}"></script>
+  <script src="{{ asset('js/nav-search.js') }}"></script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
 </body>
 </html>

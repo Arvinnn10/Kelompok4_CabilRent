@@ -13,15 +13,22 @@ document.addEventListener('DOMContentLoaded', function () {
     return kategori.replace('kemben', 'kamisol');
   }
 
-  function terapkanFilter(kategori) {
+  function terapkanFilter(kategori, kataKunci) {
     var jumlah = 0;
+    var cari = (typeof kataKunci === 'string' ? kataKunci : (new URLSearchParams(window.location.search).get('q') || '')).trim().toLowerCase();
 
     cards.forEach(function (card) {
       // Chip memakai slug dari database (mis. "pakaian-kebaya"), kartu memakai kata kunci ("kebaya")
       var kunci = samakan(kategori);
-      var cocok = kunci === 'semua' ||
+      var cocokKategori = kunci === 'semua' ||
         card.dataset.kategori === kunci ||
         kunci.indexOf(card.dataset.kategori) !== -1;
+
+      var nama = (card.querySelector('.produk-name') ? card.querySelector('.produk-name').textContent : '').toLowerCase();
+      var ket = (card.querySelector('.produk-size') ? card.querySelector('.produk-size').textContent : '').toLowerCase();
+      var cocokCari = !cari || nama.indexOf(cari) !== -1 || ket.indexOf(cari) !== -1;
+
+      var cocok = cocokKategori && cocokCari;
       card.classList.toggle('is-hidden', !cocok);
       if (cocok) jumlah++;
     });
@@ -34,7 +41,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (judul) {
       var aktif = document.querySelector('.chip.active');
       var nama = aktif && kategori !== 'semua' ? aktif.textContent.replace(/^(Pakaian|Paket)\s+/i, '').trim() : '';
-      judul.textContent = nama ? 'Semua Koleksi ' + nama : 'Semua Koleksi';
+      if (cari) {
+        judul.textContent = 'Hasil pencarian "' + cari + '"';
+      } else {
+        judul.textContent = nama ? 'Semua Koleksi ' + nama : 'Semua Koleksi';
+      }
     }
 
     if (countLabel) countLabel.textContent = jumlah + ' produk';
@@ -115,4 +126,24 @@ document.addEventListener('DOMContentLoaded', function () {
     return chip.dataset.filter === awal;
   });
   terapkanFilter(valid ? awal : 'semua');
+
+  // Pencarian lewat input navbar di halaman koleksi
+  var inputCari = document.querySelector('.nav-search input[name="q"]');
+  if (inputCari) {
+    inputCari.addEventListener('input', function () {
+      var aktif = document.querySelector('.chip.active');
+      terapkanFilter(aktif ? aktif.dataset.filter : 'semua', inputCari.value);
+    });
+  }
+
+  // Scroll langsung ke bagian katalog jika ada filter atau pencarian
+  var params = new URLSearchParams(window.location.search);
+  if (params.has('q') || (params.has('kategori') && params.get('kategori') !== 'semua') || window.location.hash === '#semua-koleksi') {
+    var sectionKoleksi = document.getElementById('semua-koleksi');
+    if (sectionKoleksi) {
+      setTimeout(function () {
+        sectionKoleksi.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+    }
+  }
 });

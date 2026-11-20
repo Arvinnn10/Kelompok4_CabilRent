@@ -1,0 +1,72 @@
+/* Dropdown autocomplete kategori pencarian navbar */
+.nav-search {
+  position: relative;
+}
+
+.nav-search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 200px;
+  background-color: #ffffff;
+  border: 1px solid #ebd9c8;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(98, 62, 43, 0.12);
+  padding: 6px;
+  z-index: 1000;
+  display: none;
+}
+
+.nav-search-dropdown.is-visible {
+  display: block;
+}
+
+.nav-search-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: #8c7b70;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 6px 10px 4px;
+}
+
+.nav-search-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #271a13;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-search-item:hover,
+.nav-search-item.is-active {
+  background-color: #f7ede2;
+  color: #623e2b;
+}
+
+.nav-search-item svg {
+  width: 14px;
+  height: 14px;
+  color: #8c7b70;
+  flex-shrink: 0;
+}
+
+.nav-search-item:hover svg,
+.nav-search-item.is-active svg {
+  color: #623e2b;
+}
+
+.nav-search-item strong {
+  color: #a85d32;
+  font-weight: 700;
+}
+
+/* Jarak aman di bawah navbar sticky saat scroll langsung ke katalog */
+#semua-koleksi {
+  scroll-margin-top: 80px;
+}

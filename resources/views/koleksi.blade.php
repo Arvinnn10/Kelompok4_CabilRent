@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koleksi - Cabil.Rent</title>
   <link rel="stylesheet" href="{{ asset('css/koleksi.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/nav-search.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
 </head>
 <body>
 
@@ -32,7 +34,7 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" name="q" placeholder="Cari koleksi">
+          <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari koleksi">
         </form>
 
         <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
@@ -489,6 +491,8 @@
   </footer>
 
   <script src="{{ asset('js/cart.js') }}"></script>
+  <script src="{{ asset('js/nav-search.js') }}"></script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
   <script src="{{ asset('js/koleksi.js') }}"></script>
 </body>
 </html>

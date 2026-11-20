@@ -12,6 +12,8 @@ class Product extends Model
         'slug',
         'desk_produk',
         'harga_sewa',
+        'ukuran',
+        'stok',
         'foto_produk',
         'status_produk',
         'foto_kebaya',

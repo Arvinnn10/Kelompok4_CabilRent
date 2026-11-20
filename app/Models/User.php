@@ -17,6 +17,7 @@ class User extends Authenticatable
         'email',
         'no_telp',
         'role',
+        'status',
         'google_id',
         'avatar',
     ];

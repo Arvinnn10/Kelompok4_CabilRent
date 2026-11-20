@@ -47,6 +47,12 @@ class AuthController extends Controller
 
         // Cek kecocokan password hash
         if ($user && Hash::check($request->password, $user->password)) {
+            if ($user->status === 'diblokir') {
+                return back()->withErrors([
+                    'login' => 'Akun Anda telah dinonaktifkan / diblokir oleh admin.',
+                ])->withInput();
+            }
+
             Auth::login($user);
             $request->session()->regenerate();
 
@@ -190,6 +196,12 @@ class AuthController extends Controller
                     'role'         => 'customers',
                 ]);
             }
+        }
+
+        if ($user->status === 'diblokir') {
+            return redirect()->route('login')->withErrors([
+                'login' => 'Akun Anda telah dinonaktifkan / diblokir oleh admin.',
+            ]);
         }
 
         Auth::login($user);

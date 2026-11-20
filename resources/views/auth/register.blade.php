@@ -7,6 +7,7 @@
   
   <!-- Style khusus halaman login/register -->
   <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
   
   <!-- Font Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -154,5 +155,6 @@
       }
     });
   </script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
 </body>
 </html>

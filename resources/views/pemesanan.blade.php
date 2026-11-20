@@ -7,6 +7,8 @@
   <title>Data Pemesanan - Cabil.Rent</title>
   <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
   <link rel="stylesheet" href="{{ asset('css/pemesanan.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/nav-search.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
 </head>
 <body>
 
@@ -29,13 +31,13 @@
 
       <!-- Bagian search dan tombol kanan -->
       <div class="nav-actions">
-        <div class="nav-search">
+        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" placeholder="Cari koleksi">
-        </div>
+          <input type="text" name="q" placeholder="Cari koleksi">
+        </form>
 
         <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
           <span class="cart-badge" id="cart-badge" hidden></span>
@@ -211,6 +213,8 @@
   </footer>
 
   <script src="{{ asset('js/cart.js') }}"></script>
+  <script src="{{ asset('js/nav-search.js') }}"></script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
   <script src="{{ asset('js/pemesanan.js') }}"></script>
 </body>
 </html>
