@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Data Pemesanan - Cabil.Rent</title>
   <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
   <link rel="stylesheet" href="{{ asset('css/pemesanan.css') }}">
@@ -64,7 +65,7 @@
       <h1 class="order-title">Data Pemesanan</h1>
 
       <div class="order-grid">
-        <form class="order-form" id="order-form" novalidate>
+        <form class="order-form" id="order-form" data-checkout="{{ route('order.checkout') }}" novalidate>
           <fieldset class="order-card">
             <legend class="order-legend">Data pemesan</legend>
             <div class="order-row">

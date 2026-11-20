@@ -1,5 +1,6 @@
 // Halaman pemesanan: menampilkan ringkasan isi keranjang (js/cart.js),
-// memvalidasi form, lalu membuka WhatsApp dengan pesan pesanan yang sudah terisi.
+// memvalidasi form, menyimpan pesanan ke sistem admin, lalu membuka WhatsApp
+// dengan pesan pesanan yang sudah terisi.
 document.addEventListener('DOMContentLoaded', function () {
   var form = document.getElementById('order-form');
   var btnKirim = document.getElementById('btn-kirim');
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var daftar = CabilCart.ambil();
   var subtotal = daftar.reduce(function (total, item) {
-    return total + item.harga;
+    return total + (parseInt(item.harga, 10) || 0);
   }, 0);
   var deposit = daftar.length * CabilCart.DEPOSIT_PER_PRODUK;
   var total = subtotal + deposit;
@@ -22,7 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
     String(hariIni.getMonth() + 1).padStart(2, '0') + '-' +
     String(hariIni.getDate()).padStart(2, '0');
 
-  // Ringkasan pesanan
+  // Isi otomatis tanggal yang sudah dipilih di halaman detail
+  var denganTanggal = daftar.find(function (item) { return item.tanggal; });
+  if (denganTanggal && denganTanggal.tanggal >= inputTanggal.min) {
+    inputTanggal.value = denganTanggal.tanggal;
+  }
+
+  // Ringkasan pesanan: foto, nama, "ukuran · 3 hari", harga
   daftar.forEach(function (item) {
     var li = template.content.firstElementChild.cloneNode(true);
     var img = li.querySelector('img');
@@ -31,9 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
     img.addEventListener('error', function () {
       img.classList.add('is-missing');
     });
+    var durasi = (item.durasi || 3) + ' hari';
     li.querySelector('.order-item-name').textContent = item.nama;
-    li.querySelector('.order-item-meta').textContent = item.keterangan + ' · ' + item.durasi + ' hari';
-    li.querySelector('.order-item-price').textContent = CabilCart.keRupiah(item.harga);
+    li.querySelector('.order-item-meta').textContent = item.ukuran ? item.ukuran + ' · ' + durasi : durasi;
+    li.querySelector('.order-item-price').textContent = CabilCart.keRupiah(parseInt(item.harga, 10) || 0);
     list.appendChild(li);
   });
 
@@ -78,12 +86,15 @@ document.addEventListener('DOMContentLoaded', function () {
     return parseInt(p[2], 10) + ' ' + bulan[parseInt(p[1], 10) - 1] + ' ' + p[0];
   }
 
-  function susunPesan() {
+  function susunPesan(nomorPesanan) {
     var baris = ['Halo Cabil.Rent, saya ingin memesan:', ''];
+    if (nomorPesanan) {
+      baris.unshift('No. Pesanan: #' + nomorPesanan);
+    }
 
     daftar.forEach(function (item, i) {
-      baris.push((i + 1) + '. ' + item.nama + ' (' + item.keterangan + ') - ' +
-        item.durasi + ' hari - ' + CabilCart.keRupiah(item.harga));
+      baris.push((i + 1) + '. ' + item.nama + (item.ukuran ? ' (' + item.ukuran + ')' : '') + ' - ' +
+        (item.durasi || 3) + ' hari - ' + CabilCart.keRupiah(parseInt(item.harga, 10) || 0));
     });
 
     baris.push('');
@@ -105,12 +116,59 @@ document.addEventListener('DOMContentLoaded', function () {
     return baris.join('\n');
   }
 
+  function bukaWhatsApp(nomorPesanan) {
+    var url = 'https://wa.me/' + btnKirim.dataset.wa + '?text=' + encodeURIComponent(susunPesan(nomorPesanan));
+    window.location.href = url;
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (kosong || !valid()) {
       return;
     }
-    var url = 'https://wa.me/' + btnKirim.dataset.wa + '?text=' + encodeURIComponent(susunPesan());
-    window.open(url, '_blank', 'noopener');
+
+    btnKirim.disabled = true;
+    btnKirim.textContent = 'Memproses pesanan...';
+
+    // Simpan pesanan ke sistem admin (route order.checkout milik backend).
+    // Data yang belum ada di form ini (domisili, TB/BB) dikirim "-"; catatan ikut di TB/BB.
+    var data = new FormData();
+    data.append('nama_lengkap', form.elements.nama.value.trim());
+    data.append('no_whatsapp', form.elements.whatsapp.value.trim());
+    data.append('domisili', '-');
+    data.append('tb_bb', (form.elements.catatan.value.trim() || '-').slice(0, 30));
+    data.append('tanggal_acara', form.elements.tanggal.value);
+    data.append('items', JSON.stringify(daftar));
+
+    var token = document.querySelector('meta[name="csrf-token"]');
+
+    fetch(form.dataset.checkout, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': token ? token.content : ''
+      },
+      body: data
+    })
+      .then(function (res) {
+        return res.ok ? res.json() : null;
+      })
+      .then(function (hasil) {
+        var nomor = hasil && hasil.success && hasil.order_ids ? hasil.order_ids[0] : null;
+        if (nomor) {
+          // Pesanan sudah tersimpan: kosongkan keranjang
+          try {
+            localStorage.removeItem('cabilrent-keranjang');
+          } catch (err) {
+            // Penyimpanan diblokir browser
+          }
+        }
+        bukaWhatsApp(nomor);
+      })
+      .catch(function () {
+        // Server tidak bisa dihubungi: tetap kirim lewat WhatsApp
+        bukaWhatsApp(null);
+      });
   });
 });

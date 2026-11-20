@@ -88,11 +88,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modal) modal.style.display = 'flex';
   }
 
+  // Lanjut ke Pemesanan -> buka halaman Data Pemesanan (/pemesanan).
+  // Keranjang kosong: tombol tidak melakukan apa-apa.
   if (btnLanjut) {
     btnLanjut.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (btnLanjut.classList.contains('is-disabled')) return;
-      bukaModal();
+      if (btnLanjut.classList.contains('is-disabled')) e.preventDefault();
     });
   }
 
