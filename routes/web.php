@@ -13,6 +13,19 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
+if (!function_exists('generateUniqueSlug')) {
+    function generateUniqueSlug($modelClass, $title, $ignoreId = null, $column = 'slug') {
+        $baseSlug = Str::slug($title);
+        $slug = $baseSlug ?: 'item';
+        $count = 1;
+        while ($modelClass::where($column, $slug)->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $slug = "{$baseSlug}-{$count}";
+            $count++;
+        }
+        return $slug;
+    }
+}
+
 // Halaman utama (Home / Customer Landing)
 Route::get('/', function () {
     return view('home');
@@ -69,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
 
             Category::create([
                 'nama_kategori' => $request->nama_kategori,
-                'slug'          => Str::slug($request->nama_kategori),
+                'slug'          => generateUniqueSlug(Category::class, $request->nama_kategori),
                 'deskripsi'     => $request->deskripsi,
             ]);
 
@@ -85,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
             $category = Category::findOrFail($id);
             $category->update([
                 'nama_kategori' => $request->nama_kategori,
-                'slug'          => Str::slug($request->nama_kategori),
+                'slug'          => generateUniqueSlug(Category::class, $request->nama_kategori, $id),
                 'deskripsi'     => $request->deskripsi,
             ]);
 
@@ -94,6 +107,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/kategori/{id}', function ($id) {
             $category = Category::findOrFail($id);
+            if ($category->products()->exists()) {
+                return back()->with('error', 'Kategori tidak dapat dihapus karena masih memuat produk aktif!');
+            }
             $category->delete();
 
             return back()->with('success', 'Kategori berhasil dihapus!');
@@ -188,7 +204,7 @@ Route::middleware(['auth'])->group(function () {
 
             Product::create([
                 'nama_produk'   => $request->nama_produk,
-                'slug'          => Str::slug($request->nama_produk),
+                'slug'          => generateUniqueSlug(Product::class, $request->nama_produk),
                 'kategori_id'   => $request->kategori_id,
                 'harga_sewa'    => $request->harga_sewa,
                 'ukuran'        => $request->ukuran,
@@ -217,7 +233,7 @@ Route::middleware(['auth'])->group(function () {
 
             $data = [
                 'nama_produk'   => $request->nama_produk,
-                'slug'          => Str::slug($request->nama_produk),
+                'slug'          => generateUniqueSlug(Product::class, $request->nama_produk, $id),
                 'kategori_id'   => $request->kategori_id,
                 'harga_sewa'    => $request->harga_sewa,
                 'ukuran'        => $request->ukuran,
@@ -318,6 +334,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/admin/keranjang/{id}', function ($id) {
             $basket = Basket::findOrFail($id);
+            if ($basket->orders()->exists()) {
+                return back()->with('error', 'Item keranjang tidak dapat dihapus karena sudah memiliki riwayat pesanan!');
+            }
             $basket->delete();
 
             return back()->with('success', 'Item keranjang berhasil dihapus!');

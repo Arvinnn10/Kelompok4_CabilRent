@@ -77,9 +77,28 @@ class OrderController extends Controller
                         ->first();
                 }
 
-                $namaProduk = $product ? $product->nama_produk : ($item['nama'] ?? 'Busana Sewa');
-                $hargaSewa = $product ? $product->harga_sewa : (int)($item['harga'] ?? 0);
-                $productId = $product ? $product->id : Product::first()->id;
+                if (!$product) {
+                    DB::rollBack();
+                    $namaItem = $item['nama'] ?? 'Item busana';
+                    $pesan = "Produk '{$namaItem}' tidak ditemukan atau sudah tidak tersedia.";
+                    if ($request->wantsJson() || $request->ajax()) {
+                        return response()->json(['success' => false, 'message' => $pesan], 422);
+                    }
+                    return back()->withErrors(['items' => $pesan]);
+                }
+
+                if ($product->status_produk !== 'tersedia' || $product->stok < 1) {
+                    DB::rollBack();
+                    $pesan = "Produk '{$product->nama_produk}' saat ini sedang tidak tersedia atau stok habis.";
+                    if ($request->wantsJson() || $request->ajax()) {
+                        return response()->json(['success' => false, 'message' => $pesan], 422);
+                    }
+                    return back()->withErrors(['items' => $pesan]);
+                }
+
+                $namaProduk = $product->nama_produk;
+                $hargaSewa  = $product->harga_sewa;
+                $productId  = $product->id;
 
                 $totalSubtotal += $hargaSewa;
                 $totalDeposit += $depositPerProduk;
@@ -159,10 +178,53 @@ class OrderController extends Controller
             'status_pesan' => 'required|in:pending,dikonfirmasi,selesai,dibatalkan',
         ]);
 
-        $order = Order::findOrFail($id);
-        $order->status_pesan = $request->status_pesan;
+        $order = Order::with('basket.product')->findOrFail($id);
+        $oldStatus = $order->status_pesan;
+        $newStatus = $request->status_pesan;
+
+        if ($oldStatus === $newStatus) {
+            return back()->with('success', 'Status pesanan tidak berubah.');
+        }
+
+        $product = $order->basket?->product;
+        $qty = $order->basket?->jumlah ?? 1;
+
+        // 1. Jika pesanan dikonfirmasi (mulai disewa), potong stok
+        if ($newStatus === 'dikonfirmasi' && $oldStatus !== 'dikonfirmasi') {
+            if ($product) {
+                if ($product->stok < $qty) {
+                    return back()->with('error', "Gagal konfirmasi: Stok '{$product->nama_produk}' tidak mencukupi (sisa: {$product->stok}).");
+                }
+                $product->decrement('stok', $qty);
+                if ($product->fresh()->stok <= 0) {
+                    $product->update(['status_produk' => 'tidak_tersedia']);
+                }
+            }
+        }
+
+        // 2. Jika pesanan dibatalkan setelah sebelumnya dikonfirmasi, kembalikan stok
+        if ($newStatus === 'dibatalkan' && $oldStatus === 'dikonfirmasi') {
+            if ($product) {
+                $product->increment('stok', $qty);
+                if ($product->fresh()->stok > 0 && $product->status_produk === 'tidak_tersedia') {
+                    $product->update(['status_produk' => 'tersedia']);
+                }
+            }
+        }
+
+        // 3. Jika pesanan selesai (masa sewa tuntas & barang kembali), pulihkan stok busana
+        if ($newStatus === 'selesai' && $oldStatus === 'dikonfirmasi') {
+            if ($product) {
+                $product->increment('stok', $qty);
+                if ($product->fresh()->stok > 0 && $product->status_produk === 'tidak_tersedia') {
+                    $product->update(['status_produk' => 'tersedia']);
+                }
+            }
+        }
+
+        $order->status_pesan = $newStatus;
         $order->save();
 
-        return back()->with('success', 'Status pesanan berhasil diupdate!');
+        return back()->with('success', "Status pesanan #{$order->id} berhasil diupdate menjadi '{$newStatus}'!");
     }
 }

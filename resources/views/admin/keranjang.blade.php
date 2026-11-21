@@ -105,6 +105,11 @@
           {{ session('success') }}
         </div>
       @endif
+      @if (session('error'))
+        <div style="background-color: #fef2f2; color: #991b1b; padding: 12px 18px; border-radius: 12px; font-size: 13px; margin-bottom: 20px; border: 1px solid #fecaca;">
+          {{ session('error') }}
+        </div>
+      @endif
 
       <div class="pesanan-filter-bar">
         <form method="GET" action="{{ url('/admin/keranjang') }}" class="search-bar" style="width: 100%; max-width: 380px;">

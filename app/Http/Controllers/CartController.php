@@ -71,6 +71,12 @@ class CartController extends Controller
                 ->first();
 
             if ($basket) {
+                if ($basket->orders()->exists()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Item keranjang tidak dapat dihapus karena sudah memiliki riwayat pesanan.'
+                    ], 400);
+                }
                 $basket->delete();
             }
         }

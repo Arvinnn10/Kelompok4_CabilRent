@@ -32,7 +32,7 @@ return new class extends Migration
                     $table->string('ukuran', 30)->nullable()->after('harga_sewa');
                 }
                 if (!Schema::hasColumn('products', 'stok')) {
-                    $table->integer('stok')->default(1)->after('ukuran');
+                    $table->unsignedInteger('stok')->default(1)->after('ukuran');
                 }
             });
         }

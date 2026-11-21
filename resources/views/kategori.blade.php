@@ -183,6 +183,9 @@
         @if (session('success'))
           <p class="flash-success">{{ session('success') }}</p>
         @endif
+        @if (session('error'))
+          <p class="flash-error" style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:12px;border-radius:8px;margin-bottom:16px;">{{ session('error') }}</p>
+        @endif
         @if ($errors->any())
           <p class="flash-error">{{ $errors->first() }}</p>
         @endif

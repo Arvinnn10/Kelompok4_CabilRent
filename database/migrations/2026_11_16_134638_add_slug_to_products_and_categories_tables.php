@@ -13,13 +13,13 @@ return new class extends Migration
     {
         if (Schema::hasTable('categories') && !Schema::hasColumn('categories', 'slug')) {
             Schema::table('categories', function (Blueprint $table) {
-                $table->string('slug', 50)->nullable()->after('nama_kategori');
+                $table->string('slug', 50)->nullable()->unique()->after('nama_kategori');
             });
         }
 
         if (Schema::hasTable('products') && !Schema::hasColumn('products', 'slug')) {
             Schema::table('products', function (Blueprint $table) {
-                $table->string('slug', 100)->nullable()->after('nama_produk');
+                $table->string('slug', 100)->nullable()->unique()->after('nama_produk');
             });
         }
     }
