@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
   <!-- CSS khusus halaman Pengguna -->
   <link rel="stylesheet" href="{{ asset('css/pengguna.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
 </head>
 <body>
 
@@ -546,5 +547,6 @@
 
   <script src="{{ asset('js/dashboard.js') }}"></script>
   <script src="{{ asset('js/pengguna.js') }}"></script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
 </body>
 </html>

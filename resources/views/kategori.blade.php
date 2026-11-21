@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
   <!-- CSS khusus halaman Kategori -->
   <link rel="stylesheet" href="{{ asset('css/kategori.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
 </head>
 <body>
 
@@ -310,5 +311,6 @@
 
   <script src="{{ asset('js/dashboard.js') }}"></script>
   <script src="{{ asset('js/kategori.js') }}"></script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
 </body>
 </html>

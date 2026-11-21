@@ -1,5 +1,10 @@
 // Transisi halus perpindahan halaman
 document.addEventListener('DOMContentLoaded', function () {
+  // Tandai halaman admin agar animasi terfokus pada konten utama (sidebar tetap stabil)
+  if (document.querySelector('.app-container, .sidebar')) {
+    document.body.classList.add('is-admin-panel');
+  }
+
   // Pulihkan tampilan saat halaman dimuat kembali dari cache (tombol Back/Forward browser)
   window.addEventListener('pageshow', function () {
     document.body.classList.remove('is-exiting');

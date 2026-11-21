@@ -8,6 +8,7 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Halaman publik / customer */
 body {
   animation: halamanSlideMasuk 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
@@ -29,7 +30,42 @@ body.is-exiting {
   }
 }
 
-/* Transisi tampilan bawaan untuk browser modern */
+/* Khusus panel admin: sidebar tetap kokoh, hanya konten utama yang slide halus */
+body.is-admin-panel,
+body:has(.app-container) {
+  animation: none !important;
+}
+
+body.is-admin-panel.is-exiting,
+body:has(.app-container).is-exiting {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.main-area,
+.main-wrapper {
+  animation: adminSlideMasuk 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+body.is-exiting .main-area,
+body.is-exiting .main-wrapper {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.16s ease-in, transform 0.16s ease-in;
+}
+
+@keyframes adminSlideMasuk {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Transisi bawaan untuk browser modern */
 ::view-transition-old(root) {
   animation: viewSlideKeluar 0.2s cubic-bezier(0.4, 0, 1, 1) both;
 }
@@ -61,10 +97,14 @@ body.is-exiting {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body {
+  body,
+  .main-area,
+  .main-wrapper {
     animation: none !important;
   }
-  body.is-exiting {
+  body.is-exiting,
+  body.is-exiting .main-area,
+  body.is-exiting .main-wrapper {
     opacity: 1 !important;
     transform: none !important;
   }

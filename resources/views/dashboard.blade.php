@@ -7,6 +7,7 @@
 
   <!-- CSS Khusus Halaman Dashboard (Vanilla CSS) -->
   <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
 </head>
 <body>
 
@@ -373,5 +374,6 @@
   </div>
 
   <script src="{{ asset('js/dashboard.js') }}"></script>
+  <script src="{{ asset('js/transisi.js') }}"></script>
 </body>
 </html>
