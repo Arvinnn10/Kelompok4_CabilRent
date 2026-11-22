@@ -14,9 +14,19 @@ class Basket extends Model
     ];
 
     protected $casts = [
+        'jumlah'        => 'integer',
         'tanggal_acara' => 'date',
         'created_at'    => 'datetime',
     ];
+
+    protected static function booted()
+    {
+        static::saving(function ($basket) {
+            if ($basket->jumlah !== null && (int)$basket->jumlah < 1) {
+                throw new \InvalidArgumentException('Jumlah keranjang minimal 1 dan tidak boleh 0 atau negatif.');
+            }
+        });
+    }
 
     // Relasi: keranjang milik satu user
     public function user()

@@ -87,9 +87,19 @@ class OrderController extends Controller
                     return back()->withErrors(['items' => $pesan]);
                 }
 
-                if ($product->status_produk !== 'tersedia' || $product->stok < 1) {
+                $itemJumlah = isset($item['jumlah']) ? (int)$item['jumlah'] : (isset($item['qty']) ? (int)$item['qty'] : 1);
+                if ($itemJumlah < 1) {
                     DB::rollBack();
-                    $pesan = "Produk '{$product->nama_produk}' saat ini sedang tidak tersedia atau stok habis.";
+                    $pesan = "Jumlah keranjang untuk produk '{$product->nama_produk}' minimal 1 dan tidak boleh 0 atau negatif.";
+                    if ($request->wantsJson() || $request->ajax()) {
+                        return response()->json(['success' => false, 'message' => $pesan], 422);
+                    }
+                    return back()->withErrors(['items' => $pesan]);
+                }
+
+                if ($product->status_produk !== 'tersedia' || $product->stok < $itemJumlah) {
+                    DB::rollBack();
+                    $pesan = "Produk '{$product->nama_produk}' saat ini sedang tidak tersedia atau stok tidak mencukupi (sisa: {$product->stok}).";
                     if ($request->wantsJson() || $request->ajax()) {
                         return response()->json(['success' => false, 'message' => $pesan], 422);
                     }
@@ -100,14 +110,17 @@ class OrderController extends Controller
                 $hargaSewa  = $product->harga_sewa;
                 $productId  = $product->id;
 
-                $totalSubtotal += $hargaSewa;
-                $totalDeposit += $depositPerProduk;
-                $orderTotal = $hargaSewa + $depositPerProduk;
+                $subtotalProduk = $hargaSewa * $itemJumlah;
+                $depositProduk  = $depositPerProduk * $itemJumlah;
+                $orderTotal     = $subtotalProduk + $depositProduk;
+
+                $totalSubtotal += $subtotalProduk;
+                $totalDeposit  += $depositProduk;
 
                 $basket = Basket::create([
                     'user_id'       => $user->id,
                     'produk_id'     => $productId,
-                    'jumlah'        => 1,
+                    'jumlah'        => $itemJumlah,
                     'tanggal_acara' => $request->tanggal_acara,
                 ]);
 

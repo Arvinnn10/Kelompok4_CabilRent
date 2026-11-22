@@ -29,6 +29,9 @@ class CartController extends Controller
             'produk_id'     => 'required',
             'tanggal_acara' => 'nullable|date',
             'jumlah'        => 'nullable|integer|min:1',
+        ], [
+            'jumlah.min'     => 'Jumlah keranjang minimal 1 dan tidak boleh 0 atau negatif.',
+            'jumlah.integer' => 'Jumlah keranjang harus berupa bilangan bulat.',
         ]);
 
         $identifier = $request->produk_id;
@@ -44,10 +47,12 @@ class CartController extends Controller
         }
 
         if (Auth::check()) {
+            $jumlah = max(1, (int)($request->jumlah ?? 1));
+
             $basket = Basket::create([
                 'user_id'       => Auth::id(),
                 'produk_id'     => $product->id,
-                'jumlah'        => $request->jumlah ?? 1,
+                'jumlah'        => $jumlah,
                 'tanggal_acara' => $request->tanggal_acara ?? now()->addDays(3)->toDateString(),
             ]);
 
@@ -61,6 +66,40 @@ class CartController extends Controller
         return response()->json([
             'success' => true,
         ]);
+    }
+
+    public function updateItem(Request $request, $id)
+    {
+        $request->validate([
+            'jumlah' => 'required|integer|min:1',
+        ], [
+            'jumlah.required' => 'Jumlah keranjang wajib diisi.',
+            'jumlah.min'      => 'Jumlah keranjang minimal 1 dan tidak boleh 0 atau negatif.',
+            'jumlah.integer'  => 'Jumlah keranjang harus berupa bilangan bulat.',
+        ]);
+
+        if (Auth::check()) {
+            $basket = Basket::where('id', $id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if ($basket) {
+                $basket->update([
+                    'jumlah' => max(1, (int)$request->jumlah),
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Jumlah keranjang berhasil diperbarui.',
+                    'basket'  => $basket,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Item keranjang tidak ditemukan.',
+        ], 404);
     }
 
     public function removeItem($id)

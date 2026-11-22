@@ -353,6 +353,8 @@ Route::get('/detail/{id?}', [CollectionController::class, 'detail'])->name('deta
 // KERANJANG
 Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
 Route::post('/keranjang/tambah', [CartController::class, 'addItem'])->name('cart.add');
+Route::patch('/keranjang/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
+Route::put('/keranjang/update/{id}', [CartController::class, 'updateItem']);
 Route::delete('/keranjang/hapus/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
 
 // CHECKOUT PESANAN
