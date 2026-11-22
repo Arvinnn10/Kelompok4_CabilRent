@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -13,197 +12,100 @@ return new class extends Migration
     public function up(): void
     {
         $driver = DB::getDriverName();
+        if ($driver !== 'mysql') {
+            return;
+        }
+
         $dbName = DB::getDatabaseName();
 
-        if ($driver === 'mysql') {
-            // 1. Table users: status default 'aktif'
-            if (Schema::hasTable('users') && Schema::hasColumn('users', 'status')) {
-                DB::statement("ALTER TABLE `users` MODIFY COLUMN `status` ENUM('aktif', 'diblokir') NOT NULL DEFAULT 'aktif'");
+        // 1. Table users: status default 'aktif'
+        if (Schema::hasTable('users') && Schema::hasColumn('users', 'status')) {
+            DB::statement("ALTER TABLE `users` MODIFY COLUMN `status` ENUM('aktif', 'diblokir') NOT NULL DEFAULT 'aktif'");
+        }
+
+        // 2. Table categories: unique slug
+        if (Schema::hasTable('categories') && Schema::hasColumn('categories', 'slug')) {
+            $this->ensureUniqueIndex($dbName, 'categories', 'slug', 'categories_slug_unique');
+        }
+
+        // 3. Table products: unique slug, unsigned int stok default 1, FK kategori_id restrict, check constraint stok >= 0
+        if (Schema::hasTable('products')) {
+            if (Schema::hasColumn('products', 'slug')) {
+                $this->ensureUniqueIndex($dbName, 'products', 'slug', 'products_slug_unique');
             }
 
-            // 2. Table categories: unique slug
-            if (Schema::hasTable('categories') && Schema::hasColumn('categories', 'slug')) {
-                $catSlugUnique = DB::select("
-                    SELECT INDEX_NAME 
-                    FROM information_schema.STATISTICS 
-                    WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'categories' AND COLUMN_NAME = 'slug' AND NON_UNIQUE = 0
-                ", [$dbName]);
-
-                if (empty($catSlugUnique)) {
-                    Schema::table('categories', function (Blueprint $table) {
-                        $table->unique('slug', 'categories_slug_unique');
-                    });
-                }
+            if (Schema::hasColumn('products', 'stok')) {
+                DB::statement("ALTER TABLE `products` MODIFY COLUMN `stok` INT UNSIGNED NOT NULL DEFAULT 1");
             }
 
-            // 3. Table products: unique slug, unsigned int stok default 1, FK kategori_id restrict
-            if (Schema::hasTable('products')) {
-                // Slug unique
-                if (Schema::hasColumn('products', 'slug')) {
-                    $prodSlugUnique = DB::select("
-                        SELECT INDEX_NAME 
-                        FROM information_schema.STATISTICS 
-                        WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'products' AND COLUMN_NAME = 'slug' AND NON_UNIQUE = 0
-                    ", [$dbName]);
-
-                    if (empty($prodSlugUnique)) {
-                        Schema::table('products', function (Blueprint $table) {
-                            $table->unique('slug', 'products_slug_unique');
-                        });
-                    }
-                }
-
-                // Stok unsigned int default 1
-                if (Schema::hasColumn('products', 'stok')) {
-                    DB::statement("ALTER TABLE `products` MODIFY COLUMN `stok` INT UNSIGNED NOT NULL DEFAULT 1");
-                }
-
-                // FK kategori_id -> categories(id) ON DELETE RESTRICT
-                if (Schema::hasColumn('products', 'kategori_id')) {
-                    DB::statement("ALTER TABLE `products` MODIFY COLUMN `kategori_id` BIGINT UNSIGNED NOT NULL");
-
-                    $existingFk = DB::select("
-                        SELECT CONSTRAINT_NAME, DELETE_RULE 
-                        FROM information_schema.REFERENTIAL_CONSTRAINTS 
-                        WHERE CONSTRAINT_SCHEMA = ? AND TABLE_NAME = 'products' AND REFERENCED_TABLE_NAME = 'categories'
-                    ", [$dbName]);
-
-                    foreach ($existingFk as $fk) {
-                        if (strtoupper($fk->DELETE_RULE) !== 'RESTRICT' && strtoupper($fk->DELETE_RULE) !== 'NO ACTION') {
-                            DB::statement("ALTER TABLE `products` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`");
-                            $existingFk = [];
-                            break;
-                        }
-                    }
-
-                    if (empty($existingFk)) {
-                        Schema::table('products', function (Blueprint $table) {
-                            $table->foreign('kategori_id', 'products_kategori_id_foreign')
-                                  ->references('id')
-                                  ->on('categories')
-                                  ->restrictOnDelete();
-                        });
-                    }
-                }
-
-                // Check constraint stok >= 0
-                $stokCheck = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM information_schema.TABLE_CONSTRAINTS 
-                    WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'products' AND CONSTRAINT_NAME = 'chk_products_stok'
-                ", [$dbName]);
-                if (empty($stokCheck)) {
-                    try {
-                        DB::statement("ALTER TABLE `products` ADD CONSTRAINT `chk_products_stok` CHECK (`stok` >= 0)");
-                    } catch (\Throwable $e) {}
-                }
+            if (Schema::hasColumn('products', 'kategori_id')) {
+                DB::statement("ALTER TABLE `products` MODIFY COLUMN `kategori_id` BIGINT UNSIGNED NOT NULL");
+                $this->ensureForeignKey(
+                    $dbName,
+                    table: 'products',
+                    column: 'kategori_id',
+                    refTable: 'categories',
+                    refColumn: 'id',
+                    rule: 'RESTRICT',
+                    constraintName: 'products_kategori_id_foreign'
+                );
             }
 
-            // 4. Table baskets: jumlah unsigned int default 1, FK user_id cascade, FK produk_id cascade, check constraint jumlah >= 1
-            if (Schema::hasTable('baskets')) {
-                if (Schema::hasColumn('baskets', 'jumlah')) {
-                    DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `jumlah` INT UNSIGNED NOT NULL DEFAULT 1");
-                }
+            $this->ensureCheckConstraint($dbName, 'products', 'chk_products_stok', '`stok` >= 0');
+        }
 
-                if (Schema::hasColumn('baskets', 'user_id')) {
-                    DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `user_id` BIGINT UNSIGNED NOT NULL");
-
-                    $userFk = DB::select("
-                        SELECT CONSTRAINT_NAME, DELETE_RULE 
-                        FROM information_schema.REFERENTIAL_CONSTRAINTS 
-                        WHERE CONSTRAINT_SCHEMA = ? AND TABLE_NAME = 'baskets' AND REFERENCED_TABLE_NAME = 'users'
-                    ", [$dbName]);
-
-                    foreach ($userFk as $fk) {
-                        if (strtoupper($fk->DELETE_RULE) !== 'CASCADE') {
-                            DB::statement("ALTER TABLE `baskets` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`");
-                            $userFk = [];
-                            break;
-                        }
-                    }
-
-                    if (empty($userFk)) {
-                        Schema::table('baskets', function (Blueprint $table) {
-                            $table->foreign('user_id', 'baskets_user_id_foreign')
-                                  ->references('id')
-                                  ->on('users')
-                                  ->cascadeOnDelete();
-                        });
-                    }
-                }
-
-                if (Schema::hasColumn('baskets', 'produk_id')) {
-                    DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `produk_id` BIGINT UNSIGNED NOT NULL");
-
-                    $prodFk = DB::select("
-                        SELECT CONSTRAINT_NAME, DELETE_RULE 
-                        FROM information_schema.REFERENTIAL_CONSTRAINTS 
-                        WHERE CONSTRAINT_SCHEMA = ? AND TABLE_NAME = 'baskets' AND REFERENCED_TABLE_NAME = 'products'
-                    ", [$dbName]);
-
-                    foreach ($prodFk as $fk) {
-                        if (strtoupper($fk->DELETE_RULE) !== 'CASCADE') {
-                            DB::statement("ALTER TABLE `baskets` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`");
-                            $prodFk = [];
-                            break;
-                        }
-                    }
-
-                    if (empty($prodFk)) {
-                        Schema::table('baskets', function (Blueprint $table) {
-                            $table->foreign('produk_id', 'baskets_produk_id_foreign')
-                                  ->references('id')
-                                  ->on('products')
-                                  ->cascadeOnDelete();
-                        });
-                    }
-                }
-
-                // Check constraint jumlah >= 1
-                $jumlahCheck = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM information_schema.TABLE_CONSTRAINTS 
-                    WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'baskets' AND CONSTRAINT_NAME = 'chk_baskets_jumlah'
-                ", [$dbName]);
-                if (empty($jumlahCheck)) {
-                    try {
-                        DB::statement("ALTER TABLE `baskets` ADD CONSTRAINT `chk_baskets_jumlah` CHECK (`jumlah` >= 1)");
-                    } catch (\Throwable $e) {}
-                }
+        // 4. Table baskets: jumlah unsigned int default 1, FK user_id cascade, FK produk_id cascade, check constraint jumlah >= 1
+        if (Schema::hasTable('baskets')) {
+            if (Schema::hasColumn('baskets', 'jumlah')) {
+                DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `jumlah` INT UNSIGNED NOT NULL DEFAULT 1");
             }
 
-            // 5. Table orders: status_pesan default 'pending', FK basket_id restrict
-            if (Schema::hasTable('orders')) {
-                if (Schema::hasColumn('orders', 'status_pesan')) {
-                    DB::statement("ALTER TABLE `orders` MODIFY COLUMN `status_pesan` ENUM('pending', 'dikonfirmasi', 'selesai', 'dibatalkan') NOT NULL DEFAULT 'pending'");
-                }
+            if (Schema::hasColumn('baskets', 'user_id')) {
+                DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `user_id` BIGINT UNSIGNED NOT NULL");
+                $this->ensureForeignKey(
+                    $dbName,
+                    table: 'baskets',
+                    column: 'user_id',
+                    refTable: 'users',
+                    refColumn: 'id',
+                    rule: 'CASCADE',
+                    constraintName: 'baskets_user_id_foreign'
+                );
+            }
 
-                if (Schema::hasColumn('orders', 'basket_id')) {
-                    DB::statement("ALTER TABLE `orders` MODIFY COLUMN `basket_id` BIGINT UNSIGNED NOT NULL");
+            if (Schema::hasColumn('baskets', 'produk_id')) {
+                DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `produk_id` BIGINT UNSIGNED NOT NULL");
+                $this->ensureForeignKey(
+                    $dbName,
+                    table: 'baskets',
+                    column: 'produk_id',
+                    refTable: 'products',
+                    refColumn: 'id',
+                    rule: 'CASCADE',
+                    constraintName: 'baskets_produk_id_foreign'
+                );
+            }
 
-                    $basketFk = DB::select("
-                        SELECT CONSTRAINT_NAME, DELETE_RULE 
-                        FROM information_schema.REFERENTIAL_CONSTRAINTS 
-                        WHERE CONSTRAINT_SCHEMA = ? AND TABLE_NAME = 'orders' AND REFERENCED_TABLE_NAME = 'baskets'
-                    ", [$dbName]);
+            $this->ensureCheckConstraint($dbName, 'baskets', 'chk_baskets_jumlah', '`jumlah` >= 1');
+        }
 
-                    foreach ($basketFk as $fk) {
-                        if (strtoupper($fk->DELETE_RULE) !== 'RESTRICT' && strtoupper($fk->DELETE_RULE) !== 'NO ACTION') {
-                            DB::statement("ALTER TABLE `orders` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`");
-                            $basketFk = [];
-                            break;
-                        }
-                    }
+        // 5. Table orders: status_pesan default 'pending', FK basket_id restrict
+        if (Schema::hasTable('orders')) {
+            if (Schema::hasColumn('orders', 'status_pesan')) {
+                DB::statement("ALTER TABLE `orders` MODIFY COLUMN `status_pesan` ENUM('pending', 'dikonfirmasi', 'selesai', 'dibatalkan') NOT NULL DEFAULT 'pending'");
+            }
 
-                    if (empty($basketFk)) {
-                        Schema::table('orders', function (Blueprint $table) {
-                            $table->foreign('basket_id', 'orders_basket_id_foreign')
-                                  ->references('id')
-                                  ->on('baskets')
-                                  ->restrictOnDelete();
-                        });
-                    }
-                }
+            if (Schema::hasColumn('orders', 'basket_id')) {
+                DB::statement("ALTER TABLE `orders` MODIFY COLUMN `basket_id` BIGINT UNSIGNED NOT NULL");
+                $this->ensureForeignKey(
+                    $dbName,
+                    table: 'orders',
+                    column: 'basket_id',
+                    refTable: 'baskets',
+                    refColumn: 'id',
+                    rule: 'RESTRICT',
+                    constraintName: 'orders_basket_id_foreign'
+                );
             }
         }
     }
@@ -213,15 +115,181 @@ return new class extends Migration
      */
     public function down(): void
     {
+        $driver = DB::getDriverName();
+        if ($driver !== 'mysql') {
+            return;
+        }
+
         $dbName = DB::getDatabaseName();
 
-        // Rollback check constraints if any
-        try {
-            DB::statement("ALTER TABLE `baskets` DROP CHECK `chk_baskets_jumlah`");
-        } catch (\Throwable $e) {}
+        // 1. Rollback CHECK constraints
+        $this->dropCheckConstraintIfExists($dbName, 'baskets', 'chk_baskets_jumlah');
+        $this->dropCheckConstraintIfExists($dbName, 'products', 'chk_products_stok');
 
-        try {
-            DB::statement("ALTER TABLE `products` DROP CHECK `chk_products_stok`");
-        } catch (\Throwable $e) {}
+        // 2. Rollback Foreign Keys to original CASCADE state
+        if (Schema::hasTable('orders') && Schema::hasColumn('orders', 'basket_id')) {
+            $this->ensureForeignKey(
+                $dbName,
+                table: 'orders',
+                column: 'basket_id',
+                refTable: 'baskets',
+                refColumn: 'id',
+                rule: 'CASCADE',
+                constraintName: 'orders_basket_id_foreign'
+            );
+        }
+
+        if (Schema::hasTable('products') && Schema::hasColumn('products', 'kategori_id')) {
+            $this->ensureForeignKey(
+                $dbName,
+                table: 'products',
+                column: 'kategori_id',
+                refTable: 'categories',
+                refColumn: 'id',
+                rule: 'CASCADE',
+                constraintName: 'products_kategori_id_foreign'
+            );
+        }
+
+        // 3. Rollback UNIQUE constraints on slugs
+        $this->dropUniqueIndexIfExists($dbName, 'categories', 'categories_slug_unique');
+        $this->dropUniqueIndexIfExists($dbName, 'products', 'products_slug_unique');
+
+        // 4. Rollback data types from unsigned back to standard integer
+        if (Schema::hasTable('baskets') && Schema::hasColumn('baskets', 'jumlah')) {
+            DB::statement("ALTER TABLE `baskets` MODIFY COLUMN `jumlah` INT NOT NULL DEFAULT 1");
+        }
+
+        if (Schema::hasTable('products') && Schema::hasColumn('products', 'stok')) {
+            DB::statement("ALTER TABLE `products` MODIFY COLUMN `stok` INT NOT NULL DEFAULT 1");
+        }
+    }
+
+    /**
+     * Get foreign key info by source table & column AND referenced table & column.
+     */
+    private function getForeignKeyInfo(string $dbName, string $table, string $column, string $refTable, string $refColumn): ?object
+    {
+        $res = DB::select('
+            SELECT kcu.CONSTRAINT_NAME, rc.DELETE_RULE
+            FROM information_schema.KEY_COLUMN_USAGE kcu
+            JOIN information_schema.REFERENTIAL_CONSTRAINTS rc 
+                ON kcu.CONSTRAINT_NAME = rc.CONSTRAINT_NAME 
+                AND kcu.CONSTRAINT_SCHEMA = rc.CONSTRAINT_SCHEMA
+            WHERE kcu.CONSTRAINT_SCHEMA = ?
+              AND kcu.TABLE_NAME = ?
+              AND kcu.COLUMN_NAME = ?
+              AND kcu.REFERENCED_TABLE_NAME = ?
+              AND kcu.REFERENCED_COLUMN_NAME = ?
+        ', [$dbName, $table, $column, $refTable, $refColumn]);
+
+        return $res[0] ?? null;
+    }
+
+    /**
+     * Ensure a foreign key exists with the correct delete rule based on source and target.
+     */
+    private function ensureForeignKey(
+        string $dbName,
+        string $table,
+        string $column,
+        string $refTable,
+        string $refColumn,
+        string $rule,
+        string $constraintName
+    ): void {
+        $fk = $this->getForeignKeyInfo($dbName, $table, $column, $refTable, $refColumn);
+        $expectedRule = strtoupper($rule);
+
+        if ($fk) {
+            $currentRule = strtoupper($fk->DELETE_RULE);
+            $matches = ($expectedRule === 'RESTRICT')
+                ? in_array($currentRule, ['RESTRICT', 'NO ACTION'])
+                : ($currentRule === $expectedRule);
+
+            if ($matches) {
+                return;
+            }
+
+            DB::statement("ALTER TABLE `{$table}` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`");
+        }
+
+        $deleteClause = ($expectedRule === 'CASCADE') ? 'ON DELETE CASCADE' : 'ON DELETE RESTRICT';
+        DB::statement("ALTER TABLE `{$table}` ADD CONSTRAINT `{$constraintName}` FOREIGN KEY (`{$column}`) REFERENCES `{$refTable}` (`{$refColumn}`) {$deleteClause}");
+    }
+
+    /**
+     * Ensure a CHECK constraint exists, throwing exception if execution fails.
+     */
+    private function ensureCheckConstraint(string $dbName, string $table, string $constraintName, string $checkExpression): void
+    {
+        $exists = DB::select('
+            SELECT CONSTRAINT_NAME 
+            FROM information_schema.TABLE_CONSTRAINTS 
+            WHERE TABLE_SCHEMA = ? 
+              AND TABLE_NAME = ? 
+              AND CONSTRAINT_NAME = ? 
+              AND CONSTRAINT_TYPE = "CHECK"
+        ', [$dbName, $table, $constraintName]);
+
+        if (empty($exists)) {
+            DB::statement("ALTER TABLE `{$table}` ADD CONSTRAINT `{$constraintName}` CHECK ({$checkExpression})");
+        }
+    }
+
+    /**
+     * Drop a CHECK constraint if it exists.
+     */
+    private function dropCheckConstraintIfExists(string $dbName, string $table, string $constraintName): void
+    {
+        $exists = DB::select('
+            SELECT CONSTRAINT_NAME 
+            FROM information_schema.TABLE_CONSTRAINTS 
+            WHERE TABLE_SCHEMA = ? 
+              AND TABLE_NAME = ? 
+              AND CONSTRAINT_NAME = ? 
+              AND CONSTRAINT_TYPE = "CHECK"
+        ', [$dbName, $table, $constraintName]);
+
+        if (!empty($exists)) {
+            DB::statement("ALTER TABLE `{$table}` DROP CHECK `{$constraintName}`");
+        }
+    }
+
+    /**
+     * Ensure unique index exists on column.
+     */
+    private function ensureUniqueIndex(string $dbName, string $table, string $column, string $indexName): void
+    {
+        $exists = DB::select('
+            SELECT INDEX_NAME 
+            FROM information_schema.STATISTICS 
+            WHERE TABLE_SCHEMA = ? 
+              AND TABLE_NAME = ? 
+              AND COLUMN_NAME = ? 
+              AND NON_UNIQUE = 0
+        ', [$dbName, $table, $column]);
+
+        if (empty($exists)) {
+            DB::statement("ALTER TABLE `{$table}` ADD UNIQUE KEY `{$indexName}` (`{$column}`)");
+        }
+    }
+
+    /**
+     * Drop unique index if it exists.
+     */
+    private function dropUniqueIndexIfExists(string $dbName, string $table, string $indexName): void
+    {
+        $exists = DB::select('
+            SELECT INDEX_NAME 
+            FROM information_schema.STATISTICS 
+            WHERE TABLE_SCHEMA = ? 
+              AND TABLE_NAME = ? 
+              AND INDEX_NAME = ?
+        ', [$dbName, $table, $indexName]);
+
+        if (!empty($exists)) {
+            DB::statement("ALTER TABLE `{$table}` DROP INDEX `{$indexName}`");
+        }
     }
 };
