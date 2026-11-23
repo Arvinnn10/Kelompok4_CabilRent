@@ -18,10 +18,10 @@ class OrderController extends Controller
     {
         $request->validate([
             'nama_lengkap'  => 'required|string|max:100',
-            'no_whatsapp'   => 'required|string|max:25',
+            'no_whatsapp'   => 'required|string|max:20',
             'domisili'      => 'required|string|max:100',
             'instagram'     => 'nullable|string|max:50',
-            'tb_bb'         => 'required|string|max:30',
+            'tb_bb'         => 'required|string|max:20',
             'tanggal_acara' => 'required|date',
             'items'         => 'nullable',
         ]);
@@ -150,7 +150,7 @@ class OrderController extends Controller
                     'no_whatsapp'    => $request->no_whatsapp,
                     'instagram'      => $request->instagram ?: '-',
                     'domisili'       => $request->domisili,
-                    'desk_pemesanan' => $namaProduk . ' (Acara: ' . $request->tanggal_acara . ')',
+                    'desk_pemesanan' => Str::limit($namaProduk . ' (Acara: ' . $request->tanggal_acara . ')', 255, ''),
                     'total_harga'    => $orderTotal,
                     'status_pesan'   => 'pending',
                     'tb_bb'          => $request->tb_bb,

@@ -194,18 +194,17 @@
             <p class="ps-stat-label">Total Pesanan</p>
             <p class="ps-stat-value">{{ $totalOrders ?? 0 }}</p>
           </div>
-          <!-- BACKEND: tiga kartu di bawah masih angka contoh dari desain -->
           <div class="stat-card">
             <p class="ps-stat-label">Perlu Dikonfirmasi</p>
-            <p class="ps-stat-value">2</p>
+            <p class="ps-stat-value">{{ $perluDikonfirmasi ?? 0 }}</p>
           </div>
           <div class="stat-card">
             <p class="ps-stat-label">Sedang Disewa</p>
-            <p class="ps-stat-value">0</p>
+            <p class="ps-stat-value">{{ $sedangDisewa ?? 0 }}</p>
           </div>
           <div class="stat-card">
             <p class="ps-stat-label">Pendapatan Selesai</p>
-            <p class="ps-stat-value">Rp 450.000</p>
+            <p class="ps-stat-value">Rp {{ number_format($pendapatanSelesai ?? 0, 0, ',', '.') }}</p>
           </div>
         </section>
 
@@ -237,7 +236,7 @@
                 @forelse ($orders as $order)
                   <tr>
                     <td>
-                      <span class="ps-id">CR-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</span>
+                      <span class="ps-id">{{ $order->kode_pesanan ? $order->kode_pesanan : 'CR-' . str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</span>
                       <span class="ps-sub">{{ $order->created_at->locale('id')->translatedFormat('j M, H:i') }}</span>
                     </td>
                     <td>
@@ -273,7 +272,7 @@
 
                         <!-- Tombol mata: membuka panel detail (js/pesanan.js membaca data-* di bawah) -->
                         <button type="button" class="btn-lihat" title="Lihat detail"
-                                data-id="CR-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}"
+                                data-id="{{ $order->kode_pesanan ? $order->kode_pesanan : 'CR-' . str_pad($order->id, 4, '0', STR_PAD_LEFT) }}"
                                 data-status="{{ $order->status_pesan }}"
                                 data-action="{{ route('pesanan.status', $order->id) }}"
                                 data-nama="{{ $order->user->nama_lengkap ?? $order->user->username ?? 'Pelanggan' }}"

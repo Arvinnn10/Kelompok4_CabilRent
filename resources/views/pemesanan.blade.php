@@ -89,19 +89,19 @@
               </div>
               <div class="order-field">
                 <label for="whatsapp">Nomor WhatsApp</label>
-                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" required>
+                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" maxlength="20" required>
                 <p class="order-error" data-error-for="whatsapp"></p>
               </div>
             </div>
             <div class="order-row">
               <div class="order-field">
                 <label for="domisili">Domisili / Kota</label>
-                <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" required>
+                <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" maxlength="100" required>
                 <p class="order-error" data-error-for="domisili"></p>
               </div>
               <div class="order-field">
                 <label for="tb_bb">Tinggi / Berat Badan (TB/BB)</label>
-                <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160 cm / 50 kg" required>
+                <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160 cm / 50 kg" maxlength="20" required>
                 <p class="order-error" data-error-for="tb_bb"></p>
               </div>
             </div>

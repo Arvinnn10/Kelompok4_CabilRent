@@ -346,4 +346,112 @@ class CabilRentAuditFixesTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Cache-Control', 'max-age=3600, public');
     }
+
+    /**
+     * AUDIT BUG FIX 1: Batas Nomor WhatsApp di codingan disamakan dengan database (maks 20 karakter).
+     */
+    public function test_whatsapp_max_length_validation_enforced_at_20_chars(): void
+    {
+        $product = $this->createProduct(['stok' => 5]);
+
+        // WhatsApp > 20 characters must fail validation
+        $response = $this->postJson(route('order.checkout'), [
+            'nama_lengkap'  => 'Pelanggan Uji',
+            'no_whatsapp'   => '0812345678901234567890', // 22 chars
+            'domisili'      => 'Banjarmasin',
+            'tb_bb'         => '160/50',
+            'tanggal_acara' => now()->addDays(5)->toDateString(),
+            'items'         => json_encode([['id' => $product->id, 'nama' => $product->nama_produk, 'jumlah' => 1]]),
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['no_whatsapp']);
+
+        // WhatsApp <= 20 characters passes validation
+        $responsePass = $this->postJson(route('order.checkout'), [
+            'nama_lengkap'  => 'Pelanggan Uji',
+            'no_whatsapp'   => '0812345678901234', // 16 chars
+            'domisili'      => 'Banjarmasin',
+            'tb_bb'         => '160/50',
+            'tanggal_acara' => now()->addDays(5)->toDateString(),
+            'items'         => json_encode([['id' => $product->id, 'nama' => $product->nama_produk, 'jumlah' => 1]]),
+        ]);
+
+        $responsePass->assertStatus(200);
+        $responsePass->assertJson(['success' => true]);
+    }
+
+    /**
+     * AUDIT BUG FIX 2: Batas Isian TB/BB di codingan disamakan dengan kapasitas database (maks 20 karakter).
+     */
+    public function test_tb_bb_max_length_validation_enforced_at_20_chars(): void
+    {
+        $product = $this->createProduct(['stok' => 5]);
+
+        // TB/BB > 20 characters must fail validation
+        $response = $this->postJson(route('order.checkout'), [
+            'nama_lengkap'  => 'Pelanggan Uji',
+            'no_whatsapp'   => '081234567890',
+            'domisili'      => 'Banjarmasin',
+            'tb_bb'         => 'Tinggi 160cm Berat 50kg Ukuran M', // 32 chars
+            'tanggal_acara' => now()->addDays(5)->toDateString(),
+            'items'         => json_encode([['id' => $product->id, 'nama' => $product->nama_produk, 'jumlah' => 1]]),
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['tb_bb']);
+
+        // TB/BB <= 20 characters passes validation
+        $responsePass = $this->postJson(route('order.checkout'), [
+            'nama_lengkap'  => 'Pelanggan Uji',
+            'no_whatsapp'   => '081234567890',
+            'domisili'      => 'Banjarmasin',
+            'tb_bb'         => '160 cm / 50 kg', // 14 chars
+            'tanggal_acara' => now()->addDays(5)->toDateString(),
+            'items'         => json_encode([['id' => $product->id, 'nama' => $product->nama_produk, 'jumlah' => 1]]),
+        ]);
+
+        $responsePass->assertStatus(200);
+        $responsePass->assertJson(['success' => true]);
+    }
+
+    /**
+     * AUDIT BUG FIX 3: Keterangan pesanan dapat menampung teks panjang (>50 karakter) tanpa database error.
+     */
+    public function test_desk_pemesanan_supports_long_text_without_database_overflow(): void
+    {
+        // Long product name: 60 chars
+        $longProductName = 'Kebaya Modern Brokat Mewah Payet Mutiara Gradasi Sage Terracotta';
+        $product = $this->createProduct([
+            'nama_produk' => $longProductName,
+            'stok'        => 5,
+        ]);
+
+        $response = $this->postJson(route('order.checkout'), [
+            'nama_lengkap'  => 'Pelanggan Kebaya Mewah',
+            'no_whatsapp'   => '081234567890',
+            'domisili'      => 'Banjarmasin',
+            'tb_bb'         => '165/52',
+            'tanggal_acara' => '2026-12-31',
+            'items'         => json_encode([['id' => $product->id, 'nama' => $longProductName, 'jumlah' => 1]]),
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        // Verify order saved in DB with desk_pemesanan > 50 chars successfully
+        $order = Order::latest()->first();
+        $this->assertNotNull($order);
+        $this->assertGreaterThan(50, strlen($order->desk_pemesanan));
+        $this->assertStringContainsString($longProductName, $order->desk_pemesanan);
+    }
+
+    /**
+     * AUDIT BUG FIX 4 & 5: Kolom kode_pesanan terdaftar di DB orders dan foto_kebaya di products telah dibersihkan.
+     */
+    public function test_schema_kode_pesanan_exists_and_foto_kebaya_dropped(): void
+    {
+        $this->assertTrue(\Illuminate\Support\Facades\Schema::hasColumn('orders', 'kode_pesanan'));
+        $this->assertFalse(\Illuminate\Support\Facades\Schema::hasColumn('products', 'foto_kebaya'));
+    }
 }

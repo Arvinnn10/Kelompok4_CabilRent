@@ -16,7 +16,6 @@ class Product extends Model
         'stok',
         'foto_produk',
         'status_produk',
-        'foto_kebaya',
     ];
 
     // Relasi: produk milik satu kategori
