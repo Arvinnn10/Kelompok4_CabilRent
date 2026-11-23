@@ -163,6 +163,11 @@ return new class extends Migration
         if (Schema::hasTable('products') && Schema::hasColumn('products', 'stok')) {
             DB::statement("ALTER TABLE `products` MODIFY COLUMN `stok` INT NOT NULL DEFAULT 1");
         }
+
+        // 5. Rollback users status default if table exists
+        if (Schema::hasTable('users') && Schema::hasColumn('users', 'status')) {
+            DB::statement("ALTER TABLE `users` MODIFY COLUMN `status` ENUM('aktif', 'diblokir') NOT NULL DEFAULT 'aktif'");
+        }
     }
 
     /**

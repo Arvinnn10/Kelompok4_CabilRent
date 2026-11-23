@@ -6,10 +6,10 @@
   <title>Produk - Cabil.Rent</title>
 
   <!-- Tata letak admin (sidebar, bar atas, kartu, badge) dipakai bersama dashboard -->
-  <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/dashboard.css') }}">
   <!-- CSS khusus halaman Produk -->
-  <link rel="stylesheet" href="{{ asset('css/produk.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/produk.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
 
   <!-- Saat halaman dibuka tanpa pilihan kategori, langsung tampilkan kategori Pakaian Kebaya (atau kategori pertama) -->
   @php

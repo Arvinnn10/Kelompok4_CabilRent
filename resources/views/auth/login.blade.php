@@ -6,8 +6,8 @@
   <title>Login - Cabil.Rent</title>
   
   <!-- Style khusus halaman login -->
-  <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/login.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
   
   <!-- Font Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -6,8 +6,8 @@
   <title>Register - Cabil.Rent</title>
   
   <!-- Style khusus halaman login/register -->
-  <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/login.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
   
   <!-- Font Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,6 +100,14 @@
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
               </button>
+            </div>
+          </div>
+
+          <!-- Konfirmasi Password (BUG-025) -->
+          <div class="form-group">
+            <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" placeholder="Ulangi password" minlength="6" required>
             </div>
           </div>
 

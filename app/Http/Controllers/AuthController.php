@@ -92,7 +92,7 @@ class AuthController extends Controller
             'username'     => 'required|max:50|unique:users,username',
             'email'        => 'required|email|max:100|unique:users,email',
             'no_telp'      => 'required|max:20|unique:users,no_telp',
-            'password'     => 'required|min:6',
+            'password'     => 'required|min:6|confirmed',
         ], [
             'nama_lengkap.required' => 'Nama lengkap wajib diisi',
             'username.required'     => 'Username wajib diisi',
@@ -104,6 +104,7 @@ class AuthController extends Controller
             'no_telp.unique'        => 'Nomor telepon sudah terdaftar',
             'password.required'     => 'Password wajib diisi',
             'password.min'          => 'Password minimal 6 karakter',
+            'password.confirmed'    => 'Konfirmasi password tidak cocok',
         ]);
 
         User::create([
@@ -123,12 +124,14 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        if (Auth::check()) {
+            Auth::logout();
+        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Anda telah berhasil keluar.');
     }
 
     /**

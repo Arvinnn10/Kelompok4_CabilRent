@@ -25,9 +25,20 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     * Mengatasi BUG-016: Sanitasi record NULL sebelum revert kolom ke NOT NULL untuk mencegah SQL error 1138.
      */
     public function down(): void
     {
+        if (Schema::hasTable('users')) {
+            \Illuminate\Support\Facades\DB::table('users')
+                ->whereNull('password')
+                ->update(['password' => '$2y$12$eInFwRqvzFz9N6E80yQ0heL1kG070Xk5r4v5S7F2c3k4l5m6n7o8p']);
+
+            \Illuminate\Support\Facades\DB::table('users')
+                ->whereNull('no_telp')
+                ->update(['no_telp' => '-']);
+        }
+
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'google_id')) {
                 $table->dropColumn('google_id');

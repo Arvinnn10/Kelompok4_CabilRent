@@ -6,8 +6,8 @@
   <title>Dashboard - Cabil.Rent</title>
 
   <!-- CSS Khusus Halaman Dashboard (Vanilla CSS) -->
-  <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
 </head>
 <body>
 
@@ -194,10 +194,9 @@
                 </svg>
               </span>
             </div>
-            <p class="stat-value">Rp 1.470.000</p>
+            <p class="stat-value">Rp {{ number_format($pendapatanBulanIni ?? 0, 0, ',', '.') }}</p>
             <div class="stat-foot">
-              <span>&#8599; 12,4%</span>
-              <span>dibanding bulan lalu</span>
+              <span>Total selesai: Rp {{ number_format($pendapatanSemua ?? 0, 0, ',', '.') }}</span>
             </div>
           </div>
 
@@ -212,10 +211,10 @@
                 </svg>
               </span>
             </div>
-            <p class="stat-value">3</p>
+            <p class="stat-value">{{ $pesananBaruCount ?? 0 }}</p>
             <div class="stat-foot">
-              <span class="stat-strong">+3 hari ini</span>
-              <span>Perlu dikonfirmasi</span>
+              <span class="stat-strong">Perlu diproses</span>
+              <span>Status pending</span>
             </div>
           </div>
 
@@ -230,7 +229,7 @@
             </div>
             <p class="stat-value">{{ $sewaBerjalan ?? 0 }}</p>
             <div class="stat-foot">
-              <span class="stat-strong">1 jatuh tempo</span>
+              <span class="stat-strong">Dikonfirmasi</span>
               <span>Pantau pengembalian</span>
             </div>
           </div>
@@ -247,10 +246,10 @@
                 </svg>
               </span>
             </div>
-            <p class="stat-value">6</p>
+            <p class="stat-value">{{ $totalPenggunaCount ?? 0 }}</p>
             <div class="stat-foot">
-              <span class="stat-strong">+2 minggu ini</span>
-              <span>Pelanggan terdaftar</span>
+              <span class="stat-strong">Pelanggan terdaftar</span>
+              <span>Non-admin</span>
             </div>
           </div>
         </section>
@@ -295,22 +294,30 @@
             <div class="donut">
               <svg viewBox="0 0 100 100" aria-hidden="true">
                 <circle class="donut-track" cx="50" cy="50" r="42"></circle>
-                <circle class="donut-arc status-menunggu" cx="50" cy="50" r="42" stroke-dasharray="131.95 263.89" stroke-dashoffset="0.00"></circle>
-                <circle class="donut-arc status-dikonfirmasi" cx="50" cy="50" r="42" stroke-dasharray="43.98 263.89" stroke-dashoffset="-131.95"></circle>
-                <circle class="donut-arc status-disewa" cx="50" cy="50" r="42" stroke-dasharray="43.98 263.89" stroke-dashoffset="-175.93"></circle>
-                <circle class="donut-arc status-selesai" cx="50" cy="50" r="42" stroke-dasharray="43.98 263.89" stroke-dashoffset="-219.91"></circle>
+                @if (isset($chartData) && ($totalOrdersCount ?? 0) > 0)
+                  @foreach ($chartData as $segment)
+                    @if ($segment['count'] > 0)
+                      <circle class="donut-arc {{ $segment['class'] }}" cx="50" cy="50" r="42"
+                              stroke-dasharray="{{ $segment['dasharray'] }}"
+                              stroke-dashoffset="{{ $segment['dashoffset'] }}"></circle>
+                    @endif
+                  @endforeach
+                @endif
               </svg>
               <div class="donut-center">
-                <span class="donut-total">6</span>
+                <span class="donut-total">{{ $totalOrdersCount ?? 0 }}</span>
                 <span class="donut-sub">pesanan</span>
               </div>
             </div>
 
             <ul class="legend">
-              <li><span class="legend-dot status-menunggu"></span><span class="legend-label">Menunggu</span><span class="legend-count">3</span></li>
-              <li><span class="legend-dot status-dikonfirmasi"></span><span class="legend-label">Dikonfirmasi</span><span class="legend-count">1</span></li>
-              <li><span class="legend-dot status-disewa"></span><span class="legend-label">Sedang disewa</span><span class="legend-count">1</span></li>
-              <li><span class="legend-dot status-selesai"></span><span class="legend-label">Selesai</span><span class="legend-count">1</span></li>
+              <li><span class="legend-dot status-menunggu"></span><span class="legend-label">Menunggu</span><span class="legend-count">{{ $countPending ?? 0 }}</span></li>
+              <li><span class="legend-dot status-dikonfirmasi"></span><span class="legend-label">Dikonfirmasi</span><span class="legend-count">{{ $countDikonfirmasi ?? 0 }}</span></li>
+              <li><span class="legend-dot status-disewa"></span><span class="legend-label">Sedang disewa</span><span class="legend-count">{{ $sewaBerjalan ?? 0 }}</span></li>
+              <li><span class="legend-dot status-selesai"></span><span class="legend-label">Selesai</span><span class="legend-count">{{ $countSelesai ?? 0 }}</span></li>
+              @if (($countDibatalkan ?? 0) > 0)
+                <li><span class="legend-dot status-dibatalkan"></span><span class="legend-label">Dibatalkan</span><span class="legend-count">{{ $countDibatalkan ?? 0 }}</span></li>
+              @endif
             </ul>
           </div>
         </section>

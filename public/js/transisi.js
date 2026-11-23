@@ -54,17 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // Jalankan efek slide keluar sebelum berpindah
-    e.preventDefault();
+    // Navigasi browser instan tanpa delay setTimeout artifisial
     document.body.classList.add('is-exiting');
-
-    setTimeout(function () {
-      window.location.href = link.href;
-    }, 180);
-
-    // Pengaman jika navigasi tertunda atau dibatalkan
-    setTimeout(function () {
-      document.body.classList.remove('is-exiting');
-    }, 1500);
   });
 });

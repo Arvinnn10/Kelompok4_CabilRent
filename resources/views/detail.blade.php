@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detail Produk - Cabil.Rent</title>
-  <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/nav-search.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/detail.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/nav-search.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
 </head>
 <body>
 
@@ -49,13 +49,23 @@
           </svg>
         </a>
 
-        <a href="{{ Auth::check() ? route('logout') : route('login') }}" class="nav-icon-btn" title="{{ Auth::check() ? 'Keluar / Logout (' . (Auth::user()->nama_lengkap ?? Auth::user()->username) . ')' : 'Masuk / Login' }}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="10" r="3"/>
-            <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-          </svg>
-        </a>
+        @if (Auth::check())
+          <a href="{{ route('logout') }}" class="nav-icon-btn" title="Keluar / Logout ({{ Auth::user()->nama_lengkap ?? Auth::user()->username }})" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
+            </svg>
+          </a>
+        @else
+          <a href="{{ route('login') }}" class="nav-icon-btn" title="Masuk / Login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
+            </svg>
+          </a>
+        @endif
       </div>
     </div>
   </header>

@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function valid() {
     var nama = form.elements.nama.value.trim();
     var wa = form.elements.whatsapp.value.replace(/[\s-]/g, '');
+    var domisili = form.elements.domisili ? form.elements.domisili.value.trim() : '';
+    var tbBb = form.elements.tb_bb ? form.elements.tb_bb.value.trim() : '';
     var tanggal = form.elements.tanggal.value;
 
     var namaOk = nama !== '';
@@ -72,10 +74,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var waOk = /^(\+62|62|0)8\d{7,12}$/.test(wa);
     setError('whatsapp', waOk ? '' : 'Masukkan nomor WhatsApp yang valid, contoh 081234567890.');
 
+    var domisiliOk = domisili !== '';
+    if (form.elements.domisili) {
+      setError('domisili', domisiliOk ? '' : 'Domisili kota wajib diisi.');
+    }
+
+    var tbBbOk = tbBb !== '';
+    if (form.elements.tb_bb) {
+      setError('tb_bb', tbBbOk ? '' : 'Tinggi dan berat badan wajib diisi.');
+    }
+
     var tglOk = tanggal !== '' && tanggal >= inputTanggal.min;
     setError('tanggal', tglOk ? '' : 'Pilih tanggal acara (hari ini atau setelahnya).');
 
-    return namaOk && waOk && tglOk;
+    return namaOk && waOk && domisiliOk && tbBbOk && tglOk;
   }
 
   // "2026-12-05" -> "5 Desember 2026"
@@ -87,37 +99,52 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function susunPesan(nomorPesanan) {
-    var baris = ['Halo Cabil.Rent, saya ingin memesan:', ''];
+    var baris = ['*FORMAT SEWA CABIL.RENT*', ''];
     if (nomorPesanan) {
-      baris.unshift('No. Pesanan: #' + nomorPesanan);
+      baris.push('No. Invoice: #' + nomorPesanan);
     }
 
+    baris.push('Nama: ' + form.elements.nama.value.trim());
+    baris.push('No. WhatsApp: ' + form.elements.whatsapp.value.trim());
+    if (form.elements.domisili) {
+      baris.push('Domisili: ' + form.elements.domisili.value.trim());
+    }
+    if (form.elements.instagram && form.elements.instagram.value.trim()) {
+      baris.push('Instagram: ' + form.elements.instagram.value.trim());
+    }
+    if (form.elements.tb_bb) {
+      baris.push('TB/BB: ' + form.elements.tb_bb.value.trim());
+    }
+    baris.push('Tanggal acara: ' + formatTanggal(form.elements.tanggal.value));
+    baris.push('');
+    baris.push('*Busana:*');
+
     daftar.forEach(function (item, i) {
-      baris.push((i + 1) + '. ' + item.nama + (item.ukuran ? ' (' + item.ukuran + ')' : '') + ' - ' +
-        (item.durasi || 3) + ' hari - ' + CabilCart.keRupiah(parseInt(item.harga, 10) || 0));
+      var qty = item.jumlah || item.qty || 1;
+      baris.push((i + 1) + '. ' + item.nama + (item.ukuran ? ' (' + item.ukuran + ')' : '') +
+        (qty > 1 ? ' x' + qty : '') + ' - ' + (item.durasi || 3) + ' hari - ' +
+        CabilCart.keRupiah((parseInt(item.harga, 10) || 0) * qty));
     });
 
     baris.push('');
     baris.push('Subtotal sewa: ' + CabilCart.keRupiah(subtotal));
     baris.push('Deposit (dikembalikan): ' + CabilCart.keRupiah(deposit));
     baris.push('Total dibayar awal: ' + CabilCart.keRupiah(total));
-    baris.push('');
-    baris.push('Nama: ' + form.elements.nama.value.trim());
-    baris.push('No. WhatsApp: ' + form.elements.whatsapp.value.trim());
-    baris.push('Tanggal acara: ' + formatTanggal(form.elements.tanggal.value));
 
-    var catatan = form.elements.catatan.value.trim();
+    var catatan = form.elements.catatan ? form.elements.catatan.value.trim() : '';
     if (catatan) {
-      baris.push('Catatan: ' + catatan);
+      baris.push('');
+      baris.push('Catatan tambahan: ' + catatan);
     }
 
     baris.push('');
-    baris.push('Mohon dicek ketersediaannya. Terima kasih.');
+    baris.push('Halo admin cabil.rent, saya mau sewa busana ini. Apakah masih tersedia? Terima kasih.');
     return baris.join('\n');
   }
 
   function bukaWhatsApp(nomorPesanan) {
-    var url = 'https://wa.me/' + btnKirim.dataset.wa + '?text=' + encodeURIComponent(susunPesan(nomorPesanan));
+    var waNumber = btnKirim.dataset.wa || '6287894302894';
+    var url = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(susunPesan(nomorPesanan));
     window.location.href = url;
   }
 
@@ -130,14 +157,15 @@ document.addEventListener('DOMContentLoaded', function () {
     btnKirim.disabled = true;
     btnKirim.textContent = 'Memproses pesanan...';
 
-    // Simpan pesanan ke sistem admin (route order.checkout milik backend).
-    // Data yang belum ada di form ini (domisili, TB/BB) dikirim "-"; catatan ikut di TB/BB.
+    // Simpan pesanan ke sistem admin (route order.checkout) dengan field lengkap (BUG-003)
     var data = new FormData();
     data.append('nama_lengkap', form.elements.nama.value.trim());
     data.append('no_whatsapp', form.elements.whatsapp.value.trim());
-    data.append('domisili', '-');
-    data.append('tb_bb', (form.elements.catatan.value.trim() || '-').slice(0, 30));
+    data.append('domisili', form.elements.domisili ? form.elements.domisili.value.trim() : '-');
+    data.append('tb_bb', form.elements.tb_bb ? form.elements.tb_bb.value.trim() : '-');
+    data.append('instagram', form.elements.instagram ? form.elements.instagram.value.trim() : '-');
     data.append('tanggal_acara', form.elements.tanggal.value);
+    data.append('catatan', form.elements.catatan ? form.elements.catatan.value.trim() : '');
     data.append('items', JSON.stringify(daftar));
 
     var token = document.querySelector('meta[name="csrf-token"]');
@@ -155,8 +183,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return res.ok ? res.json() : null;
       })
       .then(function (hasil) {
-        var nomor = hasil && hasil.success && hasil.order_ids ? hasil.order_ids[0] : null;
-        if (nomor) {
+        var kodePesanan = hasil && hasil.success ? (hasil.kode_pesanan || (hasil.order_ids ? hasil.order_ids[0] : null)) : null;
+        if (kodePesanan) {
           // Pesanan sudah tersimpan: kosongkan keranjang
           try {
             localStorage.removeItem('cabilrent-keranjang');
@@ -164,7 +192,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Penyimpanan diblokir browser
           }
         }
-        bukaWhatsApp(nomor);
+        if (hasil && hasil.whatsapp_url) {
+          window.location.href = hasil.whatsapp_url;
+        } else {
+          bukaWhatsApp(kodePesanan);
+        }
       })
       .catch(function () {
         // Server tidak bisa dihubungi: tetap kirim lewat WhatsApp

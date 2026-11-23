@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             users: fn () => auth()->user()?->isAdmin() ? '/dashboard' : '/'
         );
 
+        $middleware->web(append: [
+            \App\Http\Middleware\EnsureUserNotBlocked::class,
+            \App\Http\Middleware\CssHotReloadMiddleware::class,
+        ]);
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureAdmin::class,
         ]);

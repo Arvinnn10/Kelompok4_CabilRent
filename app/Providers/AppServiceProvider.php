@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if (file_exists($helper = app_path('helpers.php'))) {
+            require_once $helper;
+        }
     }
 
     /**
@@ -19,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Direktif Blade @css('css/file.css') dengan cache-busting otomatis
+        Blade::directive('css', function ($expression) {
+            return "<?php echo '<link rel=\"stylesheet\" href=\"' . asset_versioned({$expression}) . '\">'; ?>";
+        });
     }
 }
