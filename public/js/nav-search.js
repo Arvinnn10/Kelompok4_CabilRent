@@ -10,26 +10,40 @@ document.addEventListener('DOMContentLoaded', function () {
     { nama: 'Paket Kebaya', slug: 'kebaya' }
   ];
 
-  // Ambil kategori terbaru dari database jika tersedia
-  fetch('/api/kategori')
-    .then(function (res) { return res.ok ? res.json() : []; })
-    .then(function (data) {
-      if (Array.isArray(data) && data.length) {
-        data.forEach(function (cat) {
-          var nama = (cat.nama_kategori || '').replace(/kemben/i, 'Kamisol').trim();
-          var slug = cat.slug || nama.toLowerCase().replace(/\s+/g, '-');
-          var sudahAda = kategoriBawaan.some(function (k) {
-            return k.nama.toLowerCase() === nama.toLowerCase();
-          });
-          if (!sudahAda && nama) {
-            kategoriBawaan.push({ nama: nama, slug: slug });
-          }
+  // Ambil kategori dari cache sessionStorage atau database jika belum ada
+  function perbaruiKategoriDariData(data) {
+    if (Array.isArray(data) && data.length) {
+      data.forEach(function (cat) {
+        var nama = (cat.nama_kategori || '').replace(/kemben/i, 'Kamisol').trim();
+        var slug = cat.slug || nama.toLowerCase().replace(/\s+/g, '-');
+        var sudahAda = kategoriBawaan.some(function (k) {
+          return k.nama.toLowerCase() === nama.toLowerCase();
         });
-      }
-    })
-    .catch(function () {
-      // Gunakan daftar bawaan
-    });
+        if (!sudahAda && nama) {
+          kategoriBawaan.push({ nama: nama, slug: slug });
+        }
+      });
+    }
+  }
+
+  try {
+    var cached = sessionStorage.getItem('cabil_kategori_list');
+    if (cached) {
+      perbaruiKategoriDariData(JSON.parse(cached));
+    } else {
+      fetch('/api/kategori')
+        .then(function (res) { return res.ok ? res.json() : []; })
+        .then(function (data) {
+          if (Array.isArray(data) && data.length) {
+            sessionStorage.setItem('cabil_kategori_list', JSON.stringify(data));
+            perbaruiKategoriDariData(data);
+          }
+        })
+        .catch(function () {});
+    }
+  } catch (err) {
+    // sessionStorage dinonaktifkan browser
+  }
 
   function scrollKeKatalog() {
     var target = document.getElementById('semua-koleksi');

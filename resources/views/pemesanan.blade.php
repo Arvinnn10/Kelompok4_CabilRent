@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Data Pemesanan - Cabil.Rent</title>
-  <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/pemesanan.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/nav-search.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/keranjang.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/pemesanan.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/nav-search.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
 </head>
 <body>
 
@@ -51,13 +51,23 @@
           </svg>
         </a>
 
-        <a href="#" class="nav-icon-btn" title="Akun Saya">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="10" r="3"/>
-            <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-          </svg>
-        </a>
+        @if (Auth::check())
+          <a href="{{ route('logout') }}" class="nav-icon-btn" title="Keluar / Logout ({{ Auth::user()->nama_lengkap ?? Auth::user()->username }})" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
+            </svg>
+          </a>
+        @else
+          <a href="{{ route('login') }}" class="nav-icon-btn" title="Masuk / Login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
+            </svg>
+          </a>
+        @endif
       </div>
     </div>
   </header>
@@ -74,14 +84,31 @@
             <div class="order-row">
               <div class="order-field">
                 <label for="nama">Nama lengkap</label>
-                <input type="text" id="nama" name="nama" placeholder="Nama kamu" autocomplete="name" required>
+                <input type="text" id="nama" name="nama" value="{{ Auth::user()->nama_lengkap ?? Auth::user()->username ?? '' }}" placeholder="Nama kamu" autocomplete="name" required>
                 <p class="order-error" data-error-for="nama"></p>
               </div>
               <div class="order-field">
                 <label for="whatsapp">Nomor WhatsApp</label>
-                <input type="tel" id="whatsapp" name="whatsapp" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" required>
+                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" required>
                 <p class="order-error" data-error-for="whatsapp"></p>
               </div>
+            </div>
+            <div class="order-row">
+              <div class="order-field">
+                <label for="domisili">Domisili / Kota</label>
+                <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" required>
+                <p class="order-error" data-error-for="domisili"></p>
+              </div>
+              <div class="order-field">
+                <label for="tb_bb">Tinggi / Berat Badan (TB/BB)</label>
+                <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160 cm / 50 kg" required>
+                <p class="order-error" data-error-for="tb_bb"></p>
+              </div>
+            </div>
+            <div class="order-field order-field-wide">
+              <label for="instagram">Akun Instagram (opsional)</label>
+              <input type="text" id="instagram" name="instagram" placeholder="@username">
+              <p class="order-error" data-error-for="instagram"></p>
             </div>
           </fieldset>
 
@@ -94,8 +121,8 @@
           </div>
 
           <div class="order-field order-field-wide">
-            <label for="catatan">Catatan (opsional)</label>
-            <textarea id="catatan" name="catatan" rows="4" placeholder="Tinggi badan, warna alternatif, dll."></textarea>
+            <label for="catatan">Catatan tambahan (opsional)</label>
+            <textarea id="catatan" name="catatan" rows="3" placeholder="Warna alternatif, permintaan khusus hijab, dll."></textarea>
           </div>
         </form>
 
@@ -126,7 +153,7 @@
           </div>
 
           <button type="submit" form="order-form" class="btn-lanjut btn-kirim" id="btn-kirim"
-                  data-wa="6287894302894">Kirim Pesanan lewat Whatsapp</button>
+                  data-wa="{{ config('services.whatsapp.admin_number', '6287894302894') }}">Kirim Pesanan lewat Whatsapp</button>
 
           <p class="summary-note order-note">Pesanan dikirim ke admin lewat WhatsApp, lalu ketersediaan dikonfirmasi.</p>
         </aside>

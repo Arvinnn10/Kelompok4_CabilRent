@@ -41,4 +41,8 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', 'http://127.0.0.1:8000/auth/google/callback'),
     ],
 
+    'whatsapp' => [
+        'admin_number' => env('WHATSAPP_ADMIN_NUMBER', '6287894302894'),
+    ],
+
 ];

@@ -6,10 +6,10 @@
   <title>Kategori - Cabil.Rent</title>
 
   <!-- Tata letak admin (sidebar, bar atas, kartu, badge) dipakai bersama dashboard -->
-  <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/dashboard.css') }}">
   <!-- CSS khusus halaman Kategori -->
-  <link rel="stylesheet" href="{{ asset('css/kategori.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/transisi.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/kategori.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
 </head>
 <body>
 

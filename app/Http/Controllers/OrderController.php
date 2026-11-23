@@ -49,13 +49,17 @@ class OrderController extends Controller
                     $username .= '_' . rand(10, 99);
                 }
 
+                // Password acak aman untuk akun guest (BUG-010)
+                $guestPassword = Str::password(16);
+
                 $user = User::create([
                     'nama_lengkap' => $request->nama_lengkap,
                     'username'     => $username,
                     'email'        => 'user_' . $cleanPhone . '@cabilrent.id',
                     'no_telp'      => $request->no_whatsapp,
-                    'password'     => Hash::make('cabil_' . $suffix),
+                    'password'     => Hash::make($guestPassword),
                     'role'         => 'customers',
+                    'status'       => 'aktif',
                 ]);
             }
         }
@@ -65,6 +69,9 @@ class OrderController extends Controller
         $totalDeposit = 0;
         $orderListText = [];
         $createdOrders = [];
+
+        // Generate nomor invoice transaksi unik untuk grouping item (BUG-007)
+        $kodePesanan = 'CR-INV-' . date('Ymd') . '-' . strtoupper(Str::random(6));
 
         DB::beginTransaction();
         try {
@@ -117,14 +124,28 @@ class OrderController extends Controller
                 $totalSubtotal += $subtotalProduk;
                 $totalDeposit  += $depositProduk;
 
-                $basket = Basket::create([
-                    'user_id'       => $user->id,
-                    'produk_id'     => $productId,
-                    'jumlah'        => $itemJumlah,
-                    'tanggal_acara' => $request->tanggal_acara,
-                ]);
+                // Gunakan basket yang ada jika belum ter-checkout atau buat baru (BUG-006: Cegah keranjang yatim)
+                $basket = Basket::where('user_id', $user->id)
+                    ->where('produk_id', $productId)
+                    ->whereDoesntHave('orders')
+                    ->first();
+
+                if ($basket) {
+                    $basket->update([
+                        'jumlah'        => $itemJumlah,
+                        'tanggal_acara' => $request->tanggal_acara,
+                    ]);
+                } else {
+                    $basket = Basket::create([
+                        'user_id'       => $user->id,
+                        'produk_id'     => $productId,
+                        'jumlah'        => $itemJumlah,
+                        'tanggal_acara' => $request->tanggal_acara,
+                    ]);
+                }
 
                 $order = Order::create([
+                    'kode_pesanan'   => $kodePesanan,
                     'basket_id'      => $basket->id,
                     'no_whatsapp'    => $request->no_whatsapp,
                     'instagram'      => $request->instagram ?: '-',
@@ -136,7 +157,7 @@ class OrderController extends Controller
                 ]);
 
                 $createdOrders[] = $order;
-                $orderListText[] = "- {$namaProduk} (Rp " . number_format($hargaSewa, 0, ',', '.') . ")";
+                $orderListText[] = "- {$namaProduk} x{$itemJumlah} (Rp " . number_format($hargaSewa, 0, ',', '.') . ")";
             }
 
             DB::commit();
@@ -152,13 +173,11 @@ class OrderController extends Controller
         }
 
         $grandTotal = $totalSubtotal + $totalDeposit;
-        $firstOrderId = $createdOrders[0]->id ?? 1;
-
-        $waAdminNumber = '6287894302894';
+        $waAdminNumber = config('services.whatsapp.admin_number', '6287894302894');
         $daftarProdukStr = implode("\n", $orderListText);
 
         $waMessage = "*FORMAT SEWA CABIL.RENT*\n"
-            . "No. Pesanan: #{$firstOrderId}\n"
+            . "No. Invoice: #{$kodePesanan}\n"
             . "Nama: {$request->nama_lengkap}\n"
             . "No. WA: {$request->no_whatsapp}\n"
             . "Domisili: {$request->domisili}\n"
@@ -177,6 +196,7 @@ class OrderController extends Controller
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'success'      => true,
+                'kode_pesanan' => $kodePesanan,
                 'order_ids'    => array_map(fn($o) => $o->id, $createdOrders),
                 'whatsapp_url' => $whatsappUrl,
             ]);
@@ -239,5 +259,28 @@ class OrderController extends Controller
         $order->save();
 
         return back()->with('success', "Status pesanan #{$order->id} berhasil diupdate menjadi '{$newStatus}'!");
+    }
+
+    /**
+     * Menampilkan riwayat pesanan pelanggan yang sedang login (BUG-008).
+     */
+    public function customerHistory(Request $request)
+    {
+        $userId = Auth::id();
+        $orders = Order::whereHas('basket', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })
+        ->with(['basket.product.category'])
+        ->latest()
+        ->get();
+
+        // Mengelompokkan berdasarkan kode_pesanan atau format ID pesanan
+        $groupedOrders = $orders->groupBy(function ($order) {
+            return $order->kode_pesanan ?: ('CR-ORD-' . str_pad($order->id, 4, '0', STR_PAD_LEFT));
+        });
+
+        $orderGroups = $groupedOrders;
+
+        return view('riwayat-pesanan', compact('orders', 'orderGroups', 'groupedOrders'));
     }
 }

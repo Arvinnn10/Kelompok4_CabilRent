@@ -18,6 +18,5 @@ Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('a
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // route autentikasi (Logout)
-Route::middleware('auth')->group(function () {
-    Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
-});
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
+Route::match(['get', 'post'], '/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');

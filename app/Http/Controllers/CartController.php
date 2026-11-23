@@ -49,6 +49,25 @@ class CartController extends Controller
         if (Auth::check()) {
             $jumlah = max(1, (int)($request->jumlah ?? 1));
 
+            // Cek apakah item produk sudah ada di keranjang aktif user (BUG-005)
+            $existingBasket = Basket::where('user_id', Auth::id())
+                ->where('produk_id', $product->id)
+                ->whereDoesntHave('orders')
+                ->first();
+
+            if ($existingBasket) {
+                $existingBasket->increment('jumlah', $jumlah);
+                if ($request->filled('tanggal_acara')) {
+                    $existingBasket->update(['tanggal_acara' => $request->tanggal_acara]);
+                }
+
+                return response()->json([
+                    'success'   => true,
+                    'message'   => 'Jumlah produk di keranjang berhasil ditambahkan.',
+                    'basket_id' => $existingBasket->id,
+                ]);
+            }
+
             $basket = Basket::create([
                 'user_id'       => Auth::id(),
                 'produk_id'     => $product->id,
