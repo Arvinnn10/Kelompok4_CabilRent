@@ -1,0 +1,111 @@
+/* Transisi perpindahan halaman halus (slide navigation) */
+@view-transition {
+  navigation: auto;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Halaman publik / customer */
+body {
+  animation: halamanSlideMasuk 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+body.is-exiting {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.18s ease-in, transform 0.18s ease-in;
+}
+
+@keyframes halamanSlideMasuk {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Khusus panel admin: sidebar tetap kokoh, hanya konten utama yang slide halus */
+body.is-admin-panel,
+body:has(.app-container) {
+  animation: none !important;
+}
+
+body.is-admin-panel.is-exiting,
+body:has(.app-container).is-exiting {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.main-area,
+.main-wrapper {
+  animation: adminSlideMasuk 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+body.is-exiting .main-area,
+body.is-exiting .main-wrapper {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.16s ease-in, transform 0.16s ease-in;
+}
+
+@keyframes adminSlideMasuk {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Transisi bawaan untuk browser modern */
+::view-transition-old(root) {
+  animation: viewSlideKeluar 0.2s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: viewSlideMasuk 0.26s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+@keyframes viewSlideKeluar {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
+
+@keyframes viewSlideMasuk {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .main-area,
+  .main-wrapper {
+    animation: none !important;
+  }
+  body.is-exiting,
+  body.is-exiting .main-area,
+  body.is-exiting .main-wrapper {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
