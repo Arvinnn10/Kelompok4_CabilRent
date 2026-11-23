@@ -29,7 +29,7 @@ class CssHotReloadMiddleware
         ) {
             $content = $response->getContent();
             if ($content && str_contains($content, '</body>')) {
-                $scriptUrl = asset('js/css-hot-reload.js');
+                $scriptUrl = asset_versioned('js/css-hot-reload.js');
                 $endpointUrl = url('/_css-dev/status');
                 $scriptTag = "\n<!-- [CabilRent Dev] Automatic CSS Hot Reload -->\n"
                     . "<script src=\"{$scriptUrl}\" data-dev-endpoint=\"{$endpointUrl}\" defer></script>\n"

@@ -30,8 +30,8 @@
 
   @include('layouts.partials.admin-logout-modal')
 
-  <script src="{{ asset('js/dashboard.js') }}"></script>
-  <script src="{{ asset('js/transisi.js') }}"></script>
+  <script src="{{ asset_versioned('js/dashboard.js') }}"></script>
+  <script src="{{ asset_versioned('js/transisi.js') }}"></script>
   @yield('scripts')
 </body>
 </html>

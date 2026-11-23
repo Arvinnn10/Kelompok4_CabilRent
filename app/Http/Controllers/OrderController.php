@@ -17,13 +17,14 @@ class OrderController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'nama_lengkap'  => 'required|string|max:100',
-            'no_whatsapp'   => 'required|string|max:25',
-            'domisili'      => 'required|string|max:100',
-            'instagram'     => 'nullable|string|max:50',
-            'tb_bb'         => 'required|string|max:30',
-            'tanggal_acara' => 'required|date',
-            'items'         => 'nullable',
+            'nama_lengkap'         => 'required|string|max:100',
+            'no_whatsapp'          => 'required|string|max:20',
+            'domisili'             => 'required|string|max:100',
+            'instagram'            => 'nullable|string|max:50',
+            'tb_bb'                => 'required|string|max:30',
+            'tanggal_acara'        => 'required|date',
+            'items'                => 'nullable',
+            'confirmed_adjustment' => 'nullable|boolean',
         ]);
 
         $rawItems = $request->input('items');
@@ -32,7 +33,69 @@ class OrderController extends Controller
         }
 
         if (empty($rawItems) || !is_array($rawItems)) {
-            return back()->withErrors(['items' => 'Keranjang masih kosong.']);
+            $pesan = 'Keranjang masih kosong.';
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $pesan], 422);
+            }
+            return back()->withErrors(['items' => $pesan]);
+        }
+
+        // Aturan A: Penggabungan produk duplikat sebelum pemrosesan
+        // Jika customer mengirim produk yang sama beberapa kali, gabungkan menjadi satu produk & jumlahkan
+        $aggregatedMap = []; // productId => ['product' => Product, 'requested_qty' => int, 'raw_item' => array]
+        foreach ($rawItems as $item) {
+            $itemId = $item['id'] ?? null;
+            if (!$itemId) {
+                continue;
+            }
+
+            $product = Product::where('id', $itemId)
+                ->orWhere('slug', $itemId)
+                ->first();
+
+            if (!$product) {
+                continue;
+            }
+
+            $rawQty = null;
+            if (array_key_exists('jumlah', $item)) {
+                $rawQty = $item['jumlah'];
+            } elseif (array_key_exists('qty', $item)) {
+                $rawQty = $item['qty'];
+            }
+
+            // Validasi jumlah pesanan: tolak null, kosong, non-numerik, angka <= 0, atau desimal
+            if ($rawQty === null || $rawQty === '' || !is_numeric($rawQty) || (int)$rawQty <= 0 || (float)$rawQty != (int)$rawQty) {
+                $pesan = "Jumlah pesanan untuk produk '{$product->nama_produk}' tidak valid. Jumlah harus berupa bilangan bulat positif minimal 1.";
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $pesan,
+                        'errors'  => ['jumlah' => [$pesan]],
+                    ], 422);
+                }
+                return back()->withErrors(['items' => $pesan]);
+            }
+
+            $qty = (int)$rawQty;
+
+            if (!isset($aggregatedMap[$product->id])) {
+                $aggregatedMap[$product->id] = [
+                    'product'       => $product,
+                    'requested_qty' => $qty,
+                    'raw_item'      => $item,
+                ];
+            } else {
+                $aggregatedMap[$product->id]['requested_qty'] += $qty;
+            }
+        }
+
+        if (empty($aggregatedMap)) {
+            $pesan = 'Tidak ada produk valid yang ditemukan dalam keranjang.';
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $pesan], 422);
+            }
+            return back()->withErrors(['items' => $pesan]);
         }
 
         $user = Auth::user();
@@ -65,114 +128,209 @@ class OrderController extends Controller
         }
 
         $depositPerProduk = 100000;
-        $totalSubtotal = 0;
-        $totalDeposit = 0;
-        $orderListText = [];
-        $createdOrders = [];
+        $isConfirmed = $request->boolean('confirmed_adjustment');
 
-        // Generate nomor invoice transaksi unik untuk grouping item (BUG-007)
-        $kodePesanan = 'CR-INV-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+        // Aturan D: Transaksi database dengan penguncian baris (lockForUpdate) untuk mencegah overselling
+        $result = DB::transaction(function () use (
+            $request,
+            $aggregatedMap,
+            $user,
+            $depositPerProduk,
+            $isConfirmed
+        ) {
+            $productIds = array_keys($aggregatedMap);
+            // Kunci baris produk saat transaksi berjalan
+            $lockedProducts = Product::whereIn('id', $productIds)->lockForUpdate()->get()->keyBy('id');
 
-        DB::beginTransaction();
-        try {
-            foreach ($rawItems as $item) {
-                $itemId = $item['id'] ?? null;
-                $product = null;
-                if ($itemId) {
-                    $product = Product::where('slug', $itemId)
-                        ->orWhere('id', $itemId)
-                        ->first();
-                }
+            $adjustments = [];
+            $itemsToProcess = [];
+            $allUnavailable = true;
 
+            foreach ($aggregatedMap as $pId => $agg) {
+                $product = $lockedProducts->get($pId);
                 if (!$product) {
-                    DB::rollBack();
-                    $namaItem = $item['nama'] ?? 'Item busana';
-                    $pesan = "Produk '{$namaItem}' tidak ditemukan atau sudah tidak tersedia.";
-                    if ($request->wantsJson() || $request->ajax()) {
-                        return response()->json(['success' => false, 'message' => $pesan], 422);
-                    }
-                    return back()->withErrors(['items' => $pesan]);
+                    continue;
                 }
 
-                $itemJumlah = isset($item['jumlah']) ? (int)$item['jumlah'] : (isset($item['qty']) ? (int)$item['qty'] : 1);
-                if ($itemJumlah < 1) {
-                    DB::rollBack();
-                    $pesan = "Jumlah keranjang untuk produk '{$product->nama_produk}' minimal 1 dan tidak boleh 0 atau negatif.";
-                    if ($request->wantsJson() || $request->ajax()) {
-                        return response()->json(['success' => false, 'message' => $pesan], 422);
-                    }
-                    return back()->withErrors(['items' => $pesan]);
+                $reqQty = $agg['requested_qty'];
+                $availStock = max(0, (int)$product->stok);
+                $isAvailable = ($product->status_produk === 'tersedia' && $availStock > 0);
+
+                if (!$isAvailable) {
+                    // Aturan C: Produk dengan stok 0 atau status tidak tersedia otomatis dilewati
+                    $adjustments[] = [
+                        'product_id'   => $product->id,
+                        'nama_produk'  => $product->nama_produk,
+                        'original_qty' => $reqQty,
+                        'adjusted_qty' => 0,
+                        'status'       => 'unavailable',
+                        'keterangan'   => 'Produk sedang tidak tersedia atau stok habis (dilewati).',
+                    ];
+                } elseif ($reqQty > $availStock) {
+                    // Aturan B: Jika pesanan melebihi stok, sesuaikan dengan stok yang tersedia
+                    $allUnavailable = false;
+                    $adjustments[] = [
+                        'product_id'   => $product->id,
+                        'nama_produk'  => $product->nama_produk,
+                        'original_qty' => $reqQty,
+                        'adjusted_qty' => $availStock,
+                        'status'       => 'adjusted',
+                        'keterangan'   => "Dipesan {$reqQty}, disesuaikan menjadi {$availStock} unit sesuai sisa stok.",
+                    ];
+                    $itemsToProcess[$product->id] = [
+                        'product' => $product,
+                        'qty'     => $availStock,
+                        'item'    => $agg['raw_item'],
+                    ];
+                } else {
+                    // Stok mencukupi
+                    $allUnavailable = false;
+                    $itemsToProcess[$product->id] = [
+                        'product' => $product,
+                        'qty'     => $reqQty,
+                        'item'    => $agg['raw_item'],
+                    ];
+                }
+            }
+
+            // Aturan C: Jika seluruh produk tidak tersedia, batalkan checkout dan jangan buat transaksi kosong
+            if ($allUnavailable || empty($itemsToProcess)) {
+                return [
+                    'status'  => 'all_unavailable',
+                    'message' => 'Maaf, seluruh produk yang Anda pilih saat ini sedang tidak tersedia atau stok habis. Transaksi tidak dapat diproses.',
+                ];
+            }
+
+            // Aturan B & D: Jika terdapat penyesuaian stok dan customer belum mengonfirmasi perubahan,
+            // kembalikan detail penyesuaian untuk pop-up konfirmasi tanpa menyimpan transaksi
+            if (!empty($adjustments) && !$isConfirmed) {
+                $adjustedItemsForClient = [];
+                foreach ($itemsToProcess as $pId => $proc) {
+                    $p = $proc['product'];
+                    $adjustedItemsForClient[] = [
+                        'id'         => $p->id,
+                        'nama'       => $p->nama_produk,
+                        'jumlah'     => $proc['qty'],
+                        'harga'      => (int)$p->harga_sewa,
+                        'gambar'     => asset('images/' . ($p->foto_produk ?: 'kebaya-coco.png')),
+                        'kategori'   => $p->kategori?->nama_kategori ?? 'Busana',
+                        'keterangan' => $p->desk_produk ?? '',
+                        'ukuran'     => $p->ukuran,
+                        'durasi'     => $proc['item']['durasi'] ?? 3,
+                    ];
                 }
 
-                if ($product->status_produk !== 'tersedia' || $product->stok < $itemJumlah) {
-                    DB::rollBack();
-                    $pesan = "Produk '{$product->nama_produk}' saat ini sedang tidak tersedia atau stok tidak mencukupi (sisa: {$product->stok}).";
-                    if ($request->wantsJson() || $request->ajax()) {
-                        return response()->json(['success' => false, 'message' => $pesan], 422);
-                    }
-                    return back()->withErrors(['items' => $pesan]);
-                }
+                return [
+                    'status'         => 'needs_confirmation',
+                    'message'        => 'Terdapat penyesuaian jumlah pesanan sesuai ketersediaan stok.',
+                    'adjustments'    => $adjustments,
+                    'adjusted_items' => $adjustedItemsForClient,
+                ];
+            }
 
-                $namaProduk = $product->nama_produk;
-                $hargaSewa  = $product->harga_sewa;
-                $productId  = $product->id;
+            // Aturan E: Satu kode_pesanan unik yang sama untuk seluruh item dalam satu checkout
+            $kodePesanan = 'CR-INV-' . date('Ymd') . '-' . strtoupper(Str::random(6));
 
-                $subtotalProduk = $hargaSewa * $itemJumlah;
-                $depositProduk  = $depositPerProduk * $itemJumlah;
+            $totalSubtotal = 0;
+            $totalDeposit = 0;
+            $orderListText = [];
+            $createdOrders = [];
+
+            foreach ($itemsToProcess as $pId => $proc) {
+                $product = $proc['product'];
+                $finalQty = $proc['qty'];
+
+                // Harga selalu diambil dari database
+                $hargaSewa = (int)$product->harga_sewa;
+                $subtotalProduk = $hargaSewa * $finalQty;
+                $depositProduk  = $depositPerProduk * $finalQty;
                 $orderTotal     = $subtotalProduk + $depositProduk;
 
                 $totalSubtotal += $subtotalProduk;
                 $totalDeposit  += $depositProduk;
 
-                // Gunakan basket yang ada jika belum ter-checkout atau buat baru (BUG-006: Cegah keranjang yatim)
+                // Cari atau buat basket baru, pastikan mengecualikan record duplikat historis (ID 4-9)
                 $basket = Basket::where('user_id', $user->id)
-                    ->where('produk_id', $productId)
+                    ->where('produk_id', $product->id)
                     ->whereDoesntHave('orders')
+                    ->whereNotIn('id', [4, 5, 6, 7, 8, 9])
                     ->first();
 
                 if ($basket) {
                     $basket->update([
-                        'jumlah'        => $itemJumlah,
+                        'jumlah'        => $finalQty,
                         'tanggal_acara' => $request->tanggal_acara,
                     ]);
                 } else {
                     $basket = Basket::create([
                         'user_id'       => $user->id,
-                        'produk_id'     => $productId,
-                        'jumlah'        => $itemJumlah,
+                        'produk_id'     => $product->id,
+                        'jumlah'        => $finalQty,
                         'tanggal_acara' => $request->tanggal_acara,
                     ]);
                 }
 
+                // Tepat satu baris pesanan per produk (Aturan A)
                 $order = Order::create([
                     'kode_pesanan'   => $kodePesanan,
                     'basket_id'      => $basket->id,
                     'no_whatsapp'    => $request->no_whatsapp,
                     'instagram'      => $request->instagram ?: '-',
                     'domisili'       => $request->domisili,
-                    'desk_pemesanan' => $namaProduk . ' (Acara: ' . $request->tanggal_acara . ')',
+                    'desk_pemesanan' => Str::limit($product->nama_produk . ' (Acara: ' . $request->tanggal_acara . ')', 150, ''),
                     'total_harga'    => $orderTotal,
                     'status_pesan'   => 'pending',
                     'tb_bb'          => $request->tb_bb,
                 ]);
 
                 $createdOrders[] = $order;
-                $orderListText[] = "- {$namaProduk} x{$itemJumlah} (Rp " . number_format($hargaSewa, 0, ',', '.') . ")";
+                $orderListText[] = "- {$product->nama_produk} x{$finalQty} (Rp " . number_format($hargaSewa, 0, ',', '.') . ")";
             }
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            if ($request->wantsJson()) {
+            return [
+                'status'         => 'success',
+                'kode_pesanan'   => $kodePesanan,
+                'created_orders' => $createdOrders,
+                'total_subtotal' => $totalSubtotal,
+                'total_deposit'  => $totalDeposit,
+                'grand_total'    => $totalSubtotal + $totalDeposit,
+                'order_list_text'=> $orderListText,
+            ];
+        });
+
+        // Penanganan hasil evaluasi checkout
+        if ($result['status'] === 'all_unavailable') {
+            if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal memproses pesanan: ' . $e->getMessage(),
-                ], 500);
+                    'success'         => false,
+                    'all_unavailable' => true,
+                    'message'         => $result['message'],
+                ], 200);
             }
-            return back()->withErrors(['order' => 'Gagal memproses pesanan: ' . $e->getMessage()]);
+            return back()->withErrors(['items' => $result['message']]);
         }
 
-        $grandTotal = $totalSubtotal + $totalDeposit;
+        if ($result['status'] === 'needs_confirmation') {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success'            => false,
+                    'needs_confirmation' => true,
+                    'message'            => $result['message'],
+                    'adjustments'        => $result['adjustments'],
+                    'adjusted_items'     => $result['adjusted_items'],
+                ], 200);
+            }
+            return back()->with('warning', $result['message']);
+        }
+
+        // Checkout sukses
+        $kodePesanan = $result['kode_pesanan'];
+        $createdOrders = $result['created_orders'];
+        $totalSubtotal = $result['total_subtotal'];
+        $totalDeposit = $result['total_deposit'];
+        $grandTotal = $result['grand_total'];
+        $orderListText = $result['order_list_text'];
+
         $waAdminNumber = config('services.whatsapp.admin_number', '6287894302894');
         $daftarProdukStr = implode("\n", $orderListText);
 

@@ -10,12 +10,61 @@ document.addEventListener('DOMContentLoaded', function () {
   var rows = document.getElementById('order-rows');
   var inputTanggal = document.getElementById('tanggal');
 
-  var daftar = CabilCart.ambil();
-  var subtotal = daftar.reduce(function (total, item) {
-    return total + (parseInt(item.harga, 10) || 0);
-  }, 0);
-  var deposit = daftar.length * CabilCart.DEPOSIT_PER_PRODUK;
-  var total = subtotal + deposit;
+  var modalOverlay = document.getElementById('stock-modal-overlay');
+  var modalTitle = document.getElementById('stock-modal-title');
+  var modalContent = document.getElementById('stock-modal-content');
+  var btnModalBatal = document.getElementById('btn-stock-batal');
+  var btnModalLanjut = document.getElementById('btn-stock-lanjut');
+
+  var daftar = [];
+  var subtotal = 0;
+  var deposit = 0;
+  var total = 0;
+  var kosong = true;
+
+  function muatRingkasan() {
+    daftar = CabilCart.ambil();
+    list.innerHTML = '';
+
+    subtotal = daftar.reduce(function (tot, item) {
+      var qty = item.jumlah || item.qty || 1;
+      return tot + ((parseInt(item.harga, 10) || 0) * qty);
+    }, 0);
+
+    var totalQty = daftar.reduce(function (tot, item) {
+      var qty = item.jumlah || item.qty || 1;
+      return tot + qty;
+    }, 0);
+
+    deposit = totalQty * CabilCart.DEPOSIT_PER_PRODUK;
+    total = subtotal + deposit;
+
+    daftar.forEach(function (item) {
+      var li = template.content.firstElementChild.cloneNode(true);
+      var img = li.querySelector('img');
+      img.src = item.gambar;
+      img.alt = item.nama;
+      img.addEventListener('error', function () {
+        img.classList.add('is-missing');
+      });
+      var qty = item.jumlah || item.qty || 1;
+      var durasi = (item.durasi || 3) + ' hari';
+      var metaTeks = (item.ukuran ? item.ukuran + ' · ' : '') + durasi + (qty > 1 ? ' · x' + qty : '');
+      li.querySelector('.order-item-name').textContent = item.nama;
+      li.querySelector('.order-item-meta').textContent = metaTeks;
+      li.querySelector('.order-item-price').textContent = CabilCart.keRupiah((parseInt(item.harga, 10) || 0) * qty);
+      list.appendChild(li);
+    });
+
+    document.getElementById('summary-subtotal').textContent = CabilCart.keRupiah(subtotal);
+    document.getElementById('summary-deposit').textContent = CabilCart.keRupiah(deposit);
+    document.getElementById('summary-total').textContent = CabilCart.keRupiah(total);
+
+    kosong = daftar.length === 0;
+    emptyBox.hidden = !kosong;
+    rows.hidden = kosong;
+    btnKirim.disabled = kosong;
+  }
 
   // Tanggal acara tidak boleh sebelum hari ini
   var hariIni = new Date();
@@ -24,37 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
     String(hariIni.getDate()).padStart(2, '0');
 
   // Isi otomatis tanggal yang sudah dipilih di halaman detail
-  var denganTanggal = daftar.find(function (item) { return item.tanggal; });
+  var denganTanggal = CabilCart.ambil().find(function (item) { return item.tanggal; });
   if (denganTanggal && denganTanggal.tanggal >= inputTanggal.min) {
     inputTanggal.value = denganTanggal.tanggal;
   }
 
-  // Ringkasan pesanan: foto, nama, "ukuran · 3 hari", harga
-  daftar.forEach(function (item) {
-    var li = template.content.firstElementChild.cloneNode(true);
-    var img = li.querySelector('img');
-    img.src = item.gambar;
-    img.alt = item.nama;
-    img.addEventListener('error', function () {
-      img.classList.add('is-missing');
-    });
-    var durasi = (item.durasi || 3) + ' hari';
-    li.querySelector('.order-item-name').textContent = item.nama;
-    li.querySelector('.order-item-meta').textContent = item.ukuran ? item.ukuran + ' · ' + durasi : durasi;
-    li.querySelector('.order-item-price').textContent = CabilCart.keRupiah(parseInt(item.harga, 10) || 0);
-    list.appendChild(li);
-  });
+  muatRingkasan();
 
-  document.getElementById('summary-subtotal').textContent = CabilCart.keRupiah(subtotal);
-  document.getElementById('summary-deposit').textContent = CabilCart.keRupiah(deposit);
-  document.getElementById('summary-total').textContent = CabilCart.keRupiah(total);
-
-  var kosong = daftar.length === 0;
-  emptyBox.hidden = !kosong;
-  rows.hidden = kosong;
-  btnKirim.disabled = kosong;
-
-  // Validasi
+  // Validasi form
   function setError(nama, pesan) {
     var field = form.elements[nama].closest('.order-field');
     field.classList.toggle('has-error', !!pesan);
@@ -148,8 +174,68 @@ document.addEventListener('DOMContentLoaded', function () {
     window.location.href = url;
   }
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+  // Pengelolaan modal pop-up konfirmasi stok
+  function tutupModal() {
+    if (modalOverlay) {
+      modalOverlay.hidden = true;
+    }
+  }
+
+  function bukaModalNotifikasi(judul, pesan) {
+    if (!modalOverlay) return;
+    modalTitle.textContent = judul;
+    modalContent.innerHTML = '<p>' + pesan + '</p>';
+    btnModalBatal.hidden = true;
+    btnModalLanjut.textContent = 'Tutup';
+    btnModalLanjut.onclick = function () {
+      tutupModal();
+    };
+    modalOverlay.hidden = false;
+  }
+
+  function bukaModalKonfirmasiStok(hasil) {
+    if (!modalOverlay) return;
+    modalTitle.textContent = 'Konfirmasi Penyesuaian Stok';
+
+    var html = '<p>Terdapat penyesuaian jumlah busana sesuai ketersediaan stok aktual:</p>';
+    html += '<ul class="modal-adjust-list">';
+
+    (hasil.adjustments || []).forEach(function (adj) {
+      html += '<li class="modal-adjust-item">';
+      html += '<div class="modal-adjust-item-name">' + adj.nama_produk + '</div>';
+      html += '<div class="modal-adjust-item-detail">' + adj.keterangan + '</div>';
+      html += '</li>';
+    });
+
+    html += '</ul>';
+    html += '<p style="margin-top: 14px;">Apakah Anda ingin melanjutkan checkout dengan jumlah yang telah disesuaikan?</p>';
+
+    modalContent.innerHTML = html;
+
+    btnModalBatal.hidden = false;
+    btnModalBatal.textContent = 'Batalkan';
+    btnModalBatal.onclick = function () {
+      tutupModal();
+      btnKirim.disabled = false;
+      btnKirim.textContent = 'Kirim Pesanan lewat Whatsapp';
+    };
+
+    btnModalLanjut.textContent = 'Lanjutkan Checkout';
+    btnModalLanjut.onclick = function () {
+      tutupModal();
+      // Perbarui keranjang di localStorage dengan item yang telah disesuaikan
+      if (hasil.adjusted_items && Array.isArray(hasil.adjusted_items)) {
+        CabilCart.simpan(hasil.adjusted_items);
+        muatRingkasan();
+      }
+      // Kirim ulang dengan konfirmasi
+      kirimCheckout(true);
+    };
+
+    modalOverlay.hidden = false;
+  }
+
+  function kirimCheckout(isConfirmed) {
     if (kosong || !valid()) {
       return;
     }
@@ -157,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
     btnKirim.disabled = true;
     btnKirim.textContent = 'Memproses pesanan...';
 
-    // Simpan pesanan ke sistem admin (route order.checkout) dengan field lengkap (BUG-003)
     var data = new FormData();
     data.append('nama_lengkap', form.elements.nama.value.trim());
     data.append('no_whatsapp', form.elements.whatsapp.value.trim());
@@ -167,6 +252,9 @@ document.addEventListener('DOMContentLoaded', function () {
     data.append('tanggal_acara', form.elements.tanggal.value);
     data.append('catatan', form.elements.catatan ? form.elements.catatan.value.trim() : '');
     data.append('items', JSON.stringify(daftar));
+    if (isConfirmed) {
+      data.append('confirmed_adjustment', '1');
+    }
 
     var token = document.querySelector('meta[name="csrf-token"]');
 
@@ -180,27 +268,61 @@ document.addEventListener('DOMContentLoaded', function () {
       body: data
     })
       .then(function (res) {
-        return res.ok ? res.json() : null;
+        return res.json().catch(function () { return null; });
       })
       .then(function (hasil) {
-        var kodePesanan = hasil && hasil.success ? (hasil.kode_pesanan || (hasil.order_ids ? hasil.order_ids[0] : null)) : null;
+        if (!hasil) {
+          bukaWhatsApp(null);
+          return;
+        }
+
+        // Skenario 1: Seluruh produk tidak tersedia
+        if (hasil.all_unavailable) {
+          btnKirim.disabled = false;
+          btnKirim.textContent = 'Kirim Pesanan lewat Whatsapp';
+          bukaModalNotifikasi('Produk Tidak Tersedia', hasil.message || 'Seluruh produk tidak tersedia.');
+          return;
+        }
+
+        // Skenario 2: Butuh konfirmasi penyesuaian stok
+        if (hasil.needs_confirmation) {
+          btnKirim.disabled = false;
+          btnKirim.textContent = 'Kirim Pesanan lewat Whatsapp';
+          bukaModalKonfirmasiStok(hasil);
+          return;
+        }
+
+        // Skenario 3: Error lain
+        if (!hasil.success && hasil.message) {
+          btnKirim.disabled = false;
+          btnKirim.textContent = 'Kirim Pesanan lewat Whatsapp';
+          bukaModalNotifikasi('Pemberitahuan', hasil.message);
+          return;
+        }
+
+        // Skenario 4: Berhasil
+        var kodePesanan = hasil.kode_pesanan || (hasil.order_ids ? hasil.order_ids[0] : null);
         if (kodePesanan) {
-          // Pesanan sudah tersimpan: kosongkan keranjang
           try {
             localStorage.removeItem('cabilrent-keranjang');
-          } catch (err) {
-            // Penyimpanan diblokir browser
-          }
+          } catch (err) {}
         }
-        if (hasil && hasil.whatsapp_url) {
+
+        if (hasil.whatsapp_url) {
           window.location.href = hasil.whatsapp_url;
         } else {
           bukaWhatsApp(kodePesanan);
         }
       })
       .catch(function () {
-        // Server tidak bisa dihubungi: tetap kirim lewat WhatsApp
+        btnKirim.disabled = false;
+        btnKirim.textContent = 'Kirim Pesanan lewat Whatsapp';
         bukaWhatsApp(null);
       });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    kirimCheckout(false);
   });
 });

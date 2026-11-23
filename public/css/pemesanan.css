@@ -274,3 +274,109 @@
     gap: 14px;
   }
 }
+
+/* ========== Modal Konfirmasi Stok (Selaras Desain CabilRent) ========== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(39, 26, 19, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay[hidden] {
+  display: none !important;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background-color: #f6efe4;
+  border-radius: 16px;
+  padding: 26px 24px 24px;
+  box-shadow: 0 20px 40px rgba(39, 26, 19, 0.25);
+  border: 1px solid #ebdeca;
+}
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #623e2b;
+  margin-bottom: 12px;
+}
+
+.modal-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #33241b;
+  margin-bottom: 20px;
+}
+
+.modal-adjust-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-adjust-item {
+  background-color: #fffaf1;
+  border: 1px solid #ebdeca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+.modal-adjust-item-name {
+  font-weight: 600;
+  color: #623e2b;
+  margin-bottom: 3px;
+}
+
+.modal-adjust-item-detail {
+  color: #5c4738;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-batal,
+.btn-ya {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.btn-batal {
+  background-color: #ffffff;
+  border: 1px solid #e0d3bd;
+  color: #33241b;
+}
+
+.btn-batal:hover {
+  background-color: #ede2d0;
+}
+
+.btn-ya {
+  background-color: #623e2b;
+  border: none;
+  color: #ffffff;
+}
+
+.btn-ya:hover {
+  background-color: #4d2f20;
+}

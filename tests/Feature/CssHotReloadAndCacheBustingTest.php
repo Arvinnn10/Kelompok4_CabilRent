@@ -127,4 +127,51 @@ class CssHotReloadAndCacheBustingTest extends TestCase
         $versionedUrl = asset_versioned('css/home.css');
         $this->assertStringContainsString('css/home.css?v=', $versionedUrl);
     }
+
+    /**
+     * Test 7: Halaman Customer memuat file JavaScript dengan versioning query param ?v=.
+     */
+    public function test_customer_pages_render_with_versioned_javascript(): void
+    {
+        $pages = ['/', '/koleksi', '/tentang', '/kontak', '/keranjang', '/pemesanan'];
+
+        foreach ($pages as $page) {
+            $response = $this->get($page);
+            $response->assertStatus(200);
+            $response->assertSee('.js?v=', false);
+        }
+    }
+
+    /**
+     * Test 8: Halaman Koleksi dan Detail mengembalikan header Cache-Control must-revalidate.
+     */
+    public function test_koleksi_and_detail_return_revalidation_cache_headers(): void
+    {
+        $resKoleksi = $this->get('/koleksi');
+        $resKoleksi->assertStatus(200);
+        $headerKoleksi = $resKoleksi->headers->get('Cache-Control');
+        $this->assertStringContainsString('must-revalidate', $headerKoleksi);
+
+        // Buat kategori dan produk uji untuk detail
+        $cat = \App\Models\Category::create(['nama_kategori' => 'Kebaya Wisuda', 'slug' => 'kebaya-wisuda']);
+        $product = \App\Models\Product::create([
+            'kategori_id'   => $cat->id,
+            'nama_produk'   => 'Kebaya Kartini Test',
+            'slug'          => 'kebaya-kartini-test',
+            'harga_sewa'    => 150000,
+            'foto_produk'   => 'koleksi/kebaya-coco.png',
+            'status_produk' => 'tersedia',
+            'stok'          => 3,
+        ]);
+
+        $resDetailSlug = $this->get('/detail?id=' . $product->slug);
+        $resDetailSlug->assertStatus(200);
+        $headerDetailSlug = $resDetailSlug->headers->get('Cache-Control');
+        $this->assertStringContainsString('must-revalidate', $headerDetailSlug);
+        $resDetailSlug->assertSee('js/detail.js?v=', false);
+
+        $resDetailId = $this->get('/detail?id=' . $product->id);
+        $resDetailId->assertStatus(200);
+        $resDetailId->assertSee($product->nama_produk);
+    }
 }

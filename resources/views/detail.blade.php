@@ -203,9 +203,9 @@
   </footer>
 
   <noscript><style>#detail-produk { visibility: visible !important; }</style></noscript>
-  <script src="{{ asset('js/cart.js') }}"></script>
-  <script src="{{ asset('js/nav-search.js') }}"></script>
-  <script src="{{ asset('js/transisi.js') }}"></script>
-  <script src="{{ asset('js/detail.js') }}"></script>
+  <script src="{{ asset_versioned('js/cart.js') }}"></script>
+  <script src="{{ asset_versioned('js/nav-search.js') }}"></script>
+  <script src="{{ asset_versioned('js/transisi.js') }}"></script>
+  <script src="{{ asset_versioned('js/detail.js') }}"></script>
 </body>
 </html>

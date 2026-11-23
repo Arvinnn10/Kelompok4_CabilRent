@@ -84,37 +84,30 @@ document.addEventListener('DOMContentLoaded', function () {
     function tandaiKosong() {
       img.classList.add('is-missing');
     }
-    if (img.complete && img.naturalWidth === 0) tandaiKosong();
+    function tandaiAda() {
+      img.classList.remove('is-missing');
+    }
+
     img.addEventListener('error', tandaiKosong);
+    img.addEventListener('load', tandaiAda);
+
+    if (img.complete) {
+      if (img.naturalWidth > 0) {
+        tandaiAda();
+      } else if (!img.getAttribute('src')) {
+        tandaiKosong();
+      }
+    }
   });
 
-  // Klik di mana saja pada kotak produk: simpan data produk untuk halaman detail (js/detail.js), lalu buka detail
+  // Klik di mana saja pada kotak produk: buka halaman detail produk
   document.querySelectorAll('.produk-card').forEach(function (card) {
-    // Alamat detail: dari tautan /detail di dalam kotak (foto atau tombol Sewa); jika tidak ada, dibuat dari data-id
     var tautan = card.querySelector('a[href*="/detail"]');
     var alamatDetail = tautan ? tautan.href : window.location.origin + '/detail?id=' + encodeURIComponent(card.dataset.id);
 
-    function simpan() {
-      var produk = {
-        id: card.dataset.id,
-        nama: card.querySelector('.produk-name').textContent.trim(),
-        kategori: card.querySelector('.produk-badge').textContent.trim(),
-        keterangan: card.querySelector('.produk-size').textContent.trim(),
-        harga: CabilCart.keAngka(card.querySelector('.produk-price').textContent),
-        gambar: card.querySelector('.produk-image img').getAttribute('src'),
-        durasi: 3
-      };
-      try {
-        localStorage.setItem('cabilrent-produk-dipilih', JSON.stringify(produk));
-      } catch (e) {
-        // Penyimpanan diblokir browser: detail memakai data bawaan
-      }
-    }
-
     card.addEventListener('click', function (event) {
-      simpan();
-      // Klik pada tautan foto sudah membuka detail sendiri; klik di bagian lain kotak diarahkan ke sana
       if (!event.target.closest('a')) {
+        document.body.classList.add('is-exiting');
         window.location.href = alamatDetail;
       }
     });

@@ -114,6 +114,7 @@
 
       <!-- Form pesan, dikirim ke WhatsApp oleh js/kontak.js -->
       <form class="kontak-form" id="kontak-form" action="#" method="POST" data-wa="6287894302894">
+        @csrf
         <div class="form-group">
           <label for="nama" class="form-label-lg">Nama</label>
           <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required>
@@ -288,9 +289,9 @@
     </div>
   </footer>
 
-  <script src="{{ asset('js/kontak.js') }}"></script>
-  <script src="{{ asset('js/cart.js') }}"></script>
-  <script src="{{ asset('js/nav-search.js') }}"></script>
-  <script src="{{ asset('js/transisi.js') }}"></script>
+  <script src="{{ asset_versioned('js/kontak.js') }}"></script>
+  <script src="{{ asset_versioned('js/cart.js') }}"></script>
+  <script src="{{ asset_versioned('js/nav-search.js') }}"></script>
+  <script src="{{ asset_versioned('js/transisi.js') }}"></script>
 </body>
 </html>

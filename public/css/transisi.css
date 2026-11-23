@@ -14,9 +14,9 @@ body {
 }
 
 body.is-exiting {
-  opacity: 0;
-  transform: translateX(-12px);
-  transition: opacity 0.18s ease-in, transform 0.18s ease-in;
+  opacity: 0.88;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
 
 @keyframes halamanSlideMasuk {

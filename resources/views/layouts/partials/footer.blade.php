@@ -9,7 +9,7 @@
         <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
         <div class="footer-socials">
           <a href="https://www.instagram.com/cabil.rent" class="social-icon" title="Instagram" target="_blank" rel="noopener">
-            <img src="{{ asset('images/ig.png') }}" alt="Instagram" loading="lazy" decoding="async">
+            <img src="{{ asset('images/instagram.png') }}" alt="Instagram" loading="lazy" decoding="async">
           </a>
           <a href="https://wa.me/{{ config('services.whatsapp.admin_number', '6287894302894') }}" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
             <img src="{{ asset('images/wa.png') }}" alt="WhatsApp" loading="lazy" decoding="async">

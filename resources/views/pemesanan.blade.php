@@ -89,19 +89,19 @@
               </div>
               <div class="order-field">
                 <label for="whatsapp">Nomor WhatsApp</label>
-                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" required>
+                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" maxlength="20" required>
                 <p class="order-error" data-error-for="whatsapp"></p>
               </div>
             </div>
             <div class="order-row">
               <div class="order-field">
                 <label for="domisili">Domisili / Kota</label>
-                <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" required>
+                <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" maxlength="100" required>
                 <p class="order-error" data-error-for="domisili"></p>
               </div>
               <div class="order-field">
                 <label for="tb_bb">Tinggi / Berat Badan (TB/BB)</label>
-                <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160 cm / 50 kg" required>
+                <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160 cm / 50 kg" maxlength="30" required>
                 <p class="order-error" data-error-for="tb_bb"></p>
               </div>
             </div>
@@ -173,6 +173,18 @@
     </li>
   </template>
 
+  <!-- Modal Konfirmasi Penyesuaian Stok & Notifikasi Ketersediaan (Serasi CabilRent) -->
+  <div class="modal-overlay" id="stock-modal-overlay" hidden>
+    <div class="modal" id="stock-modal" role="dialog" aria-modal="true" aria-labelledby="stock-modal-title">
+      <h3 class="modal-title" id="stock-modal-title">Penyesuaian Stok</h3>
+      <div class="modal-text" id="stock-modal-content"></div>
+      <div class="modal-actions" id="stock-modal-actions">
+        <button type="button" class="btn-batal" id="btn-stock-batal">Batalkan</button>
+        <button type="button" class="btn-ya" id="btn-stock-lanjut">Lanjutkan Checkout</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Bagian footer -->
   <footer class="footer-section">
     <div class="container">
@@ -239,9 +251,9 @@
     </div>
   </footer>
 
-  <script src="{{ asset('js/cart.js') }}"></script>
-  <script src="{{ asset('js/nav-search.js') }}"></script>
-  <script src="{{ asset('js/transisi.js') }}"></script>
-  <script src="{{ asset('js/pemesanan.js') }}"></script>
+  <script src="{{ asset_versioned('js/cart.js') }}"></script>
+  <script src="{{ asset_versioned('js/nav-search.js') }}"></script>
+  <script src="{{ asset_versioned('js/transisi.js') }}"></script>
+  <script src="{{ asset_versioned('js/pemesanan.js') }}"></script>
 </body>
 </html>

@@ -43,14 +43,16 @@ class CollectionController extends Controller
         $products = $query->get();
         $totalProducts = $products->count();
 
-        return view('koleksi', compact(
-            'categories',
-            'products',
-            'totalProducts',
-            'kategoriParam',
-            'urut',
-            'search'
-        ));
+        return response()
+            ->view('koleksi', compact(
+                'categories',
+                'products',
+                'totalProducts',
+                'kategoriParam',
+                'urut',
+                'search'
+            ))
+            ->header('Cache-Control', 'no-cache, private, must-revalidate');
     }
 
     public function detail(Request $request, $id = null)
@@ -59,24 +61,24 @@ class CollectionController extends Controller
 
         $product = null;
         if (!empty($identifier)) {
-            $product = Product::with('category')
-                ->where('slug', $identifier)
-                ->orWhere('id', $identifier)
-                ->orWhere('nama_produk', 'like', "%{$identifier}%")
-                ->first();
+            // Pencarian teroptimasi indeks: utamakan primary key jika numerik, atau slug unik
+            if (is_numeric($identifier)) {
+                $product = Product::with('category')->find((int)$identifier);
+            }
+            if (!$product) {
+                $product = Product::with('category')->where('slug', $identifier)->first();
+            }
+            if (!$product) {
+                $product = Product::with('category')->where('nama_produk', 'like', "%{$identifier}%")->first();
+            }
         }
 
         if (!$product) {
             $product = Product::with('category')->firstOrFail();
         }
 
-        $relatedProducts = Product::with('category')
-            ->where('id', '!=', $product->id)
-            ->where('kategori_id', $product->kategori_id)
-            ->where('status_produk', 'tersedia')
-            ->take(4)
-            ->get();
-
-        return view('detail', compact('product', 'relatedProducts'));
+        return response()
+            ->view('detail', compact('product'))
+            ->header('Cache-Control', 'no-cache, private, must-revalidate');
     }
 }
