@@ -7,7 +7,15 @@ var CabilCart = (function () {
 
   function ambil() {
     try {
-      return JSON.parse(localStorage.getItem(KUNCI)) || [];
+      var data = JSON.parse(localStorage.getItem(KUNCI)) || [];
+      return data.map(function (item) {
+        if (!item || typeof item !== 'object') return item;
+        var q = parseInt(item.jumlah || item.qty, 10);
+        if (isNaN(q) || q <= 0) q = 1;
+        item.jumlah = q;
+        item.qty = q;
+        return item;
+      });
     } catch (e) {
       return [];
     }
@@ -44,6 +52,12 @@ var CabilCart = (function () {
 
   // Menambah produk; produk yang sama tidak dimasukkan dua kali
   function tambah(produk) {
+    if (!produk || typeof produk !== 'object') return false;
+    var q = parseInt(produk.jumlah || produk.qty, 10);
+    if (isNaN(q) || q <= 0) q = 1;
+    produk.jumlah = q;
+    produk.qty = q;
+
     var daftar = ambil();
     var sudahAda = daftar.some(function (item) {
       return item.id === produk.id;

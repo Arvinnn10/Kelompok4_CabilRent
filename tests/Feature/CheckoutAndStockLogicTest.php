@@ -599,4 +599,84 @@ class CheckoutAndStockLogicTest extends TestCase
         $this->assertEquals(1, Order::count());
         $this->assertEquals(2, Order::first()->basket->jumlah);
     }
+
+    /**
+     * Skenario 21: Item keranjang baru tanpa properti jumlah/qty otomatis default 1 dan berhasil HTTP 200.
+     */
+    public function test_21_checkout_item_without_quantity_defaults_to_one_success(): void
+    {
+        $customer = $this->createCustomer();
+        $this->actingAs($customer);
+        $product = $this->createProduct(['stok' => 5]);
+
+        // Payload hanya memiliki id dan nama tanpa jumlah atau qty
+        $payload = $this->basePayload($customer, [
+            ['id' => $product->id, 'nama' => $product->nama_produk]
+        ]);
+
+        $response = $this->postJson(route('order.checkout'), $payload);
+
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertTrue($data['success']);
+        $this->assertEquals(1, Order::count());
+        $this->assertEquals(1, Order::first()->basket->jumlah);
+    }
+
+    /**
+     * Skenario 22: Checkout item dengan properti qty (bukan jumlah) berhasil diterima dengan HTTP 200.
+     */
+    public function test_22_checkout_item_with_qty_key_success(): void
+    {
+        $customer = $this->createCustomer();
+        $this->actingAs($customer);
+        $product = $this->createProduct(['stok' => 5]);
+
+        $payload = $this->basePayload($customer, [
+            ['id' => $product->id, 'nama' => $product->nama_produk, 'qty' => 3]
+        ]);
+
+        $response = $this->postJson(route('order.checkout'), $payload);
+
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertTrue($data['success']);
+        $this->assertEquals(1, Order::count());
+        $this->assertEquals(3, Order::first()->basket->jumlah);
+    }
+
+    /**
+     * Skenario 23: Checkout Arella Kebaya secara spesifik tanpa kuantitas tidak lagi error 422, default 1 sukses.
+     */
+    public function test_23_checkout_arella_kebaya_without_quantity_succeeds(): void
+    {
+        $customer = $this->createCustomer();
+        $this->actingAs($customer);
+        $product = $this->createProduct([
+            'nama_produk' => 'Arella Kebaya',
+            'slug'        => 'kebaya-arella',
+            'stok'        => 4,
+        ]);
+
+        $payload = $this->basePayload($customer, [
+            [
+                'id'         => $product->id,
+                'nama'       => 'Arella Kebaya',
+                'kategori'   => 'Kebaya Wisuda',
+                'keterangan' => 'Arella Kebaya wisuda elegan',
+                'harga'      => 250000,
+                'gambar'     => '/images/kebaya-arella.png',
+                'durasi'     => 3,
+            ]
+        ]);
+
+        $response = $this->postJson(route('order.checkout'), $payload);
+
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertTrue($data['success']);
+        $this->assertEquals(1, Order::count());
+        $this->assertEquals(1, Order::first()->basket->jumlah);
+        $this->assertEquals('Arella Kebaya', Order::first()->basket->product->nama_produk);
+    }
 }

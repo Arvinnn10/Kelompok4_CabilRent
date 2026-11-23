@@ -20,10 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
         img.classList.add('is-missing');
       });
 
+      var qty = parseInt(item.jumlah || item.qty, 10) || 1;
       li.querySelector('.cart-item-name').textContent = item.nama;
       li.querySelector('.cart-item-meta').textContent = item.kategori + ' · ' + (item.keterangan || '');
-      li.querySelector('.cart-item-durasi').textContent = 'Sewa ' + (item.durasi || 3) + ' hari';
-      li.querySelector('.cart-item-price').textContent = CabilCart.keRupiah(item.harga);
+      li.querySelector('.cart-item-durasi').textContent = 'Sewa ' + (item.durasi || 3) + ' hari' + (qty > 1 ? ' · x' + qty : '');
+      li.querySelector('.cart-item-price').textContent = CabilCart.keRupiah((parseInt(item.harga, 10) || 0) * qty);
       li.querySelector('.cart-item-hapus').addEventListener('click', function () {
         CabilCart.hapus(item.id);
         tampilkan();
@@ -34,9 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Ringkasan biaya
     var subtotal = daftar.reduce(function (total, item) {
-      return total + (parseInt(item.harga, 10) || 0);
+      var qty = parseInt(item.jumlah || item.qty, 10) || 1;
+      return total + ((parseInt(item.harga, 10) || 0) * qty);
     }, 0);
-    var deposit = daftar.length * CabilCart.DEPOSIT_PER_PRODUK;
+    var totalQty = daftar.reduce(function (total, item) {
+      var qty = parseInt(item.jumlah || item.qty, 10) || 1;
+      return total + qty;
+    }, 0);
+    var deposit = totalQty * CabilCart.DEPOSIT_PER_PRODUK;
     var total = subtotal + deposit;
 
     document.getElementById('summary-subtotal').textContent = CabilCart.keRupiah(subtotal);

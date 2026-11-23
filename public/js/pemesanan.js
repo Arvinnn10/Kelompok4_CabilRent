@@ -251,7 +251,17 @@ document.addEventListener('DOMContentLoaded', function () {
     data.append('instagram', form.elements.instagram ? form.elements.instagram.value.trim() : '-');
     data.append('tanggal_acara', form.elements.tanggal.value);
     data.append('catatan', form.elements.catatan ? form.elements.catatan.value.trim() : '');
-    data.append('items', JSON.stringify(daftar));
+    var itemsToSend = (daftar || []).map(function (item) {
+      var cleanQty = parseInt(item.jumlah || item.qty, 10);
+      if (isNaN(cleanQty) || cleanQty <= 0) {
+        cleanQty = 1;
+      }
+      return Object.assign({}, item, {
+        jumlah: cleanQty,
+        qty: cleanQty
+      });
+    });
+    data.append('items', JSON.stringify(itemsToSend));
     if (isConfirmed) {
       data.append('confirmed_adjustment', '1');
     }

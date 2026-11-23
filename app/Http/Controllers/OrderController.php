@@ -57,27 +57,30 @@ class OrderController extends Controller
                 continue;
             }
 
-            $rawQty = null;
-            if (array_key_exists('jumlah', $item)) {
-                $rawQty = $item['jumlah'];
-            } elseif (array_key_exists('qty', $item)) {
-                $rawQty = $item['qty'];
-            }
+            $hasJumlah = array_key_exists('jumlah', $item);
+            $hasQty = array_key_exists('qty', $item);
 
-            // Validasi jumlah pesanan: tolak null, kosong, non-numerik, angka <= 0, atau desimal
-            if ($rawQty === null || $rawQty === '' || !is_numeric($rawQty) || (int)$rawQty <= 0 || (float)$rawQty != (int)$rawQty) {
-                $pesan = "Jumlah pesanan untuk produk '{$product->nama_produk}' tidak valid. Jumlah harus berupa bilangan bulat positif minimal 1.";
-                if ($request->wantsJson() || $request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => $pesan,
-                        'errors'  => ['jumlah' => [$pesan]],
-                    ], 422);
+            if (!$hasJumlah && !$hasQty) {
+                // Jika produk baru ditambahkan dan parameter jumlah/qty belum tersedia, otomatis default 1
+                $qty = 1;
+            } else {
+                $rawQty = $hasJumlah ? $item['jumlah'] : $item['qty'];
+
+                // Validasi jumlah pesanan: tolak null, kosong, non-numerik, angka <= 0, atau desimal
+                if ($rawQty === null || $rawQty === '' || !is_numeric($rawQty) || (int)$rawQty <= 0 || (float)$rawQty != (int)$rawQty) {
+                    $pesan = "Jumlah pesanan untuk produk '{$product->nama_produk}' tidak valid. Jumlah harus berupa bilangan bulat positif minimal 1.";
+                    if ($request->wantsJson() || $request->ajax()) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => $pesan,
+                            'errors'  => ['jumlah' => [$pesan]],
+                        ], 422);
+                    }
+                    return back()->withErrors(['items' => $pesan]);
                 }
-                return back()->withErrors(['items' => $pesan]);
-            }
 
-            $qty = (int)$rawQty;
+                $qty = (int)$rawQty;
+            }
 
             if (!isset($aggregatedMap[$product->id])) {
                 $aggregatedMap[$product->id] = [

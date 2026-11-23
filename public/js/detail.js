@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
     keterangan: root.dataset.keterangan || '',
     harga: parseInt(root.dataset.harga, 10) || 0,
     gambar: root.dataset.gambar || (gambar ? gambar.getAttribute('src') : ''),
-    durasi: 3
+    durasi: 3,
+    jumlah: 1,
+    qty: 1
   };
 
   // Pastikan kontainer utama terlihat
@@ -95,6 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var aksi = event.submitter ? event.submitter.value : 'tambah';
 
       produk.tanggal = form.tanggal.value;
+      produk.jumlah = 1;
+      produk.qty = 1;
       if (typeof CabilCart !== 'undefined') {
         CabilCart.tambah(produk);
       }
