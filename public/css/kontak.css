@@ -52,9 +52,14 @@ img {
 }
 
 .nav-container {
+  max-width: 100% !important;
+  width: 100%;
+  padding-left: clamp(20px, 4vw, 60px) !important;
+  padding-right: clamp(20px, 4vw, 60px) !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
 }
 
 /* Logo di sebelah kiri */
