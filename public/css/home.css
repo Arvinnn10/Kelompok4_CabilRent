@@ -466,6 +466,15 @@ img {
   object-fit: cover;
 }
 
+/* Foto tegak (kebaya) tampil utuh di tengah dengan latar putih, seperti desain */
+.product-image-box.is-utuh {
+  background-color: #ffffff;
+}
+
+.product-image-box.is-utuh img {
+  object-fit: contain;
+}
+
 .product-badge {
   position: absolute;
   left: 8px;

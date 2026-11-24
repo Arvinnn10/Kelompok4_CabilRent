@@ -194,10 +194,11 @@
       </div>
 
       <div class="populer-grid">
-        <!-- Produk 1: label "Paket Kebaya" sudah menyatu di foto -->
+        <!-- Produk 1 (foto: quarantine/im-6.png, versi tanpa garis tepi di koleksi/kebaya-ayana.png) -->
         <a href="{{ url('/koleksi') }}?kategori=kebaya" class="product-card">
-          <div class="product-image-box">
-            <img src="{{ asset('images/populer-arella.png') }}" alt="Arella Kebaya" loading="lazy" decoding="async">
+          <div class="product-image-box is-utuh">
+            <img src="{{ asset('images/koleksi/kebaya-ayana.png') }}" alt="Arella Kebaya" loading="lazy" decoding="async">
+            <span class="product-badge">Paket Kebaya</span>
           </div>
           <h3 class="product-title">Arella Kebaya</h3>
           <p class="product-tag">Satu ukuran</p>
