@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('domisili', 100);
             $table->string('desk_pemesanan', 50);
             $table->integer('total_harga');
-            $table->enum('status_pesan', ['pending', 'dikonfirmasi', 'selesai', 'dibatalkan'])->default('pending');
+            $table->enum('status_pesan', ['pending', 'dikonfirmasi', 'sedang_dipinjam', 'selesai', 'dibatalkan'])->default('pending');
             $table->string('tb_bb', 20);
             $table->timestamps();
         });

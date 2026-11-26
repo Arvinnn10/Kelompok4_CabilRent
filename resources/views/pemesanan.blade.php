@@ -13,100 +13,76 @@
 <body>
 
   <!-- Navigasi atas -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <!-- Logo cabil.rent -->
-      <a href="{{ url('/home') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
-        <span>CABIL.RENT</span>
-      </a>
-
-      <!-- Menu tengah -->
-      <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link">Beranda</a></li>
-        <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
-        <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
-        <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
-      </ul>
-
-      <!-- Bagian search dan tombol kanan -->
-      <div class="nav-actions">
-        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" name="q" placeholder="Cari koleksi">
-        </form>
-
-        <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
-          <span class="cart-badge" id="cart-badge" hidden></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 10h16l-2 10H6L4 10z"/>
-            <path d="M4 10l5-6"/>
-            <path d="M20 10l-5-6"/>
-            <line x1="9" y1="14" x2="9" y2="17"/>
-            <line x1="12" y1="14" x2="12" y2="17"/>
-            <line x1="15" y1="14" x2="15" y2="17"/>
-          </svg>
-        </a>
-
-        @if (Auth::check())
-          <a href="{{ route('logout') }}" class="nav-icon-btn" title="Keluar / Logout ({{ Auth::user()->nama_lengkap ?? Auth::user()->username }})" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @else
-          <a href="{{ route('login') }}" class="nav-icon-btn" title="Masuk / Login">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @endif
-      </div>
-    </div>
-  </header>
+  @include('layouts.partials.navbar')
 
   <!-- Form data pemesanan -->
   <section class="order-section">
     <div class="container order-container">
+      <!-- Tombol kembali ke keranjang -->
+      <div style="margin-bottom: 20px;">
+        <a href="{{ url('/keranjang') }}" class="btn-kembali" id="btn-kembali-keranjang" style="display:inline-flex;align-items:center;gap:8px;color:#623e2b;font-size:14px;font-weight:600;text-decoration:none;padding:8px 16px;background:#ffffff;border:1px solid #ebdcd0;border-radius:10px;transition:all 0.2s ease;box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Kembali ke Keranjang
+        </a>
+      </div>
+
       <h1 class="order-title">Data Pemesanan</h1>
+
+      <!-- Status Login Pengguna -->
+      @if (Auth::check())
+        <div class="order-auth-notice is-logged-in" style="background:#ffffff;border:1.5px solid #d4c1b2;border-radius:14px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(98,62,43,0.06);">
+          <div style="width:12px;height:12px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,0.25);flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <p style="margin:0 0 4px 0;font-size:14px;color:#33241b;">Status Akun: <strong style="color:#15803d;">Sedang Login</strong> sebagai <strong>{{ Auth::user()->nama_lengkap ?? Auth::user()->username }}</strong> ({{ Auth::user()->no_telp ?: Auth::user()->email }})</p>
+            <p style="margin:0;font-size:12px;color:#6b5749;">Data pesanan sewa Anda akan otomatis tercatat dan dapat dipantau di menu <a href="{{ route('riwayat.pesanan') }}" style="color:#623e2b;font-weight:700;text-decoration:underline;">Riwayat Pesanan Saya</a>.</p>
+          </div>
+        </div>
+      @else
+        <div class="order-auth-notice is-guest" style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:14px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:#ef4444;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <p style="margin:0 0 4px 0;font-size:14px;color:#991b1b;font-weight:700;">Perhatian: Anda Belum Login</p>
+            <p style="margin:0;font-size:13px;color:#7f1d1d;">Untuk dapat mengirim pesanan sewa busana, Anda wajib masuk terlebih dahulu. Silakan <a href="{{ route('login') }}" style="color:#b91c1c;font-weight:700;text-decoration:underline;">Masuk (Login)</a> atau <a href="{{ route('register') }}" style="color:#b91c1c;font-weight:700;text-decoration:underline;">Daftar Akun Baru</a>.</p>
+          </div>
+        </div>
+      @endif
 
       <div class="order-grid">
         <form class="order-form" id="order-form" data-checkout="{{ route('order.checkout') }}" novalidate>
           <fieldset class="order-card">
             <legend class="order-legend">Data pemesan</legend>
+            <p style="font-size:12px;color:#786558;margin:-8px 0 16px 0;clear:both;">
+              <span style="color:#dc2626;font-weight:700;">*</span> Menandakan kolom <strong>wajib diisi</strong>. Kolom bertanda <em>(Opsional)</em> boleh dikosongkan.
+            </p>
             <div class="order-row">
               <div class="order-field">
-                <label for="nama">Nama lengkap</label>
+                <label for="nama">Nama lengkap <span class="badge-tag badge-tag-req" style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
                 <input type="text" id="nama" name="nama" value="{{ Auth::user()->nama_lengkap ?? Auth::user()->username ?? '' }}" placeholder="Nama kamu" autocomplete="name" required>
                 <p class="order-error" data-error-for="nama"></p>
               </div>
               <div class="order-field">
-                <label for="whatsapp">Nomor WhatsApp</label>
-                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="08xx-xxxx-xxxx" inputmode="tel" autocomplete="tel" maxlength="20" required>
+                <label for="whatsapp">Nomor WhatsApp <span class="badge-tag badge-tag-req" style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi - Angka saja)</span></label>
+                <input type="tel" id="whatsapp" name="whatsapp" value="{{ Auth::user()->no_telp ?? '' }}" placeholder="Contoh: 081234567890" inputmode="numeric" pattern="[0-9+\s-]*" autocomplete="tel" maxlength="20" required>
                 <p class="order-error" data-error-for="whatsapp"></p>
               </div>
             </div>
             <div class="order-row">
               <div class="order-field">
-                <label for="domisili">Domisili / Kota</label>
+                <label for="domisili">Domisili / Kota <span class="badge-tag badge-tag-req" style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
                 <input type="text" id="domisili" name="domisili" placeholder="Contoh: Banjarmasin" maxlength="100" required>
                 <p class="order-error" data-error-for="domisili"></p>
               </div>
               <div class="order-field">
-                <label for="tb_bb">Tinggi / Berat Badan (TB/BB)</label>
+                <label for="tb_bb">Tinggi / Berat Badan (TB/BB) <span class="badge-tag badge-tag-req" style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
                 <input type="text" id="tb_bb" name="tb_bb" placeholder="Contoh: 160 cm / 50 kg" maxlength="30" required>
                 <p class="order-error" data-error-for="tb_bb"></p>
               </div>
             </div>
             <div class="order-field order-field-wide">
-              <label for="instagram">Akun Instagram (opsional)</label>
+              <label for="instagram">Akun Instagram <span class="badge-tag badge-tag-opt" style="color:#78716c;font-size:11px;font-weight:normal;">(Opsional / Tidak wajib)</span></label>
               <input type="text" id="instagram" name="instagram" placeholder="@username">
               <p class="order-error" data-error-for="instagram"></p>
             </div>
@@ -115,13 +91,13 @@
           <h2 class="order-subtitle">Acara dan pengambilan</h2>
 
           <div class="order-field order-field-wide">
-            <label for="tanggal">Tanggal acara</label>
+            <label for="tanggal">Tanggal acara <span class="badge-tag badge-tag-req" style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
             <input type="date" id="tanggal" name="tanggal" required>
             <p class="order-error" data-error-for="tanggal"></p>
           </div>
 
           <div class="order-field order-field-wide">
-            <label for="catatan">Catatan tambahan (opsional)</label>
+            <label for="catatan">Catatan tambahan <span class="badge-tag badge-tag-opt" style="color:#78716c;font-size:11px;font-weight:normal;">(Opsional / Tidak wajib)</span></label>
             <textarea id="catatan" name="catatan" rows="3" placeholder="Warna alternatif, permintaan khusus hijab, dll."></textarea>
           </div>
         </form>
@@ -152,8 +128,12 @@
             </div>
           </div>
 
-          <button type="submit" form="order-form" class="btn-lanjut btn-kirim" id="btn-kirim"
-                  data-wa="{{ config('services.whatsapp.admin_number', '6287894302894') }}">Kirim Pesanan lewat Whatsapp</button>
+          @auth
+            <button type="submit" form="order-form" class="btn-lanjut btn-kirim" id="btn-kirim"
+                    data-wa="{{ config('services.whatsapp.admin_number', '6287894302894') }}">Kirim Pesanan lewat Whatsapp</button>
+          @else
+            <a href="{{ route('login') }}" class="btn-lanjut" style="text-align:center;display:block;text-decoration:none;background:#b91c1c;color:#fff;" title="Anda harus login terlebih dahulu">Masuk (Login) untuk Memesan</a>
+          @endauth
 
           <p class="summary-note order-note">Pesanan dikirim ke admin lewat WhatsApp, lalu ketersediaan dikonfirmasi.</p>
         </aside>

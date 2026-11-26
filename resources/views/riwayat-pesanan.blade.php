@@ -1,23 +1,27 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Pesanan - Cabil.Rent</title>
 
-@section('title', 'Riwayat Pesanan - Cabil.Rent')
-
-@section('styles')
   <link rel="stylesheet" href="{{ asset_versioned('css/keranjang.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/nav-search.css') }}">
+  <link rel="stylesheet" href="{{ asset_versioned('css/transisi.css') }}">
   <style>
     .riwayat-section {
-      padding: 48px 0 80px;
+      padding: 40px 0 80px;
       min-height: 70vh;
-      background-color: #fdfaf6;
+      background-color: #faf6f2;
     }
     .riwayat-header {
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       flex-wrap: wrap;
       gap: 16px;
-      border-bottom: 1px solid #ebd9c8;
+      border-bottom: 1px solid #ebdcd0;
       padding-bottom: 20px;
     }
     .riwayat-title {
@@ -28,32 +32,50 @@
       margin-bottom: 6px;
     }
     .riwayat-desc {
-      font-size: 15px;
-      color: #6e5e54;
+      font-size: 14px;
+      color: #786558;
     }
-    .riwayat-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .btn-logout-cust {
+    .btn-kembali {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 18px;
-      border: 1px solid #d4c2b3;
-      border-radius: 999px;
-      background: #ffffff;
-      color: #7a2e2e;
-      font-size: 13px;
+      color: #623e2b;
+      font-size: 14px;
       font-weight: 600;
-      cursor: pointer;
       text-decoration: none;
+      padding: 8px 16px;
+      background: #ffffff;
+      border: 1px solid #ebdcd0;
+      border-radius: 10px;
       transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
-    .btn-logout-cust:hover {
-      background: #faebeb;
-      border-color: #d99b9b;
+    .btn-kembali:hover {
+      background-color: #623e2b !important;
+      color: #ffffff !important;
+      border-color: #623e2b !important;
+    }
+    .btn-kembali svg {
+      transition: transform 0.2s ease;
+    }
+    .btn-kembali:hover svg {
+      transform: translateX(-3px);
+    }
+    .btn-sewa-lagi {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background-color: #623e2b;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+    }
+    .btn-sewa-lagi:hover {
+      background-color: #4d2f20;
     }
     .order-group-card {
       background: #ffffff;
@@ -61,7 +83,7 @@
       border-radius: 16px;
       padding: 24px;
       margin-bottom: 24px;
-      box-shadow: 0 4px 16px rgba(98, 62, 43, 0.04);
+      box-shadow: 0 2px 12px rgba(98, 62, 43, 0.04);
       transition: box-shadow 0.2s ease;
     }
     .order-group-card:hover {
@@ -78,7 +100,7 @@
       margin-bottom: 16px;
     }
     .order-invoice-num {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: #623e2b;
       letter-spacing: 0.02em;
@@ -96,6 +118,7 @@
       font-weight: 600;
       text-transform: capitalize;
     }
+    .status-pending,
     .status-menunggu {
       background-color: #fef3c7;
       color: #92400e;
@@ -108,9 +131,10 @@
       background-color: #dbeafe;
       color: #1e40af;
     }
+    .status-sedang_dipinjam,
     .status-disewa {
-      background-color: #dcfce7;
-      color: #166534;
+      background-color: #e0f2fe;
+      color: #0369a1;
     }
     .status-selesai {
       background-color: #f1f5f9;
@@ -170,10 +194,10 @@
       flex-wrap: wrap;
       gap: 16px;
       margin-top: 18px;
-      padding-top: 16px;
       background-color: #fcf9f6;
       padding: 16px 20px;
       border-radius: 12px;
+      border: 1px solid #f0e6dd;
     }
     .order-total-info {
       display: flex;
@@ -181,7 +205,7 @@
       gap: 2px;
     }
     .order-total-label {
-      font-size: 13px;
+      font-size: 12.5px;
       color: #8c786c;
     }
     .order-total-val {
@@ -213,35 +237,38 @@
       border-radius: 16px;
     }
     .empty-icon {
-      width: 64px;
-      height: 64px;
+      width: 56px;
+      height: 56px;
       margin: 0 auto 16px;
       color: #a49184;
     }
   </style>
-@endsection
+</head>
+<body>
 
-@section('content')
+  <!-- Navigasi atas -->
+  @include('layouts.partials.navbar')
+
   <div class="riwayat-section">
     <div class="container">
+      <!-- Tombol kembali ke home -->
+      <div style="margin-bottom: 20px;">
+        <a href="{{ url('/') }}" class="btn-kembali" id="btn-kembali-home">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Kembali ke Beranda
+        </a>
+      </div>
+
       <div class="riwayat-header">
         <div>
           <h1 class="riwayat-title">Riwayat Pesanan Saya</h1>
-          <p class="riwayat-desc">Pantau status penyewaan busana, konfirmasi tanggal acara, dan bukti transaksi Anda.</p>
+          <p class="riwayat-desc">Pantau status penyewaan busana, jadwal sewa, dan bukti transaksi Anda.</p>
         </div>
-        <div class="riwayat-actions">
-          <a href="{{ url('/koleksi') }}" class="btn-checkout" style="padding: 10px 20px; font-size: 13px;">+ Sewa Lagi</a>
-          <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-            @csrf
-            <button type="submit" class="btn-logout-cust" title="Keluar dari akun">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-              Keluar
-            </button>
-          </form>
+        <div>
+          <a href="{{ url('/koleksi') }}" class="btn-sewa-lagi">+ Sewa Busana Lain</a>
         </div>
       </div>
 
@@ -251,14 +278,14 @@
             <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
           </svg>
           <h2 style="font-size: 20px; color: #33241b; margin-bottom: 8px;">Belum Ada Riwayat Pesanan</h2>
-          <p style="color: #6e5e54; margin-bottom: 24px;">Anda belum melakukan penyewaan kebaya, heels, atau kamisol di CabilRent.</p>
-          <a href="{{ url('/koleksi') }}" class="btn-checkout" style="display: inline-block; padding: 12px 28px;">Jelajahi Koleksi</a>
+          <p style="color: #6e5e54; margin-bottom: 24px; font-size: 14px;">Anda belum melakukan penyewaan kebaya, heels, atau kamisol di CabilRent.</p>
+          <a href="{{ url('/koleksi') }}" class="btn-sewa-lagi" style="display: inline-flex;">Jelajahi Koleksi</a>
         </div>
       @else
         @foreach ($orderGroups as $invoiceCode => $group)
           @php
             $firstOrder = $group->first();
-            $status = $firstOrder->status_pesan ?? 'menunggu';
+            $status = $firstOrder->status_pesan ?? 'pending';
             $tglSewa = $firstOrder->tanggal_sewa ? \Carbon\Carbon::parse($firstOrder->tanggal_sewa)->format('d M Y') : '-';
             $tglKembali = $firstOrder->tanggal_kembali ? \Carbon\Carbon::parse($firstOrder->tanggal_kembali)->format('d M Y') : '-';
             $totalGroupPrice = $group->sum('total_harga');
@@ -269,7 +296,7 @@
                 <span class="order-invoice-num">#{{ $invoiceCode }}</span>
                 <span class="order-date-text">Dipesan pada {{ $firstOrder->created_at->format('d M Y, H:i') }} WIB</span>
               </div>
-              <span class="badge-status status-{{ $status }}">{{ ucfirst($status) }}</span>
+              <span class="badge-status status-{{ $status }}">{{ ['pending' => 'Menunggu', 'dikonfirmasi' => 'Dikonfirmasi', 'sedang_dipinjam' => 'Sedang Dipinjam', 'selesai' => 'Selesai', 'dibatalkan' => 'Dibatalkan'][$status] ?? ucfirst($status) }}</span>
             </div>
 
             <div style="margin-bottom: 16px; font-size: 13px; color: #6e5e54; display: flex; gap: 24px; flex-wrap: wrap;">
@@ -325,4 +352,74 @@
       @endif
     </div>
   </div>
-@endsection
+
+  <!-- Bagian footer (sama dengan halaman lainnya) -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="footer-top">
+        <!-- Profil brand -->
+        <div class="footer-brand">
+          <div class="footer-logo-box">
+            <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
+            <span class="footer-brand-title">CABIL.RENT</span>
+          </div>
+          <p>Sewa kebaya akad, wisuda, pesta, dan adat yang pas di badan, rapi, dan siap pakai.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/cabil.rent/" class="social-icon" title="Instagram" target="_blank" rel="noopener">
+              <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
+            </a>
+            <a href="https://wa.me/6287894302894" class="social-icon" title="WhatsApp" target="_blank" rel="noopener">
+              <img src="{{ asset('images/wa.png') }}" alt="WhatsApp">
+            </a>
+          </div>
+        </div>
+
+        <!-- Menu jelajahi -->
+        <div class="footer-col">
+          <h4>JELAJAHI</h4>
+          <ul>
+            <li><a href="{{ url('/home') }}">Beranda</a></li>
+            <li><a href="{{ url('/koleksi') }}">Koleksi</a></li>
+            <li><a href="{{ url('/tentang') }}">Tentang</a></li>
+            <li><a href="{{ url('/kontak') }}">Kontak</a></li>
+          </ul>
+        </div>
+
+        <!-- Kategori -->
+        <div class="footer-col">
+          <h4>KATEGORI</h4>
+          <ul>
+            <li><a href="{{ url('/koleksi') }}?kategori=kebaya">Paket Kebaya</a></li>
+            <li><a href="{{ url('/koleksi') }}?kategori=heels">Heels</a></li>
+            <li><a href="{{ url('/koleksi') }}?kategori=kamisol">Kamisol</a></li>
+          </ul>
+        </div>
+
+        <!-- Kontak -->
+        <div class="footer-col">
+          <h4>KONTAK</h4>
+          <ul class="contact-list">
+            <li>Antaran Besar, Kota Banjarmasin, Kalimantan Selatan</li>
+            <li>Rabu - Senin | Buka 24 Jam</li>
+            <li>Selasa: Tutup</li>
+            <li>WhatsApp 0878-9430-2894</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright dan legalitas -->
+      <div class="footer-bottom">
+        <p>&copy; 2026 cabil.rent. All Rights Reserved</p>
+        <div class="footer-legal">
+          <a href="#">Syarat &amp; Ketentuan</a>
+          <a href="#">Kebijakan Privasi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ asset_versioned('js/cart.js') }}"></script>
+  <script src="{{ asset_versioned('js/nav-search.js') }}"></script>
+  <script src="{{ asset_versioned('js/transisi.js') }}"></script>
+</body>
+</html>

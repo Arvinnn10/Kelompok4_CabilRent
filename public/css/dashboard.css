@@ -760,7 +760,8 @@ img {
 .status-menunggu,
 .status-pending { --warna: #b7791f; --latar: #eddec8; }
 .status-dikonfirmasi { --warna: #3b78c4; --latar: #dbdee0; }
-.status-disewa { --warna: #a23c8f; --latar: #ead5d8; }
+.status-sedang_dipinjam,
+.status-disewa { --warna: #0284c7; --latar: #e0f2fe; }
 .status-selesai { --warna: #2f855a; --latar: #dae0d1; }
 .status-lain,
 .status-dibatalkan { --warna: #8a8f98; --latar: #e6e4df; }

@@ -120,15 +120,7 @@
           </svg>
         </span>
 
-        <div class="search-bar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" placeholder="Cari nama kebaya" aria-label="Cari nama kebaya">
-        </div>
-
-        <div class="topbar-actions">
+        <div class="topbar-actions" style="margin-left: auto;">
           <!-- Notifikasi -->
           <div class="dropdown">
             <button type="button" class="icon-btn btn-notif" id="btn-notif" title="Notifikasi"
@@ -145,18 +137,9 @@
                 <button type="button" class="link-btn" id="btn-baca">Tandai dibaca</button>
               </div>
               <ul class="notif-list">
-                <!-- BACKEND: ganti dengan daftar notifikasi asli -->
                 <li class="notif-item is-unread">
-                  <p class="notif-judul">Pesanan baru CR-1044</p>
-                  <p class="notif-detail">Bella Safira · 12 Des</p>
-                </li>
-                <li class="notif-item is-unread">
-                  <p class="notif-judul">Pesanan baru CR-1043</p>
-                  <p class="notif-detail">Anisa Rahma · 3 Des</p>
-                </li>
-                <li class="notif-item is-unread">
-                  <p class="notif-judul">Aura Heels tinggal 2</p>
-                  <p class="notif-detail">Perlu restok</p>
+                  <p class="notif-judul">Panel Produk</p>
+                  <p class="notif-detail">Kelola stok dan katalog busana</p>
                 </li>
               </ul>
             </div>
@@ -171,15 +154,8 @@
               <div class="akun-head">
                 <p class="akun-nama">{{ Auth::user()->nama_lengkap ?? Auth::user()->username }}</p>
                 <p class="akun-email">{{ Auth::user()->email }}</p>
+                <span style="font-size: 11px; color: #8c786c; font-weight: 600; text-transform: uppercase;">Administrator</span>
               </div>
-              <button type="button" class="akun-keluar" data-open-logout>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                <span>Keluar</span>
-              </button>
             </div>
           </div>
         </div>
@@ -223,25 +199,33 @@
           </div>
         </section>
 
-        <!-- Cari, filter kategori, dan tombol tambah -->
+        <!-- Cari, filter kategori (dropdown), dan tombol tambah -->
         <div class="pr-toolbar">
-          <form method="GET" action="{{ url('/produk') }}" class="pr-search">
-            @if (request('kategori'))
-              <input type="hidden" name="kategori" value="{{ request('kategori') }}">
-            @endif
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kebaya" aria-label="Cari nama kebaya">
-          </form>
+          <form method="GET" action="{{ url('/produk') }}" class="pr-filter-form">
+            <div class="pr-search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama busana/kebaya..." aria-label="Cari nama kebaya">
+            </div>
 
-          <div class="pr-chips">
-            @foreach ($categories as $cat)
-              <a href="{{ url('/produk') }}?kategori={{ $cat->id }}"
-                 class="pr-chip {{ request('kategori') == $cat->id ? 'is-active' : '' }}">{{ $cat->nama_kategori }}</a>
-            @endforeach
-          </div>
+            <div class="pr-category-filter">
+              <label for="filter-kategori" class="filter-label">Kategori:</label>
+              <select name="kategori" id="filter-kategori" class="pr-category-select" onchange="this.form.submit()">
+                <option value="">Semua Kategori</option>
+                @foreach ($categories as $cat)
+                  <option value="{{ $cat->id }}" {{ request('kategori') == $cat->id ? 'selected' : '' }}>
+                    {{ $cat->nama_kategori }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+
+            @if (request('kategori') || request('search'))
+              <a href="{{ url('/produk') }}" class="btn-filter-reset" style="height:42px;padding:0 14px;display:inline-flex;align-items:center;background:#fce7e7;color:#b91c1c;border:1px solid #fecaca;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;">Reset</a>
+            @endif
+          </form>
 
           <button type="button" class="btn-tambah" id="btn-tambah">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -371,6 +355,10 @@
       <input type="hidden" name="_method" value="PUT" id="field-method" disabled>
 
       <div class="drawer-body">
+        <p style="font-size:12px;color:#786558;margin:0 0 16px 0;">
+          <span style="color:#dc2626;font-weight:700;">*</span> Menandakan kolom <strong>wajib diisi</strong>. Kolom bertanda <em>(Opsional)</em> boleh dikosongkan.
+        </p>
+
         <label class="pf-upload" for="field-foto">
           <img src="" alt="" class="pf-upload-img" id="pf-preview" hidden>
           <span class="pf-upload-teks" id="pf-upload-teks">
@@ -379,19 +367,20 @@
               <circle cx="8.5" cy="8.5" r="1.5"></circle>
               <polyline points="21 15 16 10 5 21"></polyline>
             </svg>
-            Klik untuk unggah foto
+            Klik untuk unggah foto busana
+            <small style="display:block;font-size:11px;color:#8c786c;margin-top:3px;">* (Wajib diisi saat menambah produk baru)</small>
           </span>
         </label>
         <input type="file" name="foto_produk" id="field-foto" accept="image/*" hidden>
 
         <div class="pf-field">
-          <label for="field-nama">Nama produk</label>
-          <input type="text" name="nama_produk" id="field-nama" maxlength="100" required>
+          <label for="field-nama">Nama produk <span style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
+          <input type="text" name="nama_produk" id="field-nama" maxlength="100" placeholder="Contoh: Kebaya Wisuda Brokat Peach" required>
         </div>
 
         <div class="pf-row">
           <div class="pf-field">
-            <label for="field-kategori">Kategori</label>
+            <label for="field-kategori">Kategori <span style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
             <select name="kategori_id" id="field-kategori" required>
               @foreach ($categories as $cat)
                 <option value="{{ $cat->id }}">{{ $cat->nama_kategori }}</option>
@@ -399,30 +388,30 @@
             </select>
           </div>
           <div class="pf-field">
-            <label for="field-ukuran">Ukuran</label>
-            <input type="text" name="ukuran" id="field-ukuran" maxlength="30">
+            <label for="field-ukuran">Ukuran <span style="color:#78716c;font-size:11px;font-weight:normal;">(Opsional / Tidak wajib)</span></label>
+            <input type="text" name="ukuran" id="field-ukuran" maxlength="30" placeholder="Contoh: S, M, L, All Size">
           </div>
         </div>
 
         <div class="pf-row">
           <div class="pf-field">
-            <label for="field-harga">Harga sewa / 3 hari (Rp)</label>
-            <input type="number" name="harga_sewa" id="field-harga" min="0" required>
+            <label for="field-harga">Harga sewa / 3 hari (Rp) <span style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
+            <input type="number" name="harga_sewa" id="field-harga" min="0" placeholder="Contoh: 150000" required>
           </div>
           <div class="pf-field">
-            <label for="field-stok">Stok</label>
-            <input type="number" name="stok" id="field-stok" min="0" value="1">
+            <label for="field-stok">Stok <span style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
+            <input type="number" name="stok" id="field-stok" min="0" value="1" required>
           </div>
         </div>
 
         <div class="pf-field">
-          <label for="field-desk">Deskripsi</label>
-          <textarea name="desk_produk" id="field-desk" rows="3"></textarea>
+          <label for="field-desk">Deskripsi <span style="color:#78716c;font-size:11px;font-weight:normal;">(Opsional / Tidak wajib)</span></label>
+          <textarea name="desk_produk" id="field-desk" rows="3" placeholder="Kelengkapan, bahan, warna, dll."></textarea>
         </div>
 
         <div class="pf-tampil">
           <div>
-            <p class="pf-tampil-judul">Tampilkan di website</p>
+            <p class="pf-tampil-judul">Tampilkan di website <span style="color:#78716c;font-size:11px;font-weight:normal;">(Opsional)</span></p>
             <p class="pf-tampil-ket">Produk tersembunyi tidak terlihat pelanggan</p>
           </div>
           <!-- Nilai hidden dikirim bila sakelar mati; bila hidup, nilai "tersedia" menimpanya -->

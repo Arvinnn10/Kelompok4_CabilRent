@@ -82,10 +82,74 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Validasi form
   function setError(nama, pesan) {
+    if (!form.elements[nama]) return;
     var field = form.elements[nama].closest('.order-field');
-    field.classList.toggle('has-error', !!pesan);
-    form.querySelector('[data-error-for="' + nama + '"]').textContent = pesan || '';
+    if (field) {
+      field.classList.toggle('has-error', !!pesan);
+    }
+    var errEl = form.querySelector('[data-error-for="' + nama + '"]');
+    if (errEl) {
+      errEl.textContent = pesan || '';
+    }
   }
+
+  // Validasi Real-time Instan untuk WhatsApp (mencegah huruf dan langsung menampilkan notifikasi error)
+  var waInput = form.elements.whatsapp;
+  if (waInput) {
+    waInput.addEventListener('input', function () {
+      var raw = waInput.value;
+      if (/[a-zA-Z]/.test(raw)) {
+        waInput.value = raw.replace(/[a-zA-Z]/g, '');
+        setError('whatsapp', 'Nomor WhatsApp hanya boleh berisi angka (tidak boleh menggunakan huruf).');
+        return;
+      }
+
+      var cleaned = waInput.value.replace(/[^0-9+]/g, '');
+      if (cleaned !== waInput.value) {
+        waInput.value = cleaned;
+      }
+
+      var wa = waInput.value.replace(/[\s-]/g, '');
+      if (wa.length === 0) {
+        setError('whatsapp', 'Nomor WhatsApp wajib diisi.');
+      } else if (!/^(\+62|62|0)/.test(wa)) {
+        setError('whatsapp', 'Nomor WhatsApp harus diawali 08, 62, atau +62.');
+      } else if (wa.length >= 10 && !/^(\+62|62|0)8\d{7,12}$/.test(wa)) {
+        setError('whatsapp', 'Format nomor WhatsApp belum lengkap atau tidak valid (contoh: 081234567890).');
+      } else {
+        setError('whatsapp', '');
+      }
+    });
+
+    waInput.addEventListener('blur', function () {
+      var wa = waInput.value.replace(/[\s-]/g, '');
+      if (!wa) {
+        setError('whatsapp', 'Nomor WhatsApp wajib diisi.');
+      } else if (!/^(\+62|62|0)8\d{7,12}$/.test(wa)) {
+        setError('whatsapp', 'Masukkan nomor WhatsApp yang valid, contoh: 081234567890.');
+      } else {
+        setError('whatsapp', '');
+      }
+    });
+  }
+
+  // Validasi Real-time untuk input lainnya (nama, domisili, tb_bb, tanggal)
+  ['nama', 'domisili', 'tb_bb', 'tanggal'].forEach(function (fName) {
+    var el = form.elements[fName];
+    if (el) {
+      el.addEventListener('input', function () {
+        if (el.value.trim() !== '') {
+          setError(fName, '');
+        }
+      });
+      el.addEventListener('blur', function () {
+        if (el.value.trim() === '') {
+          var label = fName === 'tb_bb' ? 'Tinggi dan berat badan' : (fName === 'domisili' ? 'Domisili kota' : fName);
+          setError(fName, label + ' wajib diisi.');
+        }
+      });
+    }
+  });
 
   function valid() {
     var nama = form.elements.nama.value.trim();
@@ -283,6 +347,17 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (hasil) {
         if (!hasil) {
           bukaWhatsApp(null);
+          return;
+        }
+
+        // Pengguna belum login: tampilkan pesan dan arahkan ke halaman login
+        if (hasil.redirect) {
+          btnKirim.disabled = false;
+          btnKirim.textContent = 'Kirim Pesanan lewat Whatsapp';
+          bukaModalNotifikasi('Perlu Login', hasil.message || 'Silakan masuk (login) terlebih dahulu untuk melanjutkan pemesanan sewa.');
+          setTimeout(function () {
+            window.location.href = hasil.redirect;
+          }, 1500);
           return;
         }
 

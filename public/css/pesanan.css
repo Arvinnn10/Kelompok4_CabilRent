@@ -40,7 +40,114 @@
   margin-top: 4px;
 }
 
-/* Pencarian */
+/* Pencarian dan Filter Toolbar */
+.ps-filter-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: #f6efe4;
+  border: 1px solid #e0d3bd;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 28px;
+}
+
+.ps-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ps-filter-group.ps-search-input {
+  flex: 1;
+  min-width: 220px;
+  background: #fffaf1;
+  border: 1px solid #ebd9c8;
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 38px;
+}
+
+.ps-filter-group.ps-search-input svg {
+  width: 14px;
+  height: 14px;
+  color: #6f5b4d;
+  flex-shrink: 0;
+}
+
+.ps-filter-group.ps-search-input input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: #33241b;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #623e2b;
+  white-space: nowrap;
+}
+
+.ps-select-filter,
+.ps-date-input {
+  height: 38px;
+  padding: 0 10px;
+  background-color: #fffaf1;
+  border: 1px solid #ebd9c8;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #33241b;
+  outline: none;
+}
+
+.ps-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-filter-submit {
+  height: 38px;
+  padding: 0 16px;
+  background-color: #623e2b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-filter-submit:hover {
+  background-color: #482c1e;
+}
+
+.btn-filter-reset {
+  height: 38px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fce7e7;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-filter-reset:hover {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
 .ps-search {
   display: flex;
   align-items: center;

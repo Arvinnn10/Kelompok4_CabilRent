@@ -68,22 +68,41 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/produk/{id}', [AdminProductController::class, 'destroy'])->name('produk.destroy');
 
 
-        // PESANAN ADMIN
+        // PESANAN ADMIN (Filter Status, Tanggal, dan Pencarian)
         Route::get('/pesanan', function (Request $request) {
             $query = Order::with(['basket.product', 'product', 'user']);
 
+            // Filter Status
             if ($request->filled('status') && $request->status !== 'Semua') {
                 $query->where('status_pesan', $request->status);
             }
 
+            // Filter Tanggal Pesanan (Rentang tanggal atau tanggal tunggal)
+            if ($request->filled('tanggal_dari')) {
+                $query->whereDate('created_at', '>=', $request->tanggal_dari);
+            }
+            if ($request->filled('tanggal_sampai')) {
+                $query->whereDate('created_at', '<=', $request->tanggal_sampai);
+            }
+
+            // Filter Tanggal Acara
+            if ($request->filled('tanggal_acara')) {
+                $query->whereHas('basket', function ($b) use ($request) {
+                    $b->whereDate('tanggal_acara', $request->tanggal_acara);
+                });
+            }
+
+            // Filter Pencarian
             if ($request->filled('search')) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('id', 'like', "%{$search}%")
+                        ->orWhere('kode_pesanan', 'like', "%{$search}%")
                         ->orWhere('no_whatsapp', 'like', "%{$search}%")
                         ->orWhere('domisili', 'like', "%{$search}%")
                         ->orWhereHas('user', function ($userQuery) use ($search) {
-                            $userQuery->where('nama_lengkap', 'like', "%{$search}%");
+                            $userQuery->where('nama_lengkap', 'like', "%{$search}%")
+                                ->orWhere('username', 'like', "%{$search}%");
                         });
                 });
             }
@@ -91,13 +110,15 @@ Route::middleware(['auth'])->group(function () {
             $orders = $query->latest()->paginate(10)->withQueryString();
             $totalOrders = Order::count();
             $perluDikonfirmasi = Order::where('status_pesan', 'pending')->count();
-            $sedangDisewa = Order::where('status_pesan', 'dikonfirmasi')->count();
+            $sedangDipinjam = Order::where('status_pesan', 'sedang_dipinjam')->count();
+            $sedangDisewa = Order::whereIn('status_pesan', ['dikonfirmasi', 'sedang_dipinjam'])->count();
             $pendapatanSelesai = Order::where('status_pesan', 'selesai')->sum('total_harga');
 
             return view('pesanan', compact(
                 'orders',
                 'totalOrders',
                 'perluDikonfirmasi',
+                'sedangDipinjam',
                 'sedangDisewa',
                 'pendapatanSelesai'
             ));
@@ -123,7 +144,7 @@ Route::patch('/keranjang/update/{id}', [CartController::class, 'updateItem'])->n
 Route::put('/keranjang/update/{id}', [CartController::class, 'updateItem']);
 Route::delete('/keranjang/hapus/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
 
-// CHECKOUT PESANAN
+// CHECKOUT PESANAN (Mendukung pesanan pelanggan terdaftar & tamu)
 Route::post('/pesanan/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 
 // TENTANG
@@ -136,8 +157,11 @@ Route::get('/kontak', function () {
     return view('kontak');
 })->name('kontak');
 
-// PEMESANAN 
-Route::get('/pemesanan', function () {
+// PEMESANAN (Pelanggan wajib login terlebih dahulu sebelum memesan/beli)
+Route::get('/pemesanan', function (Request $request) {
+    if (!Auth::check()) {
+        return redirect()->guest(route('login'))->with('warning', 'Silakan masuk (login) terlebih dahulu untuk melanjutkan pemesanan sewa.');
+    }
     return view('pemesanan');
 })->name('pemesanan');
 

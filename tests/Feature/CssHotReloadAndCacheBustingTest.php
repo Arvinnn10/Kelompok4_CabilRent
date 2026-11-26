@@ -133,6 +133,17 @@ class CssHotReloadAndCacheBustingTest extends TestCase
      */
     public function test_customer_pages_render_with_versioned_javascript(): void
     {
+        $customer = User::create([
+            'nama_lengkap' => 'Customer JS Test',
+            'username'     => 'cust_js_test',
+            'email'        => 'cust_js@cabilrent.id',
+            'no_telp'      => '081234999777',
+            'password'     => bcrypt('secret123'),
+            'role'         => 'customers',
+            'status'       => 'aktif',
+        ]);
+        $this->actingAs($customer);
+
         $pages = ['/', '/koleksi', '/tentang', '/kontak', '/keranjang', '/pemesanan'];
 
         foreach ($pages as $page) {

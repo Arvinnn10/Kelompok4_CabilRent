@@ -94,14 +94,21 @@ document.addEventListener('DOMContentLoaded', function () {
   if (form) {
     form.addEventListener('submit', function (event) {
       event.preventDefault();
+
+      // Cek apakah user sudah login
+      var isAuth = form.dataset.auth === '1';
+      if (!isAuth) {
+        var loginUrl = form.dataset.login || '/login';
+        alert('Silakan masuk (login) terlebih dahulu untuk menambahkan busana ke keranjang.');
+        window.location.href = loginUrl;
+        return;
+      }
+
       var aksi = event.submitter ? event.submitter.value : 'tambah';
 
       produk.tanggal = form.tanggal.value;
       produk.jumlah = 1;
       produk.qty = 1;
-      if (typeof CabilCart !== 'undefined') {
-        CabilCart.tambah(produk);
-      }
 
       var csrfInput = form.querySelector('input[name="_token"]');
       if (csrfInput) {
@@ -109,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': csrfInput.value
           },
           body: JSON.stringify({
@@ -116,13 +124,33 @@ document.addEventListener('DOMContentLoaded', function () {
             tanggal_acara: produk.tanggal,
             jumlah: 1
           })
+        }).then(function (res) {
+          if (res.status === 401) {
+            window.location.href = form.dataset.login || '/login';
+            return;
+          }
+          return res.json();
+        }).then(function (data) {
+          if (data && data.success) {
+            if (typeof CabilCart !== 'undefined') {
+              CabilCart.tambah(produk);
+            }
+            tandaiDiKeranjang();
+            if (aksi === 'sewa') {
+              window.location.href = form.dataset.keranjang || '/keranjang';
+            }
+          } else if (data && data.redirect) {
+            window.location.href = data.redirect;
+          }
         }).catch(function () {});
-      }
-
-      tandaiDiKeranjang();
-
-      if (aksi === 'sewa') {
-        window.location.href = form.dataset.keranjang || '/keranjang';
+      } else {
+        if (typeof CabilCart !== 'undefined') {
+          CabilCart.tambah(produk);
+        }
+        tandaiDiKeranjang();
+        if (aksi === 'sewa') {
+          window.location.href = form.dataset.keranjang || '/keranjang';
+        }
       }
     });
   }

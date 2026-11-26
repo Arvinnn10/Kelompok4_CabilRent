@@ -41,6 +41,17 @@
     <!-- Form register di sebelah kanan -->
     <div class="login-content register-content">
       <div class="login-card register-card">
+        <!-- Tombol kembali ke home / beranda -->
+        <div style="margin-bottom: 16px;">
+          <a href="{{ url('/') }}" class="btn-back-home" id="btn-back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Kembali ke Beranda
+          </a>
+        </div>
+
         <div class="login-card-header">
           <h2 class="login-title">Daftar Akun</h2>
           <p class="login-desc">Lengkapi data untuk membuat akun</p>

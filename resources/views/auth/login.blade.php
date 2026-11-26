@@ -31,6 +31,17 @@
     <!-- Form sign in di sebelah kanan -->
     <div class="login-content">
       <div class="login-card">
+        <!-- Tombol kembali ke home / beranda -->
+        <div style="margin-bottom: 16px;">
+          <a href="{{ url('/') }}" class="btn-back-home" id="btn-back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Kembali ke Beranda
+          </a>
+        </div>
+
         <div class="login-card-header">
           <h2 class="login-title">Sign In</h2>
           <p class="login-desc">Masuk dengan Email dan Password</p>
@@ -40,6 +51,26 @@
         @if (session('success'))
           <div style="background-color: #e8f5e9; color: #2e7d32; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; border: 1px solid #c8e6c9;">
             {{ session('success') }}
+          </div>
+        @endif
+
+        @if (session('warning'))
+          <div style="background-color: #fffbeb; color: #b45309; padding: 12px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; border: 1px solid #fde68a;">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <div>
+                <strong>Pemberitahuan:</strong> {{ session('warning') }}
+              </div>
+            </div>
+            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #fcd34d;">
+              <a href="{{ url('/') }}" style="color: #92400e; font-weight: 700; font-size: 12px; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+                &larr; Atau kembali ke Beranda (Home)
+              </a>
+            </div>
           </div>
         @endif
 

@@ -12,10 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var tanggal = form.tanggal.value;
     var pesan = form.pesan.value.trim();
 
-    var teks = 'Halo cabil.rent, saya ' + nama + '.\n' +
-      'Busana yang diminati: ' + busana + '\n' +
-      'Tanggal acara: ' + (tanggal || '-') + '\n' +
-      'Pesan: ' + (pesan || '-');
+    var teks = 'Halo Kak admin cabil.rent, saya ' + nama + ' mau konsultasi seputar busana:\n\n' +
+      '• Pilihan busana: ' + busana + '\n' +
+      '• Rencana tanggal acara: ' + (tanggal || '-') + '\n' +
+      '• Pertanyaan / pesan: ' + (pesan || '-') + '\n\n' +
+      'Terima kasih kak!';
 
     var url = 'https://wa.me/' + form.dataset.wa + '?text=' + encodeURIComponent(teks);
     window.open(url, '_blank');

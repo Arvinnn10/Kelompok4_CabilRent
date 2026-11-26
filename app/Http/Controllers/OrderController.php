@@ -16,6 +16,19 @@ class OrderController extends Controller
 {
     public function checkout(Request $request)
     {
+        // Pelanggan belum login tidak bisa membeli/memesan sewa, harus login terlebih dahulu
+        if (!Auth::check()) {
+            $pesan = 'Silakan masuk (login) terlebih dahulu untuk melanjutkan pemesanan sewa.';
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success'  => false,
+                    'message'  => $pesan,
+                    'redirect' => route('login'),
+                ], 401);
+            }
+            return redirect()->guest(route('login'))->with('warning', $pesan);
+        }
+
         $request->validate([
             'nama_lengkap'         => 'required|string|max:100',
             'no_whatsapp'          => 'required|string|max:20',
@@ -369,7 +382,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status_pesan' => 'required|in:pending,dikonfirmasi,selesai,dibatalkan',
+            'status_pesan' => 'required|in:pending,dikonfirmasi,sedang_dipinjam,selesai,dibatalkan',
         ]);
 
         $order = Order::with('basket.product')->findOrFail($id);
@@ -383,11 +396,15 @@ class OrderController extends Controller
         $product = $order->basket?->product;
         $qty = $order->basket?->jumlah ?? 1;
 
-        // 1. Jika pesanan dikonfirmasi (mulai disewa), potong stok
-        if ($newStatus === 'dikonfirmasi' && $oldStatus !== 'dikonfirmasi') {
+        $holdingStockStatuses = ['dikonfirmasi', 'sedang_dipinjam'];
+        $wasHoldingStock = in_array($oldStatus, $holdingStockStatuses);
+        $willHoldStock = in_array($newStatus, $holdingStockStatuses);
+
+        // 1. Jika berpindah ke status yang meminjam/menahan stok (dikonfirmasi/sedang_dipinjam) dari status bebas
+        if (!$wasHoldingStock && $willHoldStock) {
             if ($product) {
                 if ($product->stok < $qty) {
-                    return back()->with('error', "Gagal konfirmasi: Stok '{$product->nama_produk}' tidak mencukupi (sisa: {$product->stok}).");
+                    return back()->with('error', "Gagal ubah status: Stok '{$product->nama_produk}' tidak mencukupi (sisa: {$product->stok}).");
                 }
                 $product->decrement('stok', $qty);
                 if ($product->fresh()->stok <= 0) {
@@ -396,18 +413,8 @@ class OrderController extends Controller
             }
         }
 
-        // 2. Jika pesanan dibatalkan setelah sebelumnya dikonfirmasi, kembalikan stok
-        if ($newStatus === 'dibatalkan' && $oldStatus === 'dikonfirmasi') {
-            if ($product) {
-                $product->increment('stok', $qty);
-                if ($product->fresh()->stok > 0 && $product->status_produk === 'tidak_tersedia') {
-                    $product->update(['status_produk' => 'tersedia']);
-                }
-            }
-        }
-
-        // 3. Jika pesanan selesai (masa sewa tuntas & barang kembali), pulihkan stok busana
-        if ($newStatus === 'selesai' && $oldStatus === 'dikonfirmasi') {
+        // 2. Jika pesanan selesai atau dibatalkan setelah sebelumnya meminjam stok, kembalikan stok
+        if ($wasHoldingStock && !$willHoldStock) {
             if ($product) {
                 $product->increment('stok', $qty);
                 if ($product->fresh()->stok > 0 && $product->status_produk === 'tidak_tersedia') {
@@ -419,7 +426,15 @@ class OrderController extends Controller
         $order->status_pesan = $newStatus;
         $order->save();
 
-        return back()->with('success', "Status pesanan #{$order->id} berhasil diupdate menjadi '{$newStatus}'!");
+        $labelStatus = [
+            'pending'         => 'Menunggu',
+            'dikonfirmasi'    => 'Dikonfirmasi',
+            'sedang_dipinjam' => 'Sedang Dipinjam',
+            'selesai'         => 'Selesai',
+            'dibatalkan'      => 'Dibatalkan',
+        ][$newStatus] ?? ucfirst($newStatus);
+
+        return back()->with('success', "Status pesanan #{$order->id} berhasil diupdate menjadi '{$labelStatus}'!");
     }
 
     /**

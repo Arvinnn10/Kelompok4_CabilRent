@@ -25,6 +25,19 @@ class CartController extends Controller
 
     public function addItem(Request $request)
     {
+        // Pelanggan belum login tidak bisa menambahkan ke keranjang
+        if (!Auth::check()) {
+            $pesan = 'Silakan masuk (login) terlebih dahulu untuk menambahkan produk ke keranjang.';
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success'  => false,
+                    'message'  => $pesan,
+                    'redirect' => route('login'),
+                ], 401);
+            }
+            return redirect()->guest(route('login'))->with('warning', $pesan);
+        }
+
         $request->validate([
             'produk_id'     => 'required',
             'tanggal_acara' => 'nullable|date',

@@ -106,15 +106,7 @@
           </svg>
         </span>
 
-        <div class="search-bar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" placeholder="Cari nama kebaya" aria-label="Cari nama kebaya">
-        </div>
-
-        <div class="topbar-actions">
+        <div class="topbar-actions" style="margin-left: auto;">
           <!-- Notifikasi -->
           <div class="dropdown">
             <button type="button" class="icon-btn btn-notif" id="btn-notif" title="Notifikasi"
@@ -131,18 +123,9 @@
                 <button type="button" class="link-btn" id="btn-baca">Tandai dibaca</button>
               </div>
               <ul class="notif-list">
-                <!-- BACKEND: ganti dengan daftar notifikasi asli -->
                 <li class="notif-item is-unread">
-                  <p class="notif-judul">Pesanan baru CR-1044</p>
-                  <p class="notif-detail">Bella Safira · 12 Des</p>
-                </li>
-                <li class="notif-item is-unread">
-                  <p class="notif-judul">Pesanan baru CR-1043</p>
-                  <p class="notif-detail">Anisa Rahma · 3 Des</p>
-                </li>
-                <li class="notif-item is-unread">
-                  <p class="notif-judul">Aura Heels tinggal 2</p>
-                  <p class="notif-detail">Perlu restok</p>
+                  <p class="notif-judul">Pesanan baru</p>
+                  <p class="notif-detail">{{ $perluDikonfirmasi ?? 0 }} pesanan perlu konfirmasi</p>
                 </li>
               </ul>
             </div>
@@ -157,15 +140,8 @@
               <div class="akun-head">
                 <p class="akun-nama">{{ Auth::user()->nama_lengkap ?? Auth::user()->username }}</p>
                 <p class="akun-email">{{ Auth::user()->email }}</p>
+                <span style="font-size: 11px; color: #8c786c; font-weight: 600; text-transform: uppercase;">Administrator</span>
               </div>
-              <button type="button" class="akun-keluar" data-open-logout>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                <span>Keluar</span>
-              </button>
             </div>
           </div>
         </div>
@@ -194,28 +170,55 @@
             <p class="ps-stat-label">Total Pesanan</p>
             <p class="ps-stat-value">{{ $totalOrders ?? 0 }}</p>
           </div>
-          <!-- BACKEND: tiga kartu di bawah masih angka contoh dari desain -->
           <div class="stat-card">
             <p class="ps-stat-label">Perlu Dikonfirmasi</p>
-            <p class="ps-stat-value">2</p>
+            <p class="ps-stat-value">{{ $perluDikonfirmasi ?? 0 }}</p>
           </div>
           <div class="stat-card">
-            <p class="ps-stat-label">Sedang Disewa</p>
-            <p class="ps-stat-value">0</p>
+            <p class="ps-stat-label">Sedang Dipinjam</p>
+            <p class="ps-stat-value">{{ $sedangDipinjam ?? 0 }}</p>
           </div>
           <div class="stat-card">
             <p class="ps-stat-label">Pendapatan Selesai</p>
-            <p class="ps-stat-value">Rp 450.000</p>
+            <p class="ps-stat-value">Rp {{ number_format($pendapatanSelesai ?? 0, 0, ',', '.') }}</p>
           </div>
         </section>
 
-        <!-- Pencarian -->
-        <form method="GET" action="{{ url('/pesanan') }}" class="ps-search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari ID atau Nama" aria-label="Cari ID atau Nama">
+        <!-- Toolbar Filter & Pencarian Pesanan -->
+        <form method="GET" action="{{ url('/pesanan') }}" class="ps-filter-toolbar">
+          <div class="ps-filter-group ps-search-input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari ID, Nama, No WA, atau Domisili" aria-label="Cari ID atau Nama">
+          </div>
+
+          <div class="ps-filter-group">
+            <label for="filter-status" class="filter-label">Status:</label>
+            <select name="status" id="filter-status" class="ps-select-filter" onchange="this.form.submit()">
+              <option value="Semua">Semua Status</option>
+              <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Menunggu Konfirmasi</option>
+              <option value="dikonfirmasi" {{ request('status') === 'dikonfirmasi' ? 'selected' : '' }}>Dikonfirmasi</option>
+              <option value="sedang_dipinjam" {{ request('status') === 'sedang_dipinjam' ? 'selected' : '' }}>Sedang Dipinjam</option>
+              <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+              <option value="dibatalkan" {{ request('status') === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+            </select>
+          </div>
+
+          <div class="ps-filter-group ps-date-group">
+            <label for="tanggal_dari" class="filter-label">Dari:</label>
+            <input type="date" name="tanggal_dari" id="tanggal_dari" value="{{ request('tanggal_dari') }}" class="ps-date-input" title="Filter dari tanggal pemesanan">
+            <label for="tanggal_sampai" class="filter-label">Sampai:</label>
+            <input type="date" name="tanggal_sampai" id="tanggal_sampai" value="{{ request('tanggal_sampai') }}" class="ps-date-input" title="Filter sampai tanggal pemesanan">
+          </div>
+
+          <div class="ps-filter-actions">
+            <button type="submit" class="btn-filter-submit">Filter</button>
+            @if(request()->hasAny(['search', 'status', 'tanggal_dari', 'tanggal_sampai']) && (request('status') !== 'Semua' || request('search') || request('tanggal_dari') || request('tanggal_sampai')))
+              <a href="{{ url('/pesanan') }}" class="btn-filter-reset">Reset</a>
+            @endif
+          </div>
         </form>
 
         <!-- Tabel pesanan -->
@@ -237,7 +240,7 @@
                 @forelse ($orders as $order)
                   <tr>
                     <td>
-                      <span class="ps-id">CR-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</span>
+                      <span class="ps-id">{{ $order->kode_pesanan ?? ('CR-' . str_pad($order->id, 4, '0', STR_PAD_LEFT)) }}</span>
                       <span class="ps-sub">{{ $order->created_at->locale('id')->translatedFormat('j M, H:i') }}</span>
                     </td>
                     <td>
@@ -251,7 +254,7 @@
                     <td class="ps-tgl">{{ $order->basket && $order->basket->tanggal_acara ? $order->basket->tanggal_acara->locale('id')->translatedFormat('j M Y') : '-' }}</td>
                     <td class="ps-total">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
                     <td>
-                      <span class="badge status-{{ $order->status_pesan }}">{{ ['pending' => 'Menunggu', 'dikonfirmasi' => 'Dikonfirmasi', 'selesai' => 'Selesai', 'dibatalkan' => 'Dibatalkan'][$order->status_pesan] ?? ucfirst($order->status_pesan) }}</span>
+                      <span class="badge status-{{ $order->status_pesan }}">{{ ['pending' => 'Menunggu', 'dikonfirmasi' => 'Dikonfirmasi', 'sedang_dipinjam' => 'Sedang Dipinjam', 'selesai' => 'Selesai', 'dibatalkan' => 'Dibatalkan'][$order->status_pesan] ?? ucfirst($order->status_pesan) }}</span>
                     </td>
                     <td>
                       <div class="ps-aksi">
@@ -260,20 +263,27 @@
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status_pesan" value="dikonfirmasi">
-                            <button type="submit" class="btn-aksi">Konfirmasi</button>
+                            <button type="submit" class="btn-aksi" title="Konfirmasi pesanan">Konfirmasi</button>
                           </form>
                         @elseif ($order->status_pesan === 'dikonfirmasi')
                           <form action="{{ route('pesanan.status', $order->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
+                            <input type="hidden" name="status_pesan" value="sedang_dipinjam">
+                            <button type="submit" class="btn-aksi" style="background:#0284c7;color:#fff;" title="Ubah status ke Sedang Dipinjam">Pinjamkan</button>
+                          </form>
+                        @elseif ($order->status_pesan === 'sedang_dipinjam')
+                          <form action="{{ route('pesanan.status', $order->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
                             <input type="hidden" name="status_pesan" value="selesai">
-                            <button type="submit" class="btn-aksi">Selesaikan</button>
+                            <button type="submit" class="btn-aksi" style="background:#16a34a;color:#fff;" title="Selesaikan pesanan sewa">Selesaikan</button>
                           </form>
                         @endif
 
                         <!-- Tombol mata: membuka panel detail (js/pesanan.js membaca data-* di bawah) -->
                         <button type="button" class="btn-lihat" title="Lihat detail"
-                                data-id="CR-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}"
+                                data-id="{{ $order->kode_pesanan ?? ('CR-' . str_pad($order->id, 4, '0', STR_PAD_LEFT)) }}"
                                 data-status="{{ $order->status_pesan }}"
                                 data-action="{{ route('pesanan.status', $order->id) }}"
                                 data-nama="{{ $order->user->nama_lengkap ?? $order->user->username ?? 'Pelanggan' }}"
@@ -385,14 +395,14 @@
         <select name="status_pesan" id="drawer-status" class="drawer-select">
           <option value="pending">Menunggu</option>
           <option value="dikonfirmasi">Dikonfirmasi</option>
+          <option value="sedang_dipinjam">Sedang Dipinjam</option>
           <option value="selesai">Selesai</option>
           <option value="dibatalkan">Dibatalkan</option>
         </select>
       </div>
 
       <div class="drawer-foot">
-        <button type="button" class="btn-batal" id="drawer-tutup">Tutup</button>
-        <button type="submit" class="btn-ya">Simpan</button>
+        <button type="submit" class="btn-ya" style="width:100%;justify-content:center;">Simpan Perubahan</button>
       </div>
     </form>
   </aside>

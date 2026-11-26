@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var LABEL_STATUS = {
     pending: 'Menunggu',
     dikonfirmasi: 'Dikonfirmasi',
+    sedang_dipinjam: 'Sedang Dipinjam',
     selesai: 'Selesai',
     dibatalkan: 'Dibatalkan'
   };
@@ -95,7 +96,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('drawer-x').addEventListener('click', tutup);
-  document.getElementById('drawer-tutup').addEventListener('click', tutup);
+  var btnDrawerTutup = document.getElementById('drawer-tutup');
+  if (btnDrawerTutup) {
+    btnDrawerTutup.addEventListener('click', tutup);
+  }
   overlay.addEventListener('click', tutup);
 
   document.addEventListener('keydown', function (e) {

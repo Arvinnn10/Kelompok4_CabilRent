@@ -11,64 +11,18 @@
 <body>
 
   <!-- Navigasi atas -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <!-- Logo cabil.rent -->
-      <a href="{{ url('/home') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
-        <span>CABIL.RENT</span>
-      </a>
+  @include('layouts.partials.navbar')
 
-      <!-- Menu tengah -->
-      <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link">Beranda</a></li>
-        <li><a href="{{ url('/koleksi') }}" class="nav-link active">Koleksi</a></li>
-        <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
-        <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
-      </ul>
-
-      <!-- Bagian search dan tombol kanan -->
-      <div class="nav-actions">
-        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" name="q" placeholder="Cari koleksi">
-        </form>
-
-        <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
-          <span class="cart-badge" id="cart-badge" hidden></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 10h16l-2 10H6L4 10z"/>
-            <path d="M4 10l5-6"/>
-            <path d="M20 10l-5-6"/>
-            <line x1="9" y1="14" x2="9" y2="17"/>
-            <line x1="12" y1="14" x2="12" y2="17"/>
-            <line x1="15" y1="14" x2="15" y2="17"/>
-          </svg>
-        </a>
-
-        @if (Auth::check())
-          <a href="{{ route('logout') }}" class="nav-icon-btn" title="Keluar / Logout ({{ Auth::user()->nama_lengkap ?? Auth::user()->username }})" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @else
-          <a href="{{ route('login') }}" class="nav-icon-btn" title="Masuk / Login">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @endif
-      </div>
-    </div>
-  </header>
+  <!-- Tombol kembali ke koleksi -->
+  <div class="container" style="padding-top: 24px; padding-bottom: 0;">
+    <a href="{{ url('/koleksi') }}" class="btn-kembali" id="btn-kembali-koleksi" style="display:inline-flex;align-items:center;gap:8px;color:#623e2b;font-size:14px;font-weight:600;text-decoration:none;padding:8px 16px;background:#ffffff;border:1px solid #ebdcd0;border-radius:10px;transition:all 0.2s ease;box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Kembali ke Koleksi
+    </a>
+  </div>
 
   @php
     $prodId = $product->slug ?: $product->id;
@@ -102,15 +56,25 @@
         </p>
         <p class="detail-keterangan" id="detail-keterangan">{{ $product->desk_produk ?: 'Inc : Rok, kamisol, selendang dan hijab.' }}</p>
 
-        <form class="detail-form" id="detail-form" data-keranjang="{{ url('/keranjang') }}" action="{{ route('cart.add') }}" method="POST">
+        <form class="detail-form" id="detail-form"
+              data-keranjang="{{ url('/keranjang') }}"
+              data-auth="{{ Auth::check() ? '1' : '0' }}"
+              data-login="{{ route('login') }}"
+              action="{{ route('cart.add') }}" method="POST">
           @csrf
           <input type="hidden" name="produk_id" value="{{ $prodId }}">
           <label for="tanggal-pesanan" class="detail-label">TANGGAL PESANAN</label>
           <input type="date" id="tanggal-pesanan" name="tanggal" min="{{ date('Y-m-d') }}" required>
           <p class="detail-note">Ketersediaan dikonfirmasi admin lewat WhatsApp.</p>
 
+          @guest
+            <p style="font-size:12.5px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:8px 12px;border-radius:8px;margin-bottom:12px;">
+              <strong>Info:</strong> Anda perlu <a href="{{ route('login') }}" style="color:#b45309;font-weight:700;text-decoration:underline;">Masuk (Login)</a> terlebih dahulu untuk menambahkan ke keranjang.
+            </p>
+          @endguest
+
           <div class="detail-buttons">
-            <button type="button" class="btn-sewa-sekarang" id="btn-beli-wa">Beli Langsung via WhatsApp</button>
+            <button type="button" class="btn-sewa-sekarang" id="btn-beli-wa">Sewa Langsung via WhatsApp</button>
             <button type="submit" name="aksi" value="tambah" class="btn-tambah-keranjang" id="btn-tambah-keranjang">Tambah ke Keranjang</button>
           </div>
         </form>

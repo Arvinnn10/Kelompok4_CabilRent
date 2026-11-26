@@ -87,7 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('drawer-x').addEventListener('click', tutup);
-  document.getElementById('drawer-tutup').addEventListener('click', tutup);
+  var btnPgTutup = document.getElementById('drawer-tutup');
+  if (btnPgTutup) {
+    btnPgTutup.addEventListener('click', tutup);
+  }
   overlay.addEventListener('click', tutup);
 
   document.addEventListener('keydown', function (e) {

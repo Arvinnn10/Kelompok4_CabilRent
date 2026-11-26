@@ -11,64 +11,7 @@
 <body>
 
   <!-- Navigasi atas -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <!-- Logo cabil.rent -->
-      <a href="{{ url('/home') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img">
-        <span>CABIL.RENT</span>
-      </a>
-
-      <!-- Menu tengah -->
-      <ul class="nav-menu">
-        <li><a href="{{ url('/home') }}" class="nav-link">Beranda</a></li>
-        <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
-        <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
-        <li><a href="{{ url('/kontak') }}" class="nav-link">Kontak</a></li>
-      </ul>
-
-      <!-- Bagian search dan tombol kanan -->
-      <div class="nav-actions">
-        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" name="q" placeholder="Cari koleksi">
-        </form>
-
-        <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
-          <span class="cart-badge" id="cart-badge" hidden></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 10h16l-2 10H6L4 10z"/>
-            <path d="M4 10l5-6"/>
-            <path d="M20 10l-5-6"/>
-            <line x1="9" y1="14" x2="9" y2="17"/>
-            <line x1="12" y1="14" x2="12" y2="17"/>
-            <line x1="15" y1="14" x2="15" y2="17"/>
-          </svg>
-        </a>
-
-        @if (Auth::check())
-          <a href="{{ route('logout') }}" class="nav-icon-btn" title="Keluar / Logout ({{ Auth::user()->nama_lengkap ?? Auth::user()->username }})" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @else
-          <a href="{{ route('login') }}" class="nav-icon-btn" title="Masuk / Login">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @endif
-      </div>
-    </div>
-  </header>
+  @include('layouts.partials.navbar')
 
   <!-- Keranjang sewa -->
   <section class="cart-section">
@@ -105,6 +48,12 @@
               <span class="summary-total-value" id="summary-total">Rp 0</span>
             </div>
           </div>
+
+          @guest
+            <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;color:#92400e;line-height:1.5;">
+              <strong>Perhatian:</strong> Anda belum login. Untuk memesan sewa busana, Anda perlu <a href="{{ route('login') }}" style="color:#b45309;font-weight:700;text-decoration:underline;">Masuk (Login)</a> terlebih dahulu.
+            </div>
+          @endguest
 
           <a href="{{ url('/pemesanan') }}" class="btn-lanjut" id="btn-lanjut">Lanjut ke Pemesanan</a>
           <a href="{{ url('/koleksi') }}" class="btn-tambah">Tambah busana lain</a>

@@ -16,64 +16,8 @@
 </head>
 <body>
 
-  <!-- Navigasi atas (sama dengan halaman home) -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <!-- Logo cabil.rent -->
-      <a href="{{ url('/') }}" class="nav-brand">
-        <img src="{{ asset('images/logo.png') }}" alt="cabil.rent logo" class="brand-logo-img" loading="lazy" decoding="async">
-        <span>CABIL.RENT</span>
-      </a>
-
-      <!-- Menu tengah -->
-      <ul class="nav-menu">
-        <li><a href="{{ url('/') }}" class="nav-link">Beranda</a></li>
-        <li><a href="{{ url('/koleksi') }}" class="nav-link">Koleksi</a></li>
-        <li><a href="{{ url('/tentang') }}" class="nav-link">Tentang</a></li>
-        <li><a href="{{ url('/kontak') }}" class="nav-link active">Kontak</a></li>
-      </ul>
-      <!-- Bagian search dan tombol kanan -->
-      <div class="nav-actions">
-        <form class="nav-search" action="{{ url('/koleksi') }}" method="GET">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" name="q" placeholder="Cari koleksi">
-        </form>
-
-        <a href="{{ url('/keranjang') }}" class="nav-icon-btn" title="Keranjang">
-          <span class="cart-badge" id="cart-badge" hidden></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 10h16l-2 10H6L4 10z"/>
-            <path d="M4 10l5-6"/>
-            <path d="M20 10l-5-6"/>
-            <line x1="9" y1="14" x2="9" y2="17"/>
-            <line x1="12" y1="14" x2="12" y2="17"/>
-            <line x1="15" y1="14" x2="15" y2="17"/>
-          </svg>
-        </a>
-
-        @if (Auth::check())
-          <a href="{{ route('logout') }}" class="nav-icon-btn" title="Keluar / Logout ({{ Auth::user()->nama_lengkap ?? Auth::user()->username }})" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @else
-          <a href="{{ route('login') }}" class="nav-icon-btn" title="Masuk / Login">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M6.168 18.849a6 6 0 0 1 11.664 0"/>
-            </svg>
-          </a>
-        @endif
-      </div>
-    </div>
-  </header>
+  <!-- Navigasi atas -->
+  @include('layouts.partials.navbar')
 
   <!-- Judul halaman -->
   <section class="kontak-intro">
@@ -115,13 +59,24 @@
       <!-- Form pesan, dikirim ke WhatsApp oleh js/kontak.js -->
       <form class="kontak-form" id="kontak-form" action="#" method="POST" data-wa="6287894302894">
         @csrf
+        <!-- Header formulir pertanyaan & konsultasi yang natural -->
+        <div class="kontak-form-header" style="margin-bottom: 22px;">
+          <h2 style="font-size: 20px; font-weight: 700; color: #271a13; margin-bottom: 6px;">Tanya &amp; Konsultasi Busana</h2>
+          <p style="font-size: 13.5px; color: #6e5e54; line-height: 1.5; margin: 0 0 10px 0;">
+            Punya pertanyaan seputar ukuran, ketersediaan model, atau ingin fitting dulu? Silakan kirim pesan ke admin kami di bawah ini.
+          </p>
+          <div style="font-size: 12.5px; color: #8c6a54; background: #faf4ef; padding: 8px 12px; border-radius: 8px; border: 1px solid #ebdcd0; display: inline-flex; align-items: center; gap: 6px;">
+            <span>💡 Ingin langsung menyewa? Pilih busana langsung di katalog <a href="{{ url('/koleksi') }}" style="color: #623e2b; font-weight: 700; text-decoration: underline;">Koleksi</a> kami.</span>
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="nama" class="form-label-lg">Nama</label>
           <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required>
         </div>
 
         <div class="form-group">
-          <label for="busana">Busana yang diminati</label>
+          <label for="busana">Busana yang ditanyakan</label>
           <select id="busana" name="busana">
             <option value="Pakaian Kebaya">Pakaian Kebaya</option>
             <option value="Heels">Heels</option>
@@ -130,16 +85,16 @@
         </div>
 
         <div class="form-group">
-          <label for="tanggal">Tanggal acara</label>
+          <label for="tanggal">Rencana tanggal acara (opsional)</label>
           <input type="date" id="tanggal" name="tanggal">
         </div>
 
         <div class="form-group">
-          <label for="pesan">Pesan</label>
-          <textarea id="pesan" name="pesan" placeholder="Ukuran, warna, atau pertanyaan lain"></textarea>
+          <label for="pesan">Isi Pertanyaan</label>
+          <textarea id="pesan" name="pesan" placeholder="Tuliskan pertanyaan seputar ukuran, ketersediaan warna, atau info lainnya"></textarea>
         </div>
 
-        <button type="submit" class="btn-kirim">Kirim lewat WhatsApp</button>
+        <button type="submit" class="btn-kirim">Kirim Pertanyaan via WhatsApp</button>
       </form>
     </div>
   </section>

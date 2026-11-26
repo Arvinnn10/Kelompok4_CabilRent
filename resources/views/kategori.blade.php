@@ -106,15 +106,7 @@
           </svg>
         </span>
 
-        <div class="search-bar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" placeholder="Cari nama kebaya" aria-label="Cari nama kebaya">
-        </div>
-
-        <div class="topbar-actions">
+        <div class="topbar-actions" style="margin-left: auto;">
           <!-- Notifikasi -->
           <div class="dropdown">
             <button type="button" class="icon-btn btn-notif" id="btn-notif" title="Notifikasi"
@@ -131,18 +123,9 @@
                 <button type="button" class="link-btn" id="btn-baca">Tandai dibaca</button>
               </div>
               <ul class="notif-list">
-                <!-- BACKEND: ganti dengan daftar notifikasi asli -->
                 <li class="notif-item is-unread">
-                  <p class="notif-judul">Pesanan baru CR-1044</p>
-                  <p class="notif-detail">Bella Safira · 12 Des</p>
-                </li>
-                <li class="notif-item is-unread">
-                  <p class="notif-judul">Pesanan baru CR-1043</p>
-                  <p class="notif-detail">Anisa Rahma · 3 Des</p>
-                </li>
-                <li class="notif-item is-unread">
-                  <p class="notif-judul">Aura Heels tinggal 2</p>
-                  <p class="notif-detail">Perlu restok</p>
+                  <p class="notif-judul">Panel Kategori</p>
+                  <p class="notif-detail">Kelola kategori koleksi busana</p>
                 </li>
               </ul>
             </div>
@@ -157,15 +140,8 @@
               <div class="akun-head">
                 <p class="akun-nama">{{ Auth::user()->nama_lengkap ?? Auth::user()->username }}</p>
                 <p class="akun-email">{{ Auth::user()->email }}</p>
+                <span style="font-size: 11px; color: #8c786c; font-weight: 600; text-transform: uppercase;">Administrator</span>
               </div>
-              <button type="button" class="akun-keluar" data-open-logout>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                <span>Keluar</span>
-              </button>
             </div>
           </div>
         </div>
@@ -274,6 +250,9 @@
   <div class="modal-overlay" id="modal-kategori" hidden>
     <div class="modal kt-modal" role="dialog" aria-modal="true" aria-labelledby="modal-kategori-judul">
       <h2 class="modal-title" id="modal-kategori-judul">Tambah Kategori</h2>
+      <p style="font-size:12px;color:#786558;margin:0 0 16px 0;">
+        <span style="color:#dc2626;font-weight:700;">*</span> Menandakan kolom <strong>wajib diisi</strong>.
+      </p>
 
       <form id="form-kategori" method="POST" action="{{ route('kategori.store') }}"
             data-action-tambah="{{ route('kategori.store') }}">
@@ -282,13 +261,13 @@
         <input type="hidden" name="_method" value="PUT" id="field-method" disabled>
 
         <div class="kt-field">
-          <label for="field-nama">Nama kategori</label>
-          <input type="text" name="nama_kategori" id="field-nama" maxlength="50" required>
+          <label for="field-nama">Nama kategori <span style="color:#b91c1c;font-size:11px;font-weight:600;">* (Wajib diisi)</span></label>
+          <input type="text" name="nama_kategori" id="field-nama" maxlength="50" placeholder="Contoh: Kebaya Wisuda" required>
         </div>
 
         <div class="kt-field">
-          <label for="field-deskripsi">Deskripsi singkat</label>
-          <textarea name="deskripsi" id="field-deskripsi" rows="3"></textarea>
+          <label for="field-deskripsi">Deskripsi singkat <span style="color:#78716c;font-size:11px;font-weight:normal;">(Opsional / Tidak wajib)</span></label>
+          <textarea name="deskripsi" id="field-deskripsi" rows="3" placeholder="Deskripsi atau ciri khas kategori"></textarea>
         </div>
 
         <div class="modal-actions">
